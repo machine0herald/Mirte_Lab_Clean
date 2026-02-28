@@ -1,0 +1,9 @@
+repositories:
+  mirte-gazebo:
+    type: git
+    url: https://github.com/mirte-robot/mirte-gazebo.git
+    version: main
+  color_util:
+    type: git
+    url: https://github.com/MetroRobots/color_util.git
+    version: main
