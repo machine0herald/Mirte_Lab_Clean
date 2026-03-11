@@ -42,23 +42,6 @@
             </mesh>
           </geometry>
         </collision>
-        <visual name="Plane.001">
-          <geometry>
-            <mesh>
-              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
-              <submesh>
-                <name>Plane.001</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="Plane.001_collision">
-          <geometry>
-            <mesh>
-              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
-            </mesh>
-          </geometry>
-        </collision>
         <visual name="Plane">
           <geometry>
             <mesh>
@@ -274,6 +257,686 @@
           </geometry>
         </visual>
         <collision name="18&quot; bin_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.000">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.000</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.000_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.001">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.001</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.001_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.002">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.002</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.002_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.003">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.003</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.003_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.004">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.004</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.004_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.005">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.005</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.005_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.006">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.006</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.006_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.007">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.007</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.007_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.008">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.008</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.008_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.009">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.009</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.009_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.010">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.010</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.010_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.011">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.011</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.011_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.012">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.012</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.012_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.013">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.013</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.013_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.014">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.014</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.014_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.015">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.015</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.015_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.016">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.016</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.016_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.017">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.017</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.017_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.018">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.018</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.018_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.019">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.019</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.019_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.020">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.020</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.020_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.021">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.021</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.021_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.022">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.022</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.022_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.023">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.023</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.023_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.024">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.024</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.024_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.025">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.025</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.025_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.026">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.026</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.026_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.027">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.027</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.027_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.028">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.028</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.028_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.029">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.029</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.029_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.030">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.030</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.030_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.031">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.031</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.031_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.032">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.032</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.032_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.033">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.033</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.033_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.034">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.034</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.034_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.035">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.035</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.035_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.036">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.036</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.036_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.037">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.037</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.037_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.038">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.038</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.038_collision">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cubes.039">
+          <geometry>
+            <mesh>
+              <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
+              <submesh>
+                <name>cubes.039</name>
+              </submesh>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="cubes.039_collision">
           <geometry>
             <mesh>
               <uri>model://floor_with_cubes/meshes/floor_with_electronics.dae</uri>
