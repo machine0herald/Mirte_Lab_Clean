@@ -37,3 +37,6 @@
     rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
     colcon build --symlink-install
     ```
+## Demo
+
+[![Watch the video](thumbnail.png)](Test_node_sim.mp4)
