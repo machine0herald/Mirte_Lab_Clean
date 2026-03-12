@@ -38,5 +38,4 @@
     colcon build --symlink-install
     ```
 ## Demo
-
-[![Watch the video](thumbnail.png)](Test_node_sim.mp4)
+https://github.com/user-attachments/assets/27938a1a-20a6-4f93-9468-7725df9ea4b7
