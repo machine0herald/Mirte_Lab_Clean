@@ -1,5 +1,9 @@
+
 # Mirte Master Lab Cleanup Robot
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
+
+## Demo
+https://github.com/user-attachments/assets/27938a1a-20a6-4f93-9468-7725df9ea4b7
 
 ## Installation
 
@@ -37,5 +41,3 @@
     rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
     colcon build --symlink-install
     ```
-## Demo
-https://github.com/user-attachments/assets/27938a1a-20a6-4f93-9468-7725df9ea4b7
