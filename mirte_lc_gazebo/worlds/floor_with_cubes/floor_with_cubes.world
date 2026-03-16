@@ -34,7 +34,7 @@
               <size>0.62664 0.67364 1.13249</size>
             </box>
           </geometry>
-          <pose>-1.95730 -0.61354 0.59713 0 0 0</pose>
+          <pose>-1.95735 -0.60018 0.56764 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
@@ -70,7 +70,7 @@
               <size>0.62664 0.67364 1.13249</size>
             </box>
           </geometry>
-          <pose>3.66478 3.36500 0.59713 0 0 0</pose>
+          <pose>3.66474 3.37836 0.56764 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
@@ -106,7 +106,7 @@
               <size>0.62260 0.67005 1.13249</size>
             </box>
           </geometry>
-          <pose>-3.16222 -2.15249 0.59713 0 0 0</pose>
+          <pose>-3.16227 -2.16584 0.56764 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
@@ -453,7 +453,7 @@
           <inertia>
             <ixx>0.00101078</ixx>
             <iyy>0.00066929</iyy>
-            <izz>0.00095466</izz>
+            <izz>0.00095467</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -713,7 +713,7 @@
           <inertia>
             <ixx>0.00175262</ixx>
             <iyy>0.00230481</iyy>
-            <izz>0.00239987</izz>
+            <izz>0.00239988</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -868,7 +868,7 @@
           <mass>1.00000</mass>
           <inertia>
             <ixx>0.00163037</ixx>
-            <iyy>0.00113669</iyy>
+            <iyy>0.00113670</iyy>
             <izz>0.00124247</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
@@ -921,7 +921,7 @@
           <inertia>
             <ixx>0.00070989</ixx>
             <iyy>0.00108457</iyy>
-            <izz>0.00110889</izz>
+            <izz>0.00110888</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -1127,9 +1127,9 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00244084</ixx>
-            <iyy>0.00218519</iyy>
-            <izz>0.00335668</izz>
+            <ixx>0.00244083</ixx>
+            <iyy>0.00218518</iyy>
+            <izz>0.00335666</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -1233,7 +1233,7 @@
           <inertia>
             <ixx>0.00168771</ixx>
             <iyy>0.00150636</iyy>
-            <izz>0.00247611</izz>
+            <izz>0.00247612</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -1284,7 +1284,7 @@
           <mass>1.00000</mass>
           <inertia>
             <ixx>0.00169775</ixx>
-            <iyy>0.00138335</iyy>
+            <iyy>0.00138336</iyy>
             <izz>0.00159385</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
@@ -1388,7 +1388,7 @@
           <mass>1.00000</mass>
           <inertia>
             <ixx>0.00246083</ixx>
-            <iyy>0.00279552</iyy>
+            <iyy>0.00279553</iyy>
             <izz>0.00248123</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
@@ -1440,8 +1440,8 @@
           <mass>1.00000</mass>
           <inertia>
             <ixx>0.00246436</ixx>
-            <iyy>0.00288248</iyy>
-            <izz>0.00369089</izz>
+            <iyy>0.00288247</iyy>
+            <izz>0.00369088</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -1545,7 +1545,7 @@
           <inertia>
             <ixx>0.00196846</ixx>
             <iyy>0.00204932</iyy>
-            <izz>0.00364770</izz>
+            <izz>0.00364769</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -1596,8 +1596,8 @@
           <mass>1.00000</mass>
           <inertia>
             <ixx>0.00155853</ixx>
-            <iyy>0.00163783</iyy>
-            <izz>0.00245946</izz>
+            <iyy>0.00163782</iyy>
+            <izz>0.00245945</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -1699,9 +1699,9 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00198766</ixx>
+            <ixx>0.00198767</ixx>
             <iyy>0.00126070</iyy>
-            <izz>0.00287146</izz>
+            <izz>0.00287147</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -1803,9 +1803,9 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00272366</ixx>
+            <ixx>0.00272367</ixx>
             <iyy>0.00285520</iyy>
-            <izz>0.00302177</izz>
+            <izz>0.00302178</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -1960,7 +1960,7 @@
           <mass>1.00000</mass>
           <inertia>
             <ixx>0.00270787</ixx>
-            <iyy>0.00200492</iyy>
+            <iyy>0.00200493</iyy>
             <izz>0.00276410</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
@@ -2011,7 +2011,7 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00236272</ixx>
+            <ixx>0.00236273</ixx>
             <iyy>0.00204180</iyy>
             <izz>0.00289415</izz>
             <ixy>0</ixy>
@@ -2117,7 +2117,7 @@
           <inertia>
             <ixx>0.00190585</ixx>
             <iyy>0.00182149</iyy>
-            <izz>0.00085530</izz>
+            <izz>0.00085531</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
@@ -2271,7 +2271,7 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00246532</ixx>
+            <ixx>0.00246533</ixx>
             <iyy>0.00252778</iyy>
             <izz>0.00219543</izz>
             <ixy>0</ixy>
@@ -2336,7 +2336,7 @@
               <size>0.70921 0.74493 1.13249</size>
             </box>
           </geometry>
-          <pose>-0.95896 -0.53862 0.59713 0 0 0</pose>
+          <pose>-0.95342 -0.52647 0.56764 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
