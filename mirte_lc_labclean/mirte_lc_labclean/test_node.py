@@ -23,10 +23,11 @@ class MirteTestController(Node):
         self.distance_left = 0.01
         self.distance_right = 0.01
         self.k_p_t = 20
+        self.k_p_t_2 = 10
         self.k_p_l = 1
 
     def controller_callback(self):
-        ang_vel = self.k_p_t * (self.distance_left - self.distance_right)
+        ang_vel = (self.k_p_t * (self.distance_left - self.distance_right)) + (k_p_t_2 / (self.distance_left + self.distance_right))
         lin_vel = self.k_p_l * (self.distance_left + self.distance_right)
 
         self.get_logger().info(
