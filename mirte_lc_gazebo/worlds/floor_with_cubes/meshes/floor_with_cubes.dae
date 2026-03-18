@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 4.2.17 LTS commit date:2026-01-19, commit time:19:10, hash:76b996a81c95</authoring_tool>
     </contributor>
-    <created>2026-03-16T12:51:07</created>
-    <modified>2026-03-16T12:51:07</modified>
+    <created>2026-03-16T22:30:10</created>
+    <modified>2026-03-16T22:30:10</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -90,13 +90,23 @@
     </effect>
     <effect id="plastic_black_rough_005-effect">
       <profile_COMMON>
+        <newparam sid="Untitled_002-surface">
+          <surface type="2D">
+            <init_from>Untitled_002</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Untitled_002-sampler">
+          <sampler2D>
+            <source>Untitled_002-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0.004422348 0.004422348 0.004422348 1</color>
+              <texture texture="Untitled_002-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
@@ -107,13 +117,23 @@
     </effect>
     <effect id="fabric_005-effect">
       <profile_COMMON>
+        <newparam sid="Untitled_001-surface">
+          <surface type="2D">
+            <init_from>Untitled_001</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Untitled_001-sampler">
+          <sampler2D>
+            <source>Untitled_001-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0 0.03405296 0.3184473 1</color>
+              <texture texture="Untitled_001-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
@@ -181,13 +201,23 @@
     </effect>
     <effect id="plastic_black_rough_004-effect">
       <profile_COMMON>
+        <newparam sid="Untitled_002-surface">
+          <surface type="2D">
+            <init_from>Untitled_002</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Untitled_002-sampler">
+          <sampler2D>
+            <source>Untitled_002-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0.004422348 0.004422348 0.004422348 1</color>
+              <texture texture="Untitled_002-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
@@ -198,13 +228,23 @@
     </effect>
     <effect id="fabric_004-effect">
       <profile_COMMON>
+        <newparam sid="Untitled_001-surface">
+          <surface type="2D">
+            <init_from>Untitled_001</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Untitled_001-sampler">
+          <sampler2D>
+            <source>Untitled_001-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0 0.03405296 0.3184473 1</color>
+              <texture texture="Untitled_001-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
@@ -272,13 +312,23 @@
     </effect>
     <effect id="plastic_black_rough_003-effect">
       <profile_COMMON>
+        <newparam sid="Untitled_002-surface">
+          <surface type="2D">
+            <init_from>Untitled_002</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Untitled_002-sampler">
+          <sampler2D>
+            <source>Untitled_002-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0.004422348 0.004422348 0.004422348 1</color>
+              <texture texture="Untitled_002-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
@@ -289,13 +339,23 @@
     </effect>
     <effect id="fabric_003-effect">
       <profile_COMMON>
+        <newparam sid="Untitled_001-surface">
+          <surface type="2D">
+            <init_from>Untitled_001</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Untitled_001-sampler">
+          <sampler2D>
+            <source>Untitled_001-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0 0.03405296 0.3184473 1</color>
+              <texture texture="Untitled_001-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
@@ -380,13 +440,23 @@
     </effect>
     <effect id="plastic_black_rough_001-effect">
       <profile_COMMON>
+        <newparam sid="Untitled_002-surface">
+          <surface type="2D">
+            <init_from>Untitled_002</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Untitled_002-sampler">
+          <sampler2D>
+            <source>Untitled_002-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0.004422348 0.004422348 0.004422348 1</color>
+              <texture texture="Untitled_002-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
@@ -397,13 +467,23 @@
     </effect>
     <effect id="fabric_001-effect">
       <profile_COMMON>
+        <newparam sid="Untitled_001-surface">
+          <surface type="2D">
+            <init_from>Untitled_001</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Untitled_001-sampler">
+          <sampler2D>
+            <source>Untitled_001-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0 0.03405296 0.3184473 1</color>
+              <texture texture="Untitled_001-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
@@ -451,13 +531,23 @@
     </effect>
     <effect id="Material_003-effect">
       <profile_COMMON>
+        <newparam sid="green_001-surface">
+          <surface type="2D">
+            <init_from>green_001</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="green_001-sampler">
+          <sampler2D>
+            <source>green_001-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0 1 0.07542197 1</color>
+              <texture texture="green_001-sampler"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.5</float>
@@ -514,6 +604,15 @@
   <library_images>
     <image id="PBR_Desk_Albedo_jpg" name="PBR_Desk_Albedo_jpg">
       <init_from>PBR_Desk_Albedo.jpg</init_from>
+    </image>
+    <image id="Untitled_001" name="Untitled_001">
+      <init_from>Untitled.001.png</init_from>
+    </image>
+    <image id="Untitled_002" name="Untitled_002">
+      <init_from>Untitled.002.png</init_from>
+    </image>
+    <image id="green_001" name="green_001">
+      <init_from>green.001.png</init_from>
     </image>
   </library_images>
   <library_materials>
