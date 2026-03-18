@@ -18,6 +18,7 @@ def generate_launch_description():
 
     mirte_gazebo = get_package_share_directory('mirte_gazebo')
     slam_toolbox_pkg = get_package_share_directory('slam_toolbox')
+    rtabmap_pkg = get_package_share_directory('rtabmap_launch')
     mirte_lc_labclean_pkg = get_package_share_directory('mirte_lc_labclean')
 
     ####################
@@ -62,23 +63,6 @@ def generate_launch_description():
         }.items()
     )
 
-    ##########################
-    # Static TF broadcaster  #
-    ##########################
-    base_footprint_tf = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        name='base_footprint_tf',
-        arguments=[
-            '0', '0', '0',   # xyz
-            '0', '0', '0',   # rpy
-            'base_link',
-            'base_footprint'
-        ],
-        parameters=[{'use_sim_time': True}],
-        output='screen'
-    )
-
     #######################
     # Slam Toolbox Launch #
     #######################
@@ -100,6 +84,27 @@ def generate_launch_description():
         }.items()
     )
 
+    ##################
+    # Rtabmap Launch #
+    ##################
+    rtabmap = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                rtabmap_pkg,
+                'launch',
+                'rtabmap.launch.py'
+            )
+        ),
+        launch_arguments={
+        'rgb_topic': '/camera/image_raw',
+        'depth_topic': '/camera/depth/image_raw',
+        'camera_info_topic': '/camera/depth/camera_info',
+        'odom_topic': '/odom',
+        'visual_odometry': 'false',
+        'use_sim_time': 'true',
+        }.items()
+    )
+
     ##############
     # Executable #
     ##############
@@ -116,7 +121,7 @@ def generate_launch_description():
         exe_arg,
         gazebo_launch,
         TimerAction(period=10.0, actions=[moveit_launch]),
-        TimerAction(period=26.0, actions=[base_footprint_tf]),
         TimerAction(period=27.0, actions=[slam_toolbox]),
+        TimerAction(period=27.0, actions=[rtabmap]),
         TimerAction(period=29.0, actions=[executable]),
     ])

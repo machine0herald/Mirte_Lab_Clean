@@ -34,9 +34,9 @@ class MirteTestController(Node):
             ang_vel = (self.k_p_t * (self.distance_left - self.distance_right))
         lin_vel = self.k_p_l * (self.distance_left + self.distance_right)
 
-        self.get_logger().info(
-            f"Linear velocity: {lin_vel}, Angular velocity: {ang_vel}"
-        )
+        # self.get_logger().info(
+        #     f"Linear velocity: {lin_vel}, Angular velocity: {ang_vel}"
+        # )
         twist_msg = Twist()
 
         # Apply values to message (with clamping)
@@ -47,7 +47,7 @@ class MirteTestController(Node):
         return
     
     def left_sensor_callback(self, msg: Range):
-        self.get_logger().info(f'Received {msg.range} from left')
+        # self.get_logger().info(f'Received {msg.range} from left')
         try:
             self.distance_left = min(msg.range, 0.4)
         except Exception as e:
@@ -55,7 +55,7 @@ class MirteTestController(Node):
         return
     
     def right_sensor_callback(self, msg: Range):
-        self.get_logger().info(f'Received {msg.range} from right')
+        # self.get_logger().info(f'Received {msg.range} from right')
         try:
             self.distance_right = min(msg.range, 0.4)
         except Exception as e:

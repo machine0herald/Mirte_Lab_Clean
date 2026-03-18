@@ -11,7 +11,9 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
     ],
-    install_requires=['setuptools', 'open3d'],
+    install_requires=['setuptools', 
+                        'open3d',
+                        'opencv-python'],
     zip_safe=True,
     maintainer='root',
     maintainer_email='matthewdelannoy527@gmail.com',
@@ -24,6 +26,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'vision_test = mirte_lc_vision.test_vision:main',
         ],
     },
 )

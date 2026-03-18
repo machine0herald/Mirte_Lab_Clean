@@ -21,7 +21,7 @@ setup(
     license='TODO: License declaration',
     extras_require={
         'test': [
-            'pytest',
+            'pytest'
         ],
     },
     entry_points={
