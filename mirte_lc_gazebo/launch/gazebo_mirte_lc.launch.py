@@ -42,7 +42,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             'gui': 'True',
-            'world': "src/mirte_lc/mirte_lc_gazebo/worlds/floor_with_cubes/floor_with_cubes.world"
+            'world': 'src/mirte_lc/mirte_lc_gazebo/worlds/floor_with_cubes/floor_with_cubes.world'
         }.items()
     )
 
@@ -92,7 +92,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             'use_sim_time': 'true',
-            'slam_params_file':os.path.join(
+            'slam_params_file': os.path.join(
                 mirte_lc_labclean_pkg,
                 'config',
                 'slam_tbx.yaml',
@@ -110,22 +110,6 @@ def generate_launch_description():
         executable=node_name,
         name='test_node',
         output='screen'
-    )
-
-    ###################
-    # Delayed startup #
-    ###################
-
-    # Start SLAM after TF is available
-    delayed_slam = TimerAction(
-        period=25.0,
-        actions=[slam_toolbox]
-    )
-
-    # Start your node after Gazebo + SLAM
-    delayed_executable = TimerAction(
-        period=35.0,
-        actions=[executable]
     )
 
     return LaunchDescription([
