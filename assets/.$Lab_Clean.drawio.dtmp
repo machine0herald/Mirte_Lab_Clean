@@ -52,7 +52,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="iPOiOlnem4SleTtNWDwd" name="Perception">
-    <mxGraphModel dx="1693" dy="510" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="1" shadow="0">
+    <mxGraphModel dx="1258" dy="247" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="1" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -149,22 +149,22 @@
         <mxCell id="OOYbH1gxyvvGrBiFLwV5-9" value="" style="group" vertex="1" connectable="0" parent="1">
           <mxGeometry x="-400" y="230" width="85" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="OOYbH1gxyvvGrBiFLwV5-10" value="" style="endArrow=classic;html=1;rounded=0;fillColor=#008a00;strokeColor=#00FF00;startSize=3;endSize=3;strokeWidth=2;" edge="1" parent="OOYbH1gxyvvGrBiFLwV5-9">
+        <mxCell id="OOYbH1gxyvvGrBiFLwV5-10" value="" style="endArrow=classic;html=1;rounded=0;fillColor=#008a00;strokeColor=#0078FF;startSize=3;endSize=3;strokeWidth=2;" edge="1" parent="OOYbH1gxyvvGrBiFLwV5-9">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="30" y="50" as="sourcePoint" />
             <mxPoint x="70" y="68" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="OOYbH1gxyvvGrBiFLwV5-11" value="" style="endArrow=classic;html=1;rounded=0;fillColor=#0050ef;strokeColor=#0078FF;startSize=3;endSize=3;strokeWidth=2;" edge="1" parent="OOYbH1gxyvvGrBiFLwV5-9">
+        <mxCell id="OOYbH1gxyvvGrBiFLwV5-11" value="" style="endArrow=classic;html=1;rounded=0;fillColor=#0050ef;strokeColor=#FF0000;startSize=3;endSize=3;strokeWidth=2;" edge="1" parent="OOYbH1gxyvvGrBiFLwV5-9">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="30" y="50" as="sourcePoint" />
             <mxPoint x="30" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="OOYbH1gxyvvGrBiFLwV5-12" value="" style="endArrow=classic;html=1;rounded=0;fillColor=#a20025;strokeColor=#FF0000;startSize=3;endSize=3;strokeWidth=2;" edge="1" parent="OOYbH1gxyvvGrBiFLwV5-9">
+        <mxCell id="OOYbH1gxyvvGrBiFLwV5-12" value="" style="endArrow=classic;html=1;rounded=0;fillColor=#a20025;strokeColor=#00FF00;startSize=3;endSize=3;strokeWidth=2;" edge="1" parent="OOYbH1gxyvvGrBiFLwV5-9">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="30" y="50" as="sourcePoint" />
-            <mxPoint x="1" y="70" as="targetPoint" />
+            <mxPoint x="-10" y="66" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="OOYbH1gxyvvGrBiFLwV5-15" value="&lt;span style=&quot;font-family: &amp;quot;Droid Sans Mono&amp;quot;, &amp;quot;monospace&amp;quot;, monospace; font-size: 14px; font-style: italic; white-space: pre;&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;$$\mathcal{F}_{g}$$&lt;/font&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">

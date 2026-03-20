@@ -1,3 +1,7 @@
+'''
+ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
+'''
+
 from launch import LaunchDescription
 from launch.actions import (
     IncludeLaunchDescription,
@@ -32,7 +36,6 @@ def generate_launch_description():
     #################
     # Gazebo launch #
     #################
-
     gazebo_launch = IncludeLaunchDescription(
         AnyLaunchDescriptionSource(
             os.path.join(
@@ -47,9 +50,9 @@ def generate_launch_description():
         }.items()
     )
 
-    ############################
-    # Mirte Moveit Demo Launch #
-    ############################
+    #######################
+    # Mirte Moveit Launch #
+    #######################
     moveit_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
@@ -85,36 +88,28 @@ def generate_launch_description():
     )
 
     ##################
-    # Rtabmap Launch #
+    # Octomap Server #
     ##################
-    rtabmap = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                rtabmap_pkg,
-                'launch',
-                'rtabmap.launch.py'
-            )
-        ),
-        launch_arguments={
-        'rgb_topic': '/camera/image_raw',
-        'depth_topic': '/camera/depth/image_raw',
-        'camera_info_topic': '/camera/depth/camera_info',
-        'odom_topic': '/odom',
-        'visual_odometry': 'false',
-        'use_sim_time': 'true',
-        }.items()
+    octomap = Node(
+        package='octomap_server',
+        executable='octomap_server_node',
+        name='octomap_server_node',
+        output='screen',
+        remappings=[
+            ('cloud_in', '/camera/points'),
+            ('use_sim_time', 'true')
+        ]
     )
 
     ##############
     # Executable #
     ##############
-    node_name = LaunchConfiguration('executable')
-
+    node_name = LaunchConfiguration('executable')                                                                                                                                                                                                                                                                                                                                                                                  
     executable = Node(
         package='mirte_lc_labclean',
         executable=node_name,
         name='test_node',
-        output='screen'
+        output='screen',
     )
 
     return LaunchDescription([
@@ -122,6 +117,6 @@ def generate_launch_description():
         gazebo_launch,
         TimerAction(period=10.0, actions=[moveit_launch]),
         TimerAction(period=27.0, actions=[slam_toolbox]),
-        TimerAction(period=27.0, actions=[rtabmap]),
-        TimerAction(period=29.0, actions=[executable]),
+        TimerAction(period=27.0, actions=[octomap]),
+        TimerAction(period=80.0, actions=[executable]),
     ])
