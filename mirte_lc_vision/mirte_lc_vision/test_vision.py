@@ -45,7 +45,6 @@ class MirteTestVision(Node):
             img_msg = Image()
             img_msg = self.bridge.cv2_to_imgmsg(overlayed, encoding='bgr8')
             self.img_pub.publish(img_msg)
-            self.img_pub.publish(img_msg)
             self.get_logger().info(f'Overlayed Image: {overlayed}')
 
         else:

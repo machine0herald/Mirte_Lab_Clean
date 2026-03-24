@@ -1,0 +1,11 @@
+twist_mux:
+  ros__parameters:
+    topics:
+      navigation:
+        topic: /cmd_vel_nav2
+        timeout: 0.5
+        priority: 200
+      mirte:
+        topic: /cmd_vel_out
+        timeout: 0.5
+        priority: 100
