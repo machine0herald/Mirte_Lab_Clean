@@ -21,11 +21,9 @@ import os
 def generate_launch_description():
 
     mirte_gazebo = get_package_share_directory('mirte_lc_gazebo')
-    slam_toolbox_pkg = get_package_share_directory('slam_toolbox')
-    rtabmap_pkg = get_package_share_directory('rtabmap_launch')
+    mirte_navigation = get_package_share_directory('mirte_navigation')
     mirte_lc_labclean_pkg = get_package_share_directory('mirte_lc_labclean')
-    nav2_pkg = get_package_share_directory('nav2_bringup')
-    twist_mux_yaml = os.path.join(mirte_lc_labclean_pkg, 'config', 's.yaml')
+    twist_mux_yaml = os.path.join(mirte_lc_labclean_pkg, 'config.yaml')
 
     ####################
     # Launch Arguments #
@@ -75,50 +73,41 @@ def generate_launch_description():
     slam_toolbox = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                slam_toolbox_pkg,
+                mirte_navigation,
                 'launch',
-                'online_async_launch.py'
+                'minimal_slam_launch.py'
             )
         ),
         launch_arguments={
             'use_sim_time': 'true',
-            'slam_params_file': os.path.join(
-                mirte_lc_labclean_pkg,
-                'config',
-                'slam_tbx.yaml',
-            )
         }.items()
     )
-
 
     ########
     # Nav2 #
     ########
     nav2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(nav2_pkg, 'launch', 'navigation_launch.py')
+            os.path.join(
+                mirte_navigation,
+                'launch',
+                'minimal_navigation_launch.py')
         ),
         launch_arguments={
             'use_sim_time': 'true',
-            'params_file': os.path.join(
-                mirte_lc_labclean_pkg,
-                'config',
-                'nav2.yaml'
-            )
         }.items()
     )
-    
 
     ##############
     # Executable #
     ##############
-    # node_name = LaunchConfiguration('executable')                                                                                                                                                                                                                                                                                                                                                                                  
-    # executable = Node(
-    #     package='mirte_lc_labclean',
-    #     executable=node_name,
-    #     name='test_node',
-    #     output='screen',
-    # )
+    node_name = LaunchConfiguration('executable')                                                                                                                                                                                                                                                                                                                                                                                  
+    executable = Node(
+        package='mirte_lc_labclean',
+        executable=node_name,
+        name='test_node',
+        output='screen',
+    )
 
     ##################
     # Twist Mux Node #
@@ -150,7 +139,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         SetParameter(name="use_sim_time", value='true'),
-        # exe_arg,
+        exe_arg,
         gazebo_launch,
         TimerAction(period=6.0, actions=[moveit_launch]),
         TimerAction(period=10.0, actions=[slam_toolbox]),
