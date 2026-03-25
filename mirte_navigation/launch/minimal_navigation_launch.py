@@ -8,9 +8,6 @@ from launch.actions import LogInfo
 
 
 def generate_launch_description():
-    params_file = LaunchConfiguration('params_file')
-
-    SetParameter(name='use_sim_time', value='true'),
 
     ###############
     # Launch Args #
@@ -22,7 +19,8 @@ def generate_launch_description():
         ),
     )
 
-    use_sim_time = DeclareLaunchArgument(
+    params_file = LaunchConfiguration('params_file')
+    sim_time_arg = DeclareLaunchArgument(
         'use_sim_time',
         default_value='false',
     )
@@ -147,6 +145,7 @@ def generate_launch_description():
 
     return LaunchDescription(
             [
+                sim_time_arg,
                 LogInfo(
                     msg='\033[1mNote: mirte_navigation requires proper PID gains, \
                 especially an integrator term, \
@@ -155,7 +154,6 @@ def generate_launch_description():
                 SetParameter('use_sim_time',
                              value=LaunchConfiguration('use_sim_time')),
                 params_arg,
-                use_sim_time,
                 tf2_ros_link_fp,
                 tf2_ros_link_frame,
                 topic_tools_vel,

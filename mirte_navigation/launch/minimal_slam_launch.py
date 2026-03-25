@@ -2,11 +2,17 @@
 
 from launch import LaunchDescription
 from launch_ros.actions import Node, SetParameter
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
+from launch.actions import DeclareLaunchArgument
 
 
 def generate_launch_description():
+
+    ###############
+    # Launch Args #
+    ###############
+    sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='false')
 
     ################
     # Slam Toolbox #
@@ -51,7 +57,9 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            SetParameter('use_sim_time', value='true'),
+            sim_time_arg,
+            SetParameter('use_sim_time', 
+                         value=LaunchConfiguration('use_sim_time')),
             slam_toolbox,
             tf2_ros_link_fp,
             tf2_ros_link_frame,
