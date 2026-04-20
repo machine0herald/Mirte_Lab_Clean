@@ -57,9 +57,9 @@ def generate_launch_description():
     moveit_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory('mirte_moveit_config'),
+                get_package_share_directory('mirte_lc_moveit'),
                 'launch',
-                'mirte_moveit.launch.py'
+                'mirte_lc_moveit.launch.py'
             )
         ),
         launch_arguments={
