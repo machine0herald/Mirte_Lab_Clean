@@ -23,7 +23,7 @@ def generate_launch_description():
     mirte_gazebo = get_package_share_directory('mirte_lc_gazebo')
     mirte_navigation = get_package_share_directory('mirte_navigation')
     mirte_lc_labclean_pkg = get_package_share_directory('mirte_lc_labclean')
-    twist_mux_yaml = os.path.join(mirte_lc_labclean_pkg, 'config.yaml')
+    twist_mux_yaml = os.path.join(mirte_lc_labclean_pkg, 'config', '.yaml')
 
     ####################
     # Launch Arguments #
@@ -110,17 +110,6 @@ def generate_launch_description():
     )
 
     ##################
-    # Twist Mux Node #
-    ##################
-    twist_mux = Node(
-        package= 'twis_mux',
-        executable= 'twist_mux',
-        parameters= [twist_mux_yaml, 
-                    {'use_sim_time': True}],
-        remappings= [('cmd_vel_out', 'cmd_vel')],
-    )
-
-    ##################
     # Octomap Server #
     ##################
     octomap = Node(
@@ -145,6 +134,6 @@ def generate_launch_description():
         TimerAction(period=10.0, actions=[slam_toolbox]),
         # TimerAction(period=27.0, actions=[octomap]),
         TimerAction(period=20.0, actions=[nav2]), 
-        TimerAction(period=25.0, actions=[twist_mux]),   
+        # TimerAction(period=25.0, actions=[twist_mux]),   
         # TimerAction(period=80.0, actions=[executable]),
     ])

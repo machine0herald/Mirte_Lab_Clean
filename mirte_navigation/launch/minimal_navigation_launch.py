@@ -5,6 +5,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import PathJoinSubstitution
 from launch.actions import LogInfo
+from launch.conditions import IfCondition, UnlessCondition
 
 
 def generate_launch_description():
@@ -19,12 +20,30 @@ def generate_launch_description():
         ),
     )
 
-    params_file = LaunchConfiguration('params_file')
+    use_localization_arg = DeclareLaunchArgument(
+        'use_localization',
+        default_value='false'
+    )
+
+    map_yaml_arg = DeclareLaunchArgument(
+        'map_yaml',
+        default_value=PathJoinSubstitution(
+            [FindPackageShare('mirte_navigation'), 'maps', 'labclean.yaml']
+        )
+    )
+
     sim_time_arg = DeclareLaunchArgument(
         'use_sim_time',
         default_value='false',
     )
 
+    autostart_arg = DeclareLaunchArgument(
+        'autostart',
+        default_value='false'
+    )
+
+    params_file = LaunchConfiguration('params_file')
+    
     ##################################
     # TF: base_link → base_footprint #
     ##################################
@@ -73,7 +92,10 @@ def generate_launch_description():
         executable='map_server',
         name='map_server',
         output='screen',
-        parameters=[params_file],
+        parameters=[
+            {'yaml_filename': LaunchConfiguration('map_yaml')},
+        ],
+        condition=IfCondition(LaunchConfiguration('use_localization'))
     )
 
     ########
@@ -85,6 +107,7 @@ def generate_launch_description():
         name='amcl',
         output='screen',
         parameters=[params_file],
+        condition=IfCondition(LaunchConfiguration('use_localization'))
     )
 
     ##################
@@ -131,7 +154,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {
-                'autostart': True,
+                'autostart': LaunchConfiguration('autostart'),
                 'node_names': [
                     'map_server',
                     'amcl',
@@ -141,11 +164,30 @@ def generate_launch_description():
                 ],
             }
         ],
+        condition=IfCondition(LaunchConfiguration('use_localization'))
     )
+
+    nav2_lifecycle_manager = Node(
+        package='nav2_lifecycle_manager',
+        executable='lifecycle_manager',
+        name='lifecycle_manager_navigation',
+        output='screen',
+        parameters=[
+            {
+                'autostart': LaunchConfiguration('autostart'),
+                'node_names': [
+                    'planner_server',
+                    'controller_server',
+                    'bt_navigator',
+                ],
+            }
+        ],
+        condition=UnlessCondition(LaunchConfiguration('use_localization'))
+    )
+
 
     return LaunchDescription(
             [
-                sim_time_arg,
                 LogInfo(
                     msg='\033[1mNote: mirte_navigation requires proper PID gains, \
                 especially an integrator term, \
@@ -153,7 +195,11 @@ def generate_launch_description():
                 ),
                 SetParameter('use_sim_time',
                              value=LaunchConfiguration('use_sim_time')),
+                use_localization_arg,
+                sim_time_arg,
                 params_arg,
+                map_yaml_arg,
+                autostart_arg,
                 tf2_ros_link_fp,
                 tf2_ros_link_frame,
                 topic_tools_vel,
