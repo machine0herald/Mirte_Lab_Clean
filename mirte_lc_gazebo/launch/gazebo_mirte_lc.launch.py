@@ -16,6 +16,8 @@ from launch.launch_description_sources import (
 from launch_ros.actions import Node, SetParameter
 from ament_index_python.packages import get_package_share_directory
 import os
+from launch.substitutions import PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
@@ -132,8 +134,10 @@ def generate_launch_description():
             ('cloud_in', '/camera/points'),
         ],
         parameters=[
-            # {'use_sim_time': True},
-            {'resolution': 0.05}
+            {'use_sim_time': True},
+            { 'occupancy_max_z': 0.5 },
+            { 'point_cloud_max_z': 0.5 },
+            {'resolution': 0.05},
         ]
     )
 
@@ -143,7 +147,7 @@ def generate_launch_description():
         gazebo_launch,
         TimerAction(period=10.0, actions=[moveit_launch]),
         TimerAction(period=20.0, actions=[slam_toolbox]),
-        # TimerAction(period=27.0, actions=[octomap]),
+        TimerAction(period=27.0, actions=[octomap]),
         TimerAction(period=30.0, actions=[nav2]), 
         # TimerAction(period=25.0, actions=[twist_mux]),   
         # TimerAction(period=80.0, actions=[executable]),

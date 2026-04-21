@@ -1,0 +1,76 @@
+octomap_server:
+  ros__parameters:
+    base_frame_id: "base_link"
+    frame_id: "map"
+
+    resolution: 0.05
+    max_depth: 16
+
+    use_sim_time: true
+    latch: true
+    compress_map: true
+    incremental_2D_projection: false
+
+    # Height limits for occupancy
+    occupancy_min_z: -2.0
+    occupancy_max_z: 0.5
+
+    # Minimum map size
+    min_x_size: 0.0
+    min_y_size: 0.0
+
+    # Point cloud filtering
+    point_cloud_min_x: -10.0
+    point_cloud_max_x: 2.0
+    point_cloud_min_y: -10.0
+    point_cloud_max_y: 2.0
+    point_cloud_min_z: -2.0
+    point_cloud_max_z: 0.1
+
+    # Ground filtering
+    filter_ground_plane: false
+    ground_filter:
+      angle: 0.15
+      distance: 0.04
+      plane_distance: 0.07
+
+    filter_speckles: true
+
+    # Sensor model
+    sensor_model:
+      hit: 0.7
+      miss: 0.4
+      min: 0.12
+      max: 0.97
+      max_range: 10.0
+
+    # Color / visualization
+    colored_map: true
+    color_factor: 0.8
+
+    color:
+      r: 0.0
+      g: 0.0
+      b: 1.0
+      a: 1.0
+
+    color_free:
+      r: 0.0
+      g: 1.0
+      b: 0.0
+      a: 1.0
+
+    publish_free_space: false
+    use_height_map: false
+
+    # File I/O
+    # octomap_path: ""
+
+    # # QoS overrides (usually leave default unless needed)
+    # qos_overrides:
+    #   /parameter_events:
+    #     publisher:
+    #       depth: 1000
+    #       durability: "volatile"
+    #       history: "keep_last"
+    #       reliability: "reliable"
