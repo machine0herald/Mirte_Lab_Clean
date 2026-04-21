@@ -11,7 +11,7 @@ def generate_launch_description():
     params_file = os.path.join(
         get_package_share_directory('mirte_lc_labclean'),
         'config',
-        'nav2.yaml'
+        'nav3.yaml'
     )
 
     use_sim_time = LaunchConfiguration('use_sim_time')
