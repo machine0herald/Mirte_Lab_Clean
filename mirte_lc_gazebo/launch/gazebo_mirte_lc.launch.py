@@ -23,7 +23,7 @@ def generate_launch_description():
     mirte_gazebo = get_package_share_directory('mirte_lc_gazebo')
     mirte_navigation = get_package_share_directory('mirte_navigation')
     mirte_lc_labclean_pkg = get_package_share_directory('mirte_lc_labclean')
-    twist_mux_yaml = os.path.join(mirte_lc_labclean_pkg, 'config.yaml')
+    twist_mux_yaml = os.path.join(mirte_lc_labclean_pkg, 'config', 'twist_mux.yaml')
 
     ####################
     # Launch Arguments #
@@ -57,9 +57,9 @@ def generate_launch_description():
     moveit_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory('mirte_moveit_config'),
+                get_package_share_directory('mirte_lc_moveit'),
                 'launch',
-                'mirte_moveit.launch.py'
+                'mirte_lc_moveit.launch.py'
             )
         ),
         launch_arguments={
@@ -113,7 +113,7 @@ def generate_launch_description():
     # Twist Mux Node #
     ##################
     twist_mux = Node(
-        package= 'twis_mux',
+        package= 'twist_mux',
         executable= 'twist_mux',
         parameters= [twist_mux_yaml, 
                     {'use_sim_time': True}],

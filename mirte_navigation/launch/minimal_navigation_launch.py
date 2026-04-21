@@ -1,170 +1,101 @@
 from launch import LaunchDescription
-from launch_ros.actions import Node, SetParameter
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, LogInfo
 from launch.substitutions import LaunchConfiguration
-from launch_ros.substitutions import FindPackageShare
-from launch.substitutions import PathJoinSubstitution
-from launch.actions import LogInfo
+from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
+import os
 
 
 def generate_launch_description():
-    params_file = LaunchConfiguration('params_file')
 
-    SetParameter(name='use_sim_time', value='true'),
-
-    ###############
-    # Launch Args #
-    ###############
-    params_arg = DeclareLaunchArgument(
-        'params_file',
-        default_value=PathJoinSubstitution(
-            [FindPackageShare('mirte_navigation'), 'params', 'minimal_nav2_params.yaml']
-        ),
+    params_file = os.path.join(
+        get_package_share_directory('mirte_lc_labclean'),
+        'config',
+        'nav2.yaml'
     )
 
-    use_sim_time = DeclareLaunchArgument(
+    use_sim_time = LaunchConfiguration('use_sim_time')
+
+    use_sim_time_arg = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='false',
+        default_value='false'
     )
 
-    ##################################
-    # TF: base_link → base_footprint #
-    ##################################
-    tf2_ros_link_fp = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'base_footprint'],
-        output='screen',
-    )
-
-    ##############################
-    # TF: base_link → base_frame #
-    ##############################
-    tf2_ros_link_frame = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'base_frame'],
-        output='screen',
-    )
-
-    ###################################################
-    # Relay /cmd_vel → /mirte_base_controller/cmd_vel #
-    ###################################################
+    # -------------------
+    # Topic relays
+    # -------------------
     topic_tools_vel = Node(
         package='topic_tools',
         executable='relay',
         arguments=['/cmd_vel', '/mirte_base_controller/cmd_vel'],
         output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
     )
 
-    #############################################
-    # Relay /mirte_base_controller/odom → /odom #
-    #############################################
     topic_tools_odom = Node(
         package='topic_tools',
         executable='relay',
         arguments=['/mirte_base_controller/odom', '/odom'],
         output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
     )
 
-    ##############
-    # Map server #
-    ##############
-    nav2_map_server = Node(
-        package='nav2_map_server',
-        executable='map_server',
-        name='map_server',
-        output='screen',
-        parameters=[params_file],
-    )
-
-    ########
-    # AMCL #
-    ########
-    nav2_amcl = Node(
-        package='nav2_amcl',
-        executable='amcl',
-        name='amcl',
-        output='screen',
-        parameters=[params_file],
-    )
-
-    ##################
-    # Planner server #
-    ##################
+    # -------------------
+    # Nav2 servers
+    # -------------------
     nav2_planner = Node(
         package='nav2_planner',
         executable='planner_server',
         name='planner_server',
         output='screen',
-        parameters=[params_file],
+        parameters=[params_file, {'use_sim_time': use_sim_time}],
     )
 
-    #####################
-    # Controller server #
-    #####################
     nav2_controller = Node(
         package='nav2_controller',
         executable='controller_server',
         name='controller_server',
         output='screen',
-        parameters=[params_file],
+        parameters=[params_file, {'use_sim_time': use_sim_time}],
     )
 
-    ################
-    # BT Navigator #
-    ################
     nav2_bt_navigator = Node(
         package='nav2_bt_navigator',
         executable='bt_navigator',
         name='bt_navigator',
         output='screen',
-        parameters=[params_file],
-        arguments=['--ros-args', '--log-level', 'bt_navigator:=debug'],
+        parameters=[params_file, {'use_sim_time': use_sim_time}],
     )
 
-    #####################
-    # Lifecycle manager #
-    #####################
+    # -------------------
+    # Lifecycle manager
+    # -------------------
     nav2_lifecycle_manager = Node(
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
         name='lifecycle_manager_navigation',
         output='screen',
-        parameters=[
-            {
-                'autostart': True,
-                'node_names': [
-                    'map_server',
-                    'amcl',
-                    'planner_server',
-                    'controller_server',
-                    'bt_navigator',
-                ],
-            }
-        ],
+        parameters=[{
+            'use_sim_time': use_sim_time,
+            'autostart': True,
+            'node_names': [
+                'planner_server',
+                'controller_server',
+                'bt_navigator',
+            ],
+        }],
     )
 
-    return LaunchDescription(
-            [
-                LogInfo(
-                    msg='\033[1mNote: mirte_navigation requires proper PID gains, \
-                especially an integrator term, \
-                in /opt/ros/humble/share/mirte_base_control/config/mirte_base_control.yaml\033[0m'
-                ),
-                SetParameter('use_sim_time',
-                             value=LaunchConfiguration('use_sim_time')),
-                params_arg,
-                use_sim_time,
-                tf2_ros_link_fp,
-                tf2_ros_link_frame,
-                topic_tools_vel,
-                topic_tools_odom,
-                nav2_map_server,
-                nav2_amcl,
-                nav2_planner,
-                nav2_controller,
-                nav2_bt_navigator,
-                nav2_lifecycle_manager,
-            ]
-        )
+    return LaunchDescription([
+        LogInfo(msg='Starting Mirte Nav2 stack'),
+
+        use_sim_time_arg,
+
+        topic_tools_vel,
+        topic_tools_odom,
+
+        nav2_planner,
+        nav2_controller,
+        nav2_bt_navigator,
+        nav2_lifecycle_manager,
+    ])
