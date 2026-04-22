@@ -59,7 +59,7 @@ def generate_launch_description():
     moveit_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory('mirte_lc_moveit'),
+                get_package_share_directory('mirte_lc_moveit_cpp'),
                 'launch',
                 'mirte_lc_moveit.launch.py'
             )
@@ -138,6 +138,7 @@ def generate_launch_description():
             { 'occupancy_max_z': 0.5 },
             { 'point_cloud_max_z': 0.5 },
             {'resolution': 0.05},
+            {'filter_ground_plane': True},
         ]
     )
 
