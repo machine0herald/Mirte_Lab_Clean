@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'labclean_navigator = mirte_lc_nav2.navigation:main',
         ],
     },
 )

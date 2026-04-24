@@ -25,17 +25,17 @@ endif()
 
 install(
   DIRECTORY include/
-  DESTINATION include
+  DESTINATION share/mirte_lc_moveit_cpp/include
 )
 
 install(
   DIRECTORY src/
-  DESTINATION src
+  DESTINATION share/mirte_lc_moveit_cpp/src
 )
 
 install(
   DIRECTORY launch/
-  DESTINATION launch
+  DESTINATION share/mirte_lc_moveit_cpp/launch
 )
 
 ament_package()
