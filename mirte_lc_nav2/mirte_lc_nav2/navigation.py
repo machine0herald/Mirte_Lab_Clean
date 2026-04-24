@@ -12,6 +12,9 @@ from rclpy.lifecycle import State
 from rclpy.lifecycle import TransitionCallbackReturn
 from rclpy.action import ActionClient
 
+from lifecycle_msgs.srv import ChangeState
+from lifecycle_msgs.msg import Transition
+
 from mirte_lc_nav2.navigators import get_path_planner
 
 import numpy as np
@@ -19,6 +22,8 @@ import math
 
 class LabCleanNavigator(Node):
     """Our lifecycle talker node."""
+    # TODO: Read parameters before every configure, 
+    #       so it is possible to use different planners upon lifecycle restarts 
 
     def __init__(self,
                  node_name: str,
@@ -106,6 +111,7 @@ class LabCleanNavigator(Node):
         if self._verbose:
             self.get_logger().info(f'Path execution result: {result}')
             self.get_logger().info('Path execution complete')
+            self.trigger_shutdown()
     
     def costmap_callback(self, msg):
         if self.map is None:
@@ -213,6 +219,19 @@ class LabCleanNavigator(Node):
 
         self.get_logger().info('on_shutdown() is called.')
         return TransitionCallbackReturn.SUCCESS
+    
+    def trigger_shutdown(self):
+    client = self.create_client(ChangeState, f'/{self.get_name()}/change_state')
+
+    if not client.wait_for_service(timeout_sec=2.0):
+        self.get_logger().error('Lifecycle change_state service not available')
+        return
+
+    req = ChangeState.Request()
+    req.transition.id = Transition.TRANSITION_SHUTDOWN
+
+    future = client.call_async(req)
+    future.add_done_callback(lambda f: self.get_logger().info('Shutdown transition requested'))
 
 def main() -> None:
     try:
