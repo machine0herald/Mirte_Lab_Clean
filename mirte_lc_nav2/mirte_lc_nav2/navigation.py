@@ -21,14 +21,15 @@ import numpy as np
 import math
 
 class LabCleanNavigator(Node):
-    """Our lifecycle talker node."""
-    # TODO: Read parameters before every configure, 
-    #       so it is possible to use different planners upon lifecycle restarts 
-
+    """
+    Our lifecycle talker node.\\
+    TODO: \\
+        Read parameters before every configure, 
+        so it is possible to use different planners upon lifecycle restarts 
+    """
     def __init__(self,
                  node_name: str,
                  ) -> None:
-        """Construct the node."""
         super().__init__(node_name)
 
         # Set Planner Parameters
@@ -69,6 +70,7 @@ class LabCleanNavigator(Node):
 
                 pose_stamped.pose.orientation.z = math.sin(yaw / 2.0)
                 pose_stamped.pose.orientation.w = math.cos(yaw / 2.0)
+
                 goal.poses.append(pose_stamped)
 
             if self._verbose:
@@ -115,11 +117,13 @@ class LabCleanNavigator(Node):
     
     def costmap_callback(self, msg):
         if self.map is None:
-            self.map = msg.data
+            width = msg.width
+            height = msg.height
+            self.map = np.array(msg.data, dtype=np.int16).reshape((height, width))
             self.path_publisher()
 
     def on_configure(self, state: State) -> TransitionCallbackReturn:
-        """
+        '''
         Configure the node, after a configuring transition is requested.
 
         on_configure callback is being called when the lifecycle node
@@ -130,9 +134,9 @@ class LabCleanNavigator(Node):
             TransitionCallbackReturn.SUCCESS transitions to "inactive".
             TransitionCallbackReturn.FAILURE transitions to "unconfigured".
             TransitionCallbackReturn.ERROR or any uncaught exceptions to "errorprocessing"
-        """
+        '''
         try:
-            self.planner = get_path_planner(self._planner_name.value)
+            self.planner = get_path_planner(self._planner_name.value)(self)
             self.get_logger().info('on_configure() is called.')
 
             # Configure Navigators
@@ -179,24 +183,33 @@ class LabCleanNavigator(Node):
         return super().on_deactivate(state)
 
     def on_cleanup(self, state: State) -> TransitionCallbackReturn:
-        """
-        Cleanup the node, after a cleaning-up transition is requested.
-
-        on_cleanup callback is being called when the lifecycle node
-        enters the "cleaning up" state.
-
-        :return: The state machine either invokes a transition to the "unconfigured" state or stays
-            in "inactive" depending on the return value.
-            TransitionCallbackReturn.SUCCESS transitions to "unconfigured".
-            TransitionCallbackReturn.FAILURE transitions to "inactive".
-            TransitionCallbackReturn.ERROR or any uncaught exceptions to "errorprocessing"
-        """
-        if self._timer is not None:
-            self.destroy_timer(self._timer)
-        if self._pub is not None:
-            self.destroy_publisher(self._pub)
-
         self.get_logger().info('on_cleanup() is called.')
+
+        # Destroy subscription
+        if hasattr(self, 'costmap_sub') and self.costmap_sub is not None:
+            self.destroy_subscription(self.costmap_sub)
+            self.costmap_sub = None
+
+        # Destroy action client
+        if hasattr(self, '_path_publisher') and self._path_publisher is not None:
+            self._path_publisher.destroy()
+            self._path_publisher = None
+
+        # Destroy goal publisher (reactive mode)
+        if hasattr(self, '_goal_publisher') and self._goal_publisher is not None:
+            self.destroy_publisher(self._goal_publisher)
+            self._goal_publisher = None
+
+        # Destroy timer (reactive mode)
+        if hasattr(self, 'goal_timer') and self.goal_timer is not None:
+            self.destroy_timer(self.goal_timer)
+            self.goal_timer = None
+
+        # Reset state
+        self.map = None
+        self.path = None
+        self.previous_path = None
+
         return TransitionCallbackReturn.SUCCESS
 
     def on_shutdown(self, state: State) -> TransitionCallbackReturn:
@@ -221,17 +234,17 @@ class LabCleanNavigator(Node):
         return TransitionCallbackReturn.SUCCESS
     
     def trigger_shutdown(self):
-    client = self.create_client(ChangeState, f'/{self.get_name()}/change_state')
+        client = self.create_client(ChangeState, f'/{self.get_name()}/change_state')
 
-    if not client.wait_for_service(timeout_sec=2.0):
-        self.get_logger().error('Lifecycle change_state service not available')
-        return
+        if not client.wait_for_service(timeout_sec=2.0):
+            self.get_logger().error('Lifecycle change_state service not available')
+            return
 
-    req = ChangeState.Request()
-    req.transition.id = Transition.TRANSITION_SHUTDOWN
+        req = ChangeState.Request()
+        req.transition.id = Transition.TRANSITION_SHUTDOWN
 
-    future = client.call_async(req)
-    future.add_done_callback(lambda f: self.get_logger().info('Shutdown transition requested'))
+        future = client.call_async(req)
+        future.add_done_callback(lambda f: self.get_logger().info('Shutdown transition requested'))
 
 def main() -> None:
     try:

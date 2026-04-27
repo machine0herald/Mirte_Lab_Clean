@@ -3,3 +3,7 @@ repositories:
     type: git
     url: https://github.com/mirte-robot/mirte-ros-packages.git
     version: develop
+  Fields2Cover:
+    type: git
+    url: https://github.com/Fields2Cover/Fields2Cover.git
+    version: main

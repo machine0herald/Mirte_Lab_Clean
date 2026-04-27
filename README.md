@@ -29,11 +29,16 @@
 
 4. update mirte_ros_packages submodule
     ```sh
-    cd src/mirte-ros-packages && git submodule update --init --recursive
+    cd src/mirte-ros-packages && git submodule update --init --recursive && cd ../..
     ```
 
 5. Install mirte ros packages' rosdeps and build
     ```sh
     rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
     colcon build --symlink-install
+    ```
+
+6. Run install script for Fields2Cover
+    ```sh
+    sudo install_Fields.sh
     ```

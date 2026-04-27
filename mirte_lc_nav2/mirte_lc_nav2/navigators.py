@@ -9,6 +9,9 @@
 '''
 
 import numpy as np
+import cv2
+import fields2cover as f2c
+
 from mirte_lc_nav2.navigator_types import SystematicNavigator, ReactiveNavigator
 
 def get_path_planner(name):
@@ -18,13 +21,13 @@ def get_path_planner(name):
         "straightline": StraightLinePath,
     }
     if name in path_planners.keys():
-        return path_planners[name]()
+        return path_planners[name]
     else:
         raise ValueError(f"Unknown path planner: {name}")
 
 class StraightLinePath(SystematicNavigator):
-    def __init__(self, resolution=0.1, length=2.0):
-        super().__init__(resolution)
+    def __init__(self,node, resolution=0.1, length=2.0):
+        super().__init__(node, resolution)
         self.name = "StraightLinePath"
         self.length = length  # meters
         self.start_pose = (0,0,0)
@@ -41,8 +44,8 @@ class StraightLinePath(SystematicNavigator):
         path = []
         for i in range(n_points):
             d = i * self.resolution
-            x = x0 + d * np.cos(yaw)
-            y = y0 + d * np.sin(yaw)
+            x = x0 + d
+            y = y0 + d
 
             # store as (x, y, yaw)
             path.append([x, y, yaw])
@@ -50,26 +53,42 @@ class StraightLinePath(SystematicNavigator):
         self.path = np.array(path)
 
 class BousPath(SystematicNavigator):
-    def __init__(self, resolution=0.1):
+    def __init__(self, node, resolution=0.1):
         self.name = "BousPath"
-        super().__init__(resolution)
+        super().__init__(node, resolution)
 
-    def partition_map(self):
-        if self.map is None:
-            return None
-        # Example partitioning logic (this can be replaced with actual partitioning)
-        self.partitions = np.array_split(self.map, 4)  # Split the map into 4 partitions
-
-    def bous_path(self):
-        # Generate back and forth path within each partition
-        for partition in self.partitions:
-            pass
+    def bcd(self):
+        decomposer = f2c.DECOMP_Boustrophedon()
+        self.cells = decomposer.decompose(self.field)
+        self.publish_decomposition()
         
-        # Connect the paths between partitions
-        self.path = np.concatenate(self.partitions)
+    def bous_path(self, robot_width = 0.3):
+        if self.field is None:
+            return None
+
+        robot_width = 0.3  # adjust
+
+        # 1. Swath generation
+        swath_gen = f2c.SG_BruteForce()
+        swaths = swath_gen.generateSwaths(self.cells, robot_width)
+
+        # 2. Path planning
+        path_planner = f2c.PP_PathPlanning()
+        dubins_cc = f2c.PP_DubinsCurvesCC()
+        path = path_planner.planPath(swaths, dubins_cc)
+
+        # 3. Convert to numpy path
+        coords = []
+        for state in path.states:
+            x = state.point.getX()
+            y = state.point.getY()
+            yaw = state.angle
+            coords.append([x, y, yaw])
+
+        self.path = np.array(coords)
     
     def generate_path(self):
-        self.partition_map()
+        self.bcd()
         self.bous_path()
 
 class SpiralPath(SystematicNavigator):
@@ -79,16 +98,5 @@ class SpiralPath(SystematicNavigator):
         self.center = None
         self.radius = None
     
-    def update_spiral_parameters(self, center, radius):
-        self.center = center
-        self.radius = radius
-    
     def generate_path(self):
-        if self.center is None or self.radius is None:
-            return None
-        angles = np.linspace(0, 4 * np.pi, num_points)
-        self.path = np.array([
-            [self.center[0] + self.radius * np.cos(angle), 
-             self.center[1] + self.radius * np.sin(angle)] 
-            for angle in angles
-        ])
+        pass
