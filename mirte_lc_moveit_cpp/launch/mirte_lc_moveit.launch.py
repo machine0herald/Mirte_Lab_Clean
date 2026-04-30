@@ -1,12 +1,15 @@
 import os
+import yaml
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, TimerAction
 from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition, UnlessCondition
 from launch_ros.actions import Node, SetParameter
 from launch.actions import ExecuteProcess
 from ament_index_python.packages import get_package_share_directory
 from moveit_configs_utils import MoveItConfigsBuilder
+from launch.substitutions import Command
+from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
@@ -22,16 +25,15 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration("use_sim_time")
 
     moveit_config = (
-        MoveItConfigsBuilder("mirte")
-        .robot_description(
-            file_path="config/mirte_master.urdf.xacro",
-        )
-        .robot_description_semantic(file_path="config/mirte_master.srdf")
-        .trajectory_execution(file_path="config/moveit_controllers.yaml")
-        .planning_pipelines(
-            pipelines=["ompl", "chomp", "pilz_industrial_motion_planner"]
-        )
-        .to_moveit_configs()
+    MoveItConfigsBuilder("mirte", package_name="mirte_moveit_config")
+    .robot_description(file_path="config/mirte_master.urdf.xacro")
+    .robot_description_semantic(file_path="config/mirte_master.srdf")
+    .trajectory_execution(file_path="config/moveit_controllers.yaml")
+    .planning_pipelines(
+          pipelines=["ompl", "chomp", "pilz_industrial_motion_planner"]
+      )
+    .to_moveit_configs()
+
     )
 
     # Start the actual move_group node/action server
@@ -39,7 +41,11 @@ def generate_launch_description():
         package="moveit_ros_move_group",
         executable="move_group",
         output="screen",
-        parameters=[moveit_config.to_dict()],
+        parameters=[
+            moveit_config.to_dict(),
+            {"use_sim_time": use_sim_time},
+
+        ],
         arguments=["--ros-args", "--log-level", "info"],
     )
 
@@ -62,11 +68,28 @@ def generate_launch_description():
         ],
     )
 
+    test_ik_node = Node(
+        package='mirte_lc_moveit_cpp',
+        executable='test_ik',
+        name='moveit_node',
+        output='screen',
+        parameters=[
+        moveit_config.robot_description,
+        moveit_config.robot_description_semantic,
+        moveit_config.planning_pipelines,
+        moveit_config.robot_description_kinematics,
+        ],
+    )
+
     return LaunchDescription(
         [
             use_sim_time_arg,
             SetParameter(name="use_sim_time", value=use_sim_time),
-            rviz_node,
             move_group_node,
+            TimerAction(period = 5.0, actions = [rviz_node]),
+            TimerAction(period = 15.0, actions = [test_ik_node]),
+            # TimerAction(period = 20.0, actions = [custom_test_node]),
+            # TimerAction(period = 10.0, actions = [moveit_test_node]),
+            # TimerAction(period = 20.0, actions = [robot_state_node]),
         ]
     )
