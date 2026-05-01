@@ -1,3 +1,8 @@
+'''
+ros2 run mirte_lc_nav2 labclean_navigator
+ros2 lifecycle set labclean_navigator configure
+'''
+
 from typing import Optional
 from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Path, OccupancyGrid, Goals
@@ -33,7 +38,7 @@ class LabCleanNavigator(Node):
         super().__init__(node_name)
 
         # Set Planner Parameters
-        self._planner_name = self.declare_parameter('planner_type', 'straightline')
+        self._planner_name = self.declare_parameter('planner_type', 'bous')
         self._verbose = self.declare_parameter('verbose', True)
 
         # ROS2 Interfaces
@@ -41,55 +46,43 @@ class LabCleanNavigator(Node):
         self._path_publisher = None
         self.costmap_sub = None
         self.path = None
-        self.previous_path = None
         self.map = None
+        self.counter = True
 
     def path_publisher(self) -> None:
         '''
             Publish a new path message when enabled.
         '''
-        if self.map is None:
-            return
+        if self.counter:
+            self.planner.update_map(self.map)
 
-        self.path = self.planner.update_map(self.map)
+        self.path = self.planner.nav_path
+
+        if self.path is None:
+            return  # nothing to send yet
+            
+        self.get_logger().info('New path generated, updating waypoints.')
+
         goal = NavigateThroughPoses.Goal()
-        goal.poses = []
+        goal.poses = self.path.poses
+        for pose in goal.poses:
+            pose.header.frame_id = "map" 
 
-        # Only publish if there is no previous path or if this path isnt the same as the previous one.
-        if self.previous_path is None or not np.array_equal(self.path, self.previous_path):
-            self.get_logger().info('New path generated, updating waypoints.')
+        if self._verbose:
+            self.get_logger().info(f'Path publisher is active. Sending path goal request: [{goal}]')
 
-            for pose in self.path:
-                pose_stamped = PoseStamped()
-                pose_stamped.header.stamp = self.get_clock().now().to_msg()
-                pose_stamped.header.frame_id = "map"
-                pose_stamped.pose.position.x = pose[0]
-                pose_stamped.pose.position.y = pose[1]
-                pose_stamped.pose.position.z = 0.0
-                yaw = pose[2]
+        self._path_publisher.wait_for_server()
 
-                pose_stamped.pose.orientation.z = math.sin(yaw / 2.0)
-                pose_stamped.pose.orientation.w = math.cos(yaw / 2.0)
+        # Cancel if a previous goal is still executing
+        if hasattr(self, "goal_handle") and self.goal_handle is not None:
+            self.goal_handle.cancel_goal_async()
 
-                goal.poses.append(pose_stamped)
+        self._send_goal_future = self._path_publisher.send_goal_async(
+            goal,
+            feedback_callback=self.feedback_callback
+        )
 
-            if self._verbose:
-                self.get_logger().info(f'Path publisher is active. Sending path goal request: [{goal}]')
-
-            self._path_publisher.wait_for_server()
-
-            # Cancel if a previous goal is still executing
-            if hasattr(self, "goal_handle") and self.goal_handle is not None:
-                self.goal_handle.cancel_goal_async()
-
-            self._send_goal_future = self._path_publisher.send_goal_async(
-                goal,
-                feedback_callback=self.feedback_callback
-            )
-
-            self._send_goal_future.add_done_callback(self.goal_response_callback)
-
-            self.previous_path = self.path
+        self._send_goal_future.add_done_callback(self.goal_response_callback)
     
     def goal_response_callback(self, future):
         self.goal_handle = future.result()
@@ -102,6 +95,7 @@ class LabCleanNavigator(Node):
 
         self._result_future = self.goal_handle.get_result_async()
         self._result_future.add_done_callback(self.result_callback)
+        self.path = None
 
     def feedback_callback(self, feedback_msg):
         feedback = feedback_msg.feedback
@@ -116,11 +110,13 @@ class LabCleanNavigator(Node):
             self.trigger_shutdown()
     
     def costmap_callback(self, msg):
-        if self.map is None:
-            width = msg.width
-            height = msg.height
-            self.map = np.array(msg.data, dtype=np.int16).reshape((height, width))
-            self.path_publisher()
+        width = msg.info.width
+        height = msg.info.height
+        self.map = np.array(msg.data, dtype=np.int16).reshape((height, width))
+
+        if self.counter:
+            self.planner.update_map(self.map)
+            self.counter = False
 
     def on_configure(self, state: State) -> TransitionCallbackReturn:
         '''
@@ -156,6 +152,26 @@ class LabCleanNavigator(Node):
         except Exception as e:
             self.get_logger().error(str(e))
             return TransitionCallbackReturn.FAILURE
+    
+    def startup(self, node_name='bt_navigator'):
+        # Waits for the node within the tester namespace to become active
+        print(f'Waiting for {node_name} to become active..')
+        node_service = f'{node_name}/get_state'
+        state_client = self.create_client(GetState, node_service)
+        while not state_client.wait_for_service(timeout_sec=1.0):
+            print(f'{node_service} service not available, waiting...')
+
+        req = GetState.Request()
+        state = 'unknown'
+        while state != 'active':
+            print(f'Getting {node_name} state...')
+            future = state_client.call_async(req)
+            rclpy.spin_until_future_complete(self, future)
+            if future.result() is not None:
+                state = future.result().current_state.label
+                print(f'Result of get_state: {state}')
+            time.sleep(2)
+        return
 
 
     def on_activate(self, state: State) -> TransitionCallbackReturn:
@@ -241,7 +257,7 @@ class LabCleanNavigator(Node):
             return
 
         req = ChangeState.Request()
-        req.transition.id = Transition.TRANSITION_SHUTDOWN
+        req.transition.id = Transition.TRANSITION_DESTROY
 
         future = client.call_async(req)
         future.add_done_callback(lambda f: self.get_logger().info('Shutdown transition requested'))
