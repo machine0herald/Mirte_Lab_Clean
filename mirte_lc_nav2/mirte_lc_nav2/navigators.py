@@ -10,20 +10,16 @@
 
 import numpy as np
 import cv2
-import fields2cover as f2c
 
 import rclpy
-
 from mirte_lc_nav2.navigator_types import SystematicNavigator, ReactiveNavigator
 
-from opennav_coverage_msgs.action import ComputeCoveragePath
-from opennav_coverage_msgs.msg import (Coordinates,
-                                       Coordinate,
-                                       HeadlandMode, 
-                                       SwathMode, 
-                                       RowSwathMode, 
-                                       RouteMode, 
-                                       PathMode)
+import trajgenpy as tjp
+from trajgenpy import Geometries
+
+import shapely
+from shapely.validation import explain_validity
+
 
 def get_path_planner(name):
     path_planners = {
@@ -67,98 +63,94 @@ class BousPath(SystematicNavigator):
     def __init__(self, node, resolution=0.1):
         self.node = node
         self.name = "BousPath"
-        self.node.nav2coverage_client = rclpy.action.ActionClient(self.node, ComputeCoveragePath, 'compute_coverage_path')
         super().__init__(node, resolution)
 
-    def bcd(self):
-        Decomposition is a feature of f2c 2.0 which 
-        is incompatible with Opennav2 coverage for ros2 humble
+    def bcd(self):        
+        self.node.get_logger().info(f"Contours: {len(self.polymap)}")
+        for i, c in enumerate(self.polymap):
+            self.node.get_logger().info(f"{i}: {len(c)} points")
+        polygons = self.polymap.copy()
+        outer_poly = shapely.Polygon(polygons[0])
         
-        decomposer = f2c.DECOMP_Boustrophedon()
-        self.cells = decomposer.decompose(self.field)
-        self.publish_decomposition()
+        if not outer_poly.is_valid:
+            self.node.get_logger().warn(f"Invalid outer polygon: {explain_validity(outer_poly)}")
+            outer_poly = outer_poly.buffer(0)
+            if not outer_poly.is_valid:
+                self.node.get_logger().warn(f"Could not fix outer polygon")
+                return False
+
+            if outer_poly.is_empty:
+                self.node.get_logger().error("Outer polygon is empty after fix")
+                return False
+
+            if outer_poly.geom_type == "MultiPolygon":
+                self.node.get_logger().warn("Outer polygon became MultiPolygon, taking largest piece")
+                outer_poly = max(outer_poly.geoms, key=lambda p: p.area)
+
+        outer = Geometries.GeoPolygon(
+                outer_poly,
+                crs="map"
+            )
+
+        # outer.set_crs("EPSG:3857")
+        polygons.pop(0)
         
-    def bous_path(self, robot_width = 0.3):
-        goal = ComputeCoveragePath.Goal()
+        holes = []
 
-        # Add polygons of free space map to message
-        polygons = []
+        for contour in polygons:
+            poly = shapely.Polygon(contour).simplify(0.1, preserve_topology=True)
+            geo_contour = Geometries.GeoPolygon(
+                poly,
+                crs="map"
+                )
+            if not poly.is_valid:
+                self.node.get_logger().warn(f"Invalid polygon: {explain_validity(poly)}")
+                poly = poly.buffer(0)
+                if not poly.is_valid:
+                    self.node.get_logger().warn(f"Could not fix polygon: {poly}")
+                    continue
+                if poly.is_empty:
+                    self.node.get_logger().error("Polygon is empty after fix")
+                    return False
 
-        for contour in self.polymap:
-            poly = []
-            polygon = Coordinates()
-
-            for pt in contour:
-                x = pt[0]
-                y = pt[1]
-                coord = Coordinate()
-                coord.axis1 = float(x)
-                coord.axis2 = float(y)
-                poly.append(coord)
-
-            polygon.coordinates = poly
-            polygons.append(polygon)
-
-        goal.polygons = polygons
-
-        # Select Headland mode
-        headland_mode = HeadlandMode()
-        headland_mode.width = 0.5
-        goal.headland_mode = headland_mode
-
-        # Select Swath mode
-        swath_mode = SwathMode()
-        swath_mode.objective = 'LENGTH'
-        swath_mode.mode = 'BRUTE_FORCE'
-        goal.swath_mode = swath_mode
-
-        # Select Route mode
-        route_mode = RouteMode()
-        route_mode.mode = 'BOUSTROPHEDON'
-        goal.route_mode = route_mode
-
-        # Select Path mode
-        path_mode = PathMode()
-        path_mode.mode = 'DUBIN'
-        path_mode.continuity_mode = 'DISCONTINUOUS'
-        path_mode.turn_point_distance = 0.1
-        goal.path_mode = path_mode   
+                if poly.geom_type == "MultiPolygon":
+                    self.node.get_logger().warn("Outer polygon became MultiPolygon, taking largest piece")
+                    poly = max(poly.geoms, key=lambda p: p.area)
+                
+            # geo_contour.set_crs("EPSG:3857")
+            holes.append(geo_contour.get_geometry())
         
-        # send goal and receive response
-        send_goal_future = self.node.nav2coverage_client.send_goal_async(
-            goal,
-            feedback_callback=self._feedbackCallback
+        polygon_list = Geometries.decompose_polygon(
+            outer.get_geometry(), 
+            # obstacles=shapely.MultiPolygon(holes)
         )
 
-        send_goal_future.add_done_callback(self._goal_response_callback)
-        return True
-    
-    def _goal_response_callback(self, future):
-        self.goal_handle = future.result()
+        self.cells = polygon_list
+        self.publish_decomposition()
+        self.node.get_logger().info('map decomposed, publishing decomposition')
+        
+    def bous_path(self, robot_width = 0.3):
+        self.node.get_logger().info(f"Number of cells: {len(self.cells)}")
+        offset = Geometries.get_sweep_offset(overlap=0.0, height=0.3, field_of_view=90)
+        result = []
+        self.node.get_logger().info('generating path')
+        for decomposed_poly in self.cells:
+            sweeps_connected = Geometries.generate_sweep_pattern(
+                decomposed_poly, offset, clockwise=True, connect_sweeps=True
+            )
+            result.extend(sweeps_connected)
+        
+        mls = Geometries.GeoMultiTrajectory(result, crs="map").get_geometry()
+        self.path = self.to_ros_path(self.multiline_to_coords(mls))
+        
+    def multiline_to_coords(self, multiline):
+        coords = []
+        for line in multiline.geoms:
+            coords.extend(list(line.coords))
+        return coords
 
-        if not self.goal_handle.accepted:
-            self.node.get_logger().error("Coverage goal rejected")
-            return
-
-        result_future = self.goal_handle.get_result_async()
-        result_future.add_done_callback(self._result_callback)
-    
-    def _result_callback(self, future):
-        result = future.result().result
-        self.nav_path = result.nav_path
-        self.node.get_logger().info("Coverage path received")
-        self.node.path_publisher()
-    
-    def _feedbackCallback(self, msg):
-        self.feedback = msg.feedback
-        return
-
-    def getFeedback(self):
-        """Get the pending action feedback message."""
-        return self.feedback
-    
     def generate_path(self):
-        # self.bcd()
+        self.bcd()
         self.bous_path()
 
 class SpiralPath(SystematicNavigator):

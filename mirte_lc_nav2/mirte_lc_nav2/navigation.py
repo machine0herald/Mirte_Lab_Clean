@@ -54,35 +54,38 @@ class LabCleanNavigator(Node):
             Publish a new path message when enabled.
         '''
         if self.counter:
+            if self.map is None:
+                self.get_logger().warn("Map not received yet")
+                return
             self.planner.update_map(self.map)
 
-        self.path = self.planner.nav_path
+            self.path = self.planner.path
 
-        if self.path is None:
-            return  # nothing to send yet
-            
-        self.get_logger().info('New path generated, updating waypoints.')
+            if self.path is None:
+                return  # nothing to send yet
+                
+            self.get_logger().info('New path generated, updating waypoints.')
 
-        goal = NavigateThroughPoses.Goal()
-        goal.poses = self.path.poses
-        for pose in goal.poses:
-            pose.header.frame_id = "map" 
+            goal = NavigateThroughPoses.Goal()
+            goal.poses = self.path.poses
+            for pose in goal.poses:
+                pose.header.frame_id = "map" 
 
-        if self._verbose:
-            self.get_logger().info(f'Path publisher is active. Sending path goal request: [{goal}]')
+            if self._verbose:
+                self.get_logger().info(f'Path publisher is active. Sending path goal request')
 
-        self._path_publisher.wait_for_server()
+            self._path_publisher.wait_for_server()
 
-        # Cancel if a previous goal is still executing
-        if hasattr(self, "goal_handle") and self.goal_handle is not None:
-            self.goal_handle.cancel_goal_async()
+            # Cancel if a previous goal is still executing
+            if hasattr(self, "goal_handle") and self.goal_handle is not None:
+                self.goal_handle.cancel_goal_async()
 
-        self._send_goal_future = self._path_publisher.send_goal_async(
-            goal,
-            feedback_callback=self.feedback_callback
-        )
+            self._send_goal_future = self._path_publisher.send_goal_async(
+                goal,
+                feedback_callback=self.feedback_callback
+            )
 
-        self._send_goal_future.add_done_callback(self.goal_response_callback)
+            self._send_goal_future.add_done_callback(self.goal_response_callback)
     
     def goal_response_callback(self, future):
         self.goal_handle = future.result()
@@ -96,6 +99,7 @@ class LabCleanNavigator(Node):
         self._result_future = self.goal_handle.get_result_async()
         self._result_future.add_done_callback(self.result_callback)
         self.path = None
+        self.counter = False
 
     def feedback_callback(self, feedback_msg):
         feedback = feedback_msg.feedback
@@ -113,10 +117,7 @@ class LabCleanNavigator(Node):
         width = msg.info.width
         height = msg.info.height
         self.map = np.array(msg.data, dtype=np.int16).reshape((height, width))
-
-        if self.counter:
-            self.planner.update_map(self.map)
-            self.counter = False
+        self.path_publisher()
 
     def on_configure(self, state: State) -> TransitionCallbackReturn:
         '''

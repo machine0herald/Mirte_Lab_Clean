@@ -150,12 +150,14 @@ def generate_launch_description():
     )
     
     return LaunchDescription([
-        LogInfo(msg='Starting Slam Toolbox'),
         SetParameter(name="use_sim_time", value='true'),
-        TimerAction(period=20.0, actions=[slam_toolbox]),
+        TimerAction(period=20.0, actions=[
+            LogInfo(msg='Starting Slam Toolbox'),
+            slam_toolbox
+            ]),
         
-        LogInfo(msg='Starting Mirte Nav2 stack'),
         TimerAction(period=30.0, actions=[
+            LogInfo(msg='Starting Mirte Nav2 stack'),
             topic_tools_vel,
             topic_tools_odom,
             nav2_planner,
@@ -165,6 +167,8 @@ def generate_launch_description():
             nav2_behavior_server,
         ]),
         
-        LogInfo(msg='Starting Mirte OpenNavCoverage stack'),
-        TimerAction(period=40.0, actions=[opennav_coverage])
+        TimerAction(period=40.0, actions=[
+            LogInfo(msg='Starting Mirte OpenNavCoverage stack'),
+            opennav_coverage
+            ])
     ])

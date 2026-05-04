@@ -87,7 +87,7 @@ def generate_launch_description():
             SetParameter(name="use_sim_time", value=use_sim_time),
             move_group_node,
             TimerAction(period = 5.0, actions = [rviz_node]),
-            TimerAction(period = 15.0, actions = [test_ik_node]),
+            # TimerAction(period = 15.0, actions = [test_ik_node]),
             # TimerAction(period = 20.0, actions = [custom_test_node]),
             # TimerAction(period = 10.0, actions = [moveit_test_node]),
             # TimerAction(period = 20.0, actions = [robot_state_node]),

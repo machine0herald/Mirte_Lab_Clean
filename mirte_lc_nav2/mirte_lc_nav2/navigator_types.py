@@ -4,7 +4,6 @@
 
 import numpy as np
 import cv2
-import fields2cover as f2c
 from geometry_msgs.msg import PolygonStamped, Point32
 from visualization_msgs.msg import Marker, MarkerArray
 from nav_msgs.msg import Path
@@ -30,6 +29,19 @@ class SystematicNavigator():
 
         self.decomp_publisher = self.node.create_publisher(
             MarkerArray, f'/systematic_navigator/decomposed_map', 10)
+        
+    def to_ros_path(self, trajectory):
+        path_msg = Path()
+        path_msg.header.frame_id = "map"
+        for x, y in trajectory:
+            pose = PoseStamped()
+            pose.header.frame_id = "map"
+            pose.pose.position.x = float(x)
+            pose.pose.position.y = float(y)
+            pose.pose.orientation.w = 1.0
+            path_msg.poses.append(pose)
+
+        return path_msg
    
     def update_map(self, new_map, show=False):
         """update internal map of the navigator"""
@@ -51,7 +63,7 @@ class SystematicNavigator():
             margin_px += 1
 
         kernel = np.ones((margin_px, margin_px), np.uint8)
-        free_mask = cv2.erode(free_mask, kernel)
+        # free_mask = cv2.erode(free_mask, kernel)
 
         contours, _ = cv2.findContours(free_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
         if show:
@@ -59,10 +71,11 @@ class SystematicNavigator():
 
         contours = sorted(contours, key=cv2.contourArea, reverse=True)
         
-        cell = f2c.Cell()
         closed_contour = []
         for contour in contours:
-            ring = f2c.LinearRing()
+            if len(contour) < 6:
+                self.node.get_logger().warn(f"Skipping contour with {len(contour)} points")
+                continue
             pts = contour[:, 0, :]
             # convert points
             map_height = self.map.shape[0]
@@ -73,18 +86,11 @@ class SystematicNavigator():
             # ensure closure
             if points[0] != points[-1]:
                 points.append(points[0])
-
-            for x, y in points:
-                ring.addPoint(f2c.Point(x, y))
             
-            closed_contour.append(points)
-            cell.addGeometry(ring)
+            if len(points) >= 4:
+                closed_contour.append(points)
         self.publish_polygon(closed_contour)
-
-        cells = f2c.Cells(cell)
         self.polymap = closed_contour
-        self.field = f2c.Field(cells)
-
         self.generate_path()
         return None
 
@@ -118,30 +124,17 @@ class SystematicNavigator():
 
             marker.scale.x = 0.02
 
-            marker.color.r = (i % 3 == 0)
-            marker.color.g = (i % 3 == 1)
-            marker.color.b = (i % 3 == 2)
+            marker.color.r = float(i % 3 == 0)
+            marker.color.g = float(i % 3 == 1)
+            marker.color.b = float(i % 3 == 2)
             marker.color.a = 1.0
 
-            ring = cell.getGeometry().getOuterRing()
-
-            for j in range(ring.size()):
-                p = ring.getPoint(j)
-
+            for p in cell.exterior.coords:
                 pt = PoseStamped().pose.position
-                pt.x = p.getX()
-                pt.y = p.getY()
+                pt.x = p[0]
+                pt.y = p[1]
                 pt.z = 0.0
 
-                marker.points.append(pt)
-
-            # close the loop
-            if ring.size() > 0:
-                first = ring.getPoint(0)
-                pt = PoseStamped().pose.position
-                pt.x = first.getX()
-                pt.y = first.getY()
-                pt.z = 0.0
                 marker.points.append(pt)
 
             marker_array.markers.append(marker)
