@@ -1,7 +1,7 @@
-'''
+"""
 ros2 run mirte_lc_nav2 labclean_navigator
 ros2 lifecycle set labclean_navigator configure
-'''
+"""
 
 from typing import Optional
 from geometry_msgs.msg import PoseStamped
@@ -20,11 +20,23 @@ from rclpy.action import ActionClient
 from lifecycle_msgs.srv import ChangeState
 from lifecycle_msgs.msg import Transition
 
-from mirte_lc_nav2.navigators import get_path_planner
-import utils as ut
+import mirte_lc_nav2.navigators as nv
+import mirte_lc_nav2.utils as ut
 
 import numpy as np
 import math
+
+
+def get_path_planner(name):
+    path_planners = {
+        "bous": nv.BousPath,
+        "spiral": nv.SpiralPath,
+        "straightline": nv.StraightLinePath,
+    }
+    if name in path_planners:
+        return path_planners[name]
+    raise ValueError(f"Unknown path planner: {name}")
+
 
 class LabCleanNavigator(Node):
     """
@@ -33,14 +45,16 @@ class LabCleanNavigator(Node):
         Read parameters before every configure, 
         so it is possible to use different planners upon lifecycle restarts 
     """
-    def __init__(self,
-                 node_name: str,
-                 ) -> None:
+
+    def __init__(
+        self,
+        node_name: str,
+    ) -> None:
         super().__init__(node_name)
 
         # Set Planner Parameters
-        self._planner_name = self.declare_parameter('planner_type', 'bous')
-        self._verbose = self.declare_parameter('verbose', True)
+        self._planner_name = self.declare_parameter("planner_type", "bous")
+        self._verbose = self.declare_parameter("verbose", True)
 
         # ROS2 Interfaces
         self._posegoal_publisher = None
@@ -51,9 +65,9 @@ class LabCleanNavigator(Node):
         self.counter = True
 
     def path_publisher(self) -> None:
-        '''
-            Publish a new path message when enabled.
-        '''
+        """
+        Publish a new path message when enabled.
+        """
         if self.counter:
             if self.map is None:
                 self.get_logger().warn("Map not received yet")
@@ -64,16 +78,18 @@ class LabCleanNavigator(Node):
 
             if self.path is None:
                 return  # nothing to send yet
-                
-            self.get_logger().info('New path generated, updating waypoints.')
+
+            self.get_logger().info("New path generated, updating waypoints.")
 
             goal = NavigateThroughPoses.Goal()
             goal.poses = self.path.poses
             for pose in goal.poses:
-                pose.header.frame_id = "map" 
+                pose.header.frame_id = "map"
 
             if self._verbose:
-                self.get_logger().info(f'Path publisher is active. Sending path goal request')
+                self.get_logger().info(
+                    f"Path publisher is active. Sending path goal request"
+                )
 
             self._path_publisher.wait_for_server()
 
@@ -82,20 +98,19 @@ class LabCleanNavigator(Node):
                 self.goal_handle.cancel_goal_async()
 
             self._send_goal_future = self._path_publisher.send_goal_async(
-                goal,
-                feedback_callback=self.feedback_callback
+                goal, feedback_callback=self.feedback_callback
             )
 
             self._send_goal_future.add_done_callback(self.goal_response_callback)
-    
+
     def goal_response_callback(self, future):
         self.goal_handle = future.result()
 
         if not self.goal_handle.accepted:
-            self.get_logger().info('Goal rejected')
+            self.get_logger().info("Goal rejected")
             return
 
-        self.get_logger().info('Goal accepted')
+        self.get_logger().info("Goal accepted")
 
         self._result_future = self.goal_handle.get_result_async()
         self._result_future.add_done_callback(self.result_callback)
@@ -105,15 +120,15 @@ class LabCleanNavigator(Node):
     def feedback_callback(self, feedback_msg):
         feedback = feedback_msg.feedback
         if self._verbose:
-            self.get_logger().info(f'Distance remaining: {feedback.distance_remaining}')
+            self.get_logger().info(f"Distance remaining: {feedback.distance_remaining}")
 
     def result_callback(self, future):
         result = future.result().result
         if self._verbose:
-            self.get_logger().info(f'Path execution result: {result}')
-            self.get_logger().info('Path execution complete')
+            self.get_logger().info(f"Path execution result: {result}")
+            self.get_logger().info("Path execution complete")
             self.trigger_shutdown()
-    
+
     def costmap_callback(self, msg):
         width = msg.info.width
         height = msg.info.height
@@ -121,7 +136,7 @@ class LabCleanNavigator(Node):
         self.path_publisher()
 
     def on_configure(self, state: State) -> TransitionCallbackReturn:
-        '''
+        """
         Configure the node, after a configuring transition is requested.
 
         on_configure callback is being called when the lifecycle node
@@ -132,49 +147,58 @@ class LabCleanNavigator(Node):
             TransitionCallbackReturn.SUCCESS transitions to "inactive".
             TransitionCallbackReturn.FAILURE transitions to "unconfigured".
             TransitionCallbackReturn.ERROR or any uncaught exceptions to "errorprocessing"
-        '''
+        """
         try:
             self.planner = get_path_planner(self._planner_name.value)(self)
-            self.get_logger().info('on_configure() is called.')
+            self.get_logger().info("on_configure() is called.")
 
             # Configure Navigators
             match self.planner.navigator_type:
-                case 'systematic':
+                case "systematic":
                     self.costmap_sub = self.create_subscription(
-                        OccupancyGrid, '/global_costmap/costmap', self.costmap_callback, 10)
-                    self._path_publisher = ActionClient(self, NavigateThroughPoses, '/navigate_through_poses')
-                case 'reactive':
-                    self._goal_publisher = self.create_lifecycle_publisher(PoseStamped, '/goal_pose', 10)
+                        OccupancyGrid,
+                        "/global_costmap/costmap",
+                        self.costmap_callback,
+                        10,
+                    )
+                    self._path_publisher = ActionClient(
+                        self, NavigateThroughPoses, "/navigate_through_poses"
+                    )
+                case "reactive":
+                    self._goal_publisher = self.create_lifecycle_publisher(
+                        PoseStamped, "/goal_pose", 10
+                    )
                     self.goal_timer = self.create_timer(1.0, self.goal_publisher)
                 case _:
-                    self.get_logger().error(f"Unknown navigator type: {self.planner.navigator_type}")
+                    self.get_logger().error(
+                        f"Unknown navigator type: {self.planner.navigator_type}"
+                    )
 
             return TransitionCallbackReturn.SUCCESS
 
         except Exception as e:
             self.get_logger().error(str(e))
             return TransitionCallbackReturn.FAILURE
-    
-    def startup(self, node_name='bt_navigator'):
+
+    def startup(self, node_name="bt_navigator"):
         # Waits for the node within the tester namespace to become active
-        print(f'Waiting for {node_name} to become active..')
-        node_service = f'{node_name}/get_state'
+        print(f"Waiting for {node_name} to become active..")
+        node_service = f"{node_name}/get_state"
         state_client = self.create_client(GetState, node_service)
         while not state_client.wait_for_service(timeout_sec=1.0):
-            print(f'{node_service} service not available, waiting...')
+            print(f"{node_service} service not available, waiting...")
 
         req = GetState.Request()
-        state = 'unknown'
-        while state != 'active':
-            print(f'Getting {node_name} state...')
+        state = "unknown"
+        while state != "active":
+            print(f"Getting {node_name} state...")
             future = state_client.call_async(req)
             rclpy.spin_until_future_complete(self, future)
             if future.result() is not None:
                 state = future.result().current_state.label
-                print(f'Result of get_state: {state}')
+                print(f"Result of get_state: {state}")
             time.sleep(2)
         return
-
 
     def on_activate(self, state: State) -> TransitionCallbackReturn:
         # Differently to rclcpp, a lifecycle publisher transitions automatically between the
@@ -183,43 +207,43 @@ class LabCleanNavigator(Node):
         # and we don't need to write on_activate()/on_deactivate() callbacks.
 
         # Log, only for demo purposes
-        self.get_logger().info('on_activate() is called.')
+        self.get_logger().info("on_activate() is called.")
         super().on_activate(state)
         # self.path_publisher()
 
         # The default LifecycleNode callback is the one transitioning
         # LifecyclePublisher entities from inactive to enabled.
         # If you override on_activate(), don't forget to call the parent class method as well!!
-        
+
         return super().on_activate(state)
 
     def on_deactivate(self, state: State) -> TransitionCallbackReturn:
         # Log, only for demo purposes
-        self.get_logger().info('on_deactivate() is called.')
+        self.get_logger().info("on_deactivate() is called.")
         # Same reasong here that for on_activate().
         # These are the two only cases where you need to call the parent method.
         return super().on_deactivate(state)
 
     def on_cleanup(self, state: State) -> TransitionCallbackReturn:
-        self.get_logger().info('on_cleanup() is called.')
+        self.get_logger().info("on_cleanup() is called.")
 
         # Destroy subscription
-        if hasattr(self, 'costmap_sub') and self.costmap_sub is not None:
+        if hasattr(self, "costmap_sub") and self.costmap_sub is not None:
             self.destroy_subscription(self.costmap_sub)
             self.costmap_sub = None
 
         # Destroy action client
-        if hasattr(self, '_path_publisher') and self._path_publisher is not None:
+        if hasattr(self, "_path_publisher") and self._path_publisher is not None:
             self._path_publisher.destroy()
             self._path_publisher = None
 
         # Destroy goal publisher (reactive mode)
-        if hasattr(self, '_goal_publisher') and self._goal_publisher is not None:
+        if hasattr(self, "_goal_publisher") and self._goal_publisher is not None:
             self.destroy_publisher(self._goal_publisher)
             self._goal_publisher = None
 
         # Destroy timer (reactive mode)
-        if hasattr(self, 'goal_timer') and self.goal_timer is not None:
+        if hasattr(self, "goal_timer") and self.goal_timer is not None:
             self.destroy_timer(self.goal_timer)
             self.goal_timer = None
 
@@ -248,28 +272,31 @@ class LabCleanNavigator(Node):
         if self._pub is not None:
             self.destroy_publisher(self._pub)
 
-        self.get_logger().info('on_shutdown() is called.')
+        self.get_logger().info("on_shutdown() is called.")
         return TransitionCallbackReturn.SUCCESS
-    
+
     def trigger_shutdown(self):
-        client = self.create_client(ChangeState, f'/{self.get_name()}/change_state')
+        client = self.create_client(ChangeState, f"/{self.get_name()}/change_state")
 
         if not client.wait_for_service(timeout_sec=2.0):
-            self.get_logger().error('Lifecycle change_state service not available')
+            self.get_logger().error("Lifecycle change_state service not available")
             return
 
         req = ChangeState.Request()
         req.transition.id = Transition.TRANSITION_DESTROY
 
         future = client.call_async(req)
-        future.add_done_callback(lambda f: self.get_logger().info('Shutdown transition requested'))
+        future.add_done_callback(
+            lambda f: self.get_logger().info("Shutdown transition requested")
+        )
+
 
 def main() -> None:
     try:
         rclpy.init()
 
         executor = SingleThreadedExecutor()
-        lc_node = LabCleanNavigator('labclean_navigator')
+        lc_node = LabCleanNavigator("labclean_navigator")
         executor.add_node(lc_node)
 
         executor.spin()
@@ -279,5 +306,6 @@ def main() -> None:
     finally:
         rclpy.shutdown()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

@@ -32,10 +32,8 @@ class SystematicNavigator():
         self.map = new_map
 
         self.binary_costmap = np.zeros_like(self.map, dtype=np.uint8)
-
-        free_mask = np.zeros_like(self.map, dtype=np.uint8)
-        free_mask[self.map < self.threshold] = 255
-        free_mask[self.map == -1] = 0
+        self.binary_costmap[self.map < self.threshold] = 255
+        self.binary_costmap[self.map == -1] = 0
 
         margin_m = 0.3
         margin_px = max(1, int(margin_m / self.map_resolution))
@@ -43,14 +41,13 @@ class SystematicNavigator():
         if margin_px % 2 == 0:
             margin_px += 1
 
-        kernel = np.ones((margin_px, margin_px), np.uint8)
-
-        contours, _ = cv2.findContours(free_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+        contours, _ = cv2.findContours(self.binary_costmap, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
         if show:
-            self.debug_save(free_mask, contours)
+            self.debug_save(self.binary_costmap, contours)
 
         contours = sorted(contours, key=cv2.contourArea, reverse=True)
+        self.contours = contours
 
         closed_contour = []
 
@@ -130,7 +127,7 @@ class SystematicNavigator():
 
         self.decomp_publisher.publish(marker_array)
 
-    def debug_save(self, free_mask, contours):
+    def debug_save(self, self.binary_costmap, contours):
         img = cv2.normalize(self.map.astype(np.float32), None, 0, 255, cv2.NORM_MINMAX)
         img = cv2.cvtColor(img.astype(np.uint8), cv2.COLOR_GRAY2BGR)
 

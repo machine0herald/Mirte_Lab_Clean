@@ -1,4 +1,4 @@
-from geometry_msgs.msg import Path
+from geometry_msgs.msg import PoseStamped, Path
 
 # Log Types
 INFO = 1
@@ -30,4 +30,4 @@ def log(node, msg_type:int, msg:str):
             case DEBUG:
                 node.get_logger().debug(msg)
             case _:
-                node.getlogger().info(msg)
+                node.get_logger().info(msg)

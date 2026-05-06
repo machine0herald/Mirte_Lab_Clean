@@ -12,17 +12,6 @@ import shapely
 from shapely.validation import explain_validity
 
 
-def get_path_planner(name):
-    path_planners = {
-        "bous": BousPath,
-        "spiral": SpiralPath,
-        "straightline": StraightLinePath,
-    }
-    if name in path_planners:
-        return path_planners[name]
-    raise ValueError(f"Unknown path planner: {name}")
-
-
 class StraightLinePath(SystematicNavigator):
     def __init__(self, node, resolution=0.1, length=2.0):
         super().__init__(node, resolution)
@@ -62,7 +51,11 @@ class BousPath(SystematicNavigator):
         outer_poly = shapely.Polygon(polygons[0])
 
         if not outer_poly.is_valid:
-            ut.log(self.node, ut.WARN, f"Invalid outer polygon: {explain_validity(outer_poly)}")
+            ut.log(
+                self.node,
+                ut.WARN,
+                f"Invalid outer polygon: {explain_validity(outer_poly)}",
+            )
             outer_poly = outer_poly.buffer(0)
 
             if not outer_poly.is_valid:
@@ -74,7 +67,11 @@ class BousPath(SystematicNavigator):
                 return False
 
             if outer_poly.geom_type == "MultiPolygon":
-                ut.log(self.node, ut.WARN, "Outer polygon became MultiPolygon, taking largest piece")
+                ut.log(
+                    self.node,
+                    ut.WARN,
+                    "Outer polygon became MultiPolygon, taking largest piece",
+                )
                 outer_poly = max(outer_poly.geoms, key=lambda p: p.area)
 
         outer = Geometries.GeoPolygon(outer_poly, crs="map")
@@ -98,7 +95,11 @@ class BousPath(SystematicNavigator):
                     return False
 
                 if poly.geom_type == "MultiPolygon":
-                    ut.log(self.node, ut.WARN, "Polygon became MultiPolygon, taking largest piece")
+                    ut.log(
+                        self.node,
+                        ut.WARN,
+                        "Polygon became MultiPolygon, taking largest piece",
+                    )
                     poly = max(poly.geoms, key=lambda p: p.area)
 
             holes.append(poly)
