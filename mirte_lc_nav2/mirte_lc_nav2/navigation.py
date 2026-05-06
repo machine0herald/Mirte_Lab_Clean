@@ -21,6 +21,7 @@ from lifecycle_msgs.srv import ChangeState
 from lifecycle_msgs.msg import Transition
 
 from mirte_lc_nav2.navigators import get_path_planner
+import utils as ut
 
 import numpy as np
 import math
@@ -59,7 +60,7 @@ class LabCleanNavigator(Node):
                 return
             self.planner.update_map(self.map)
 
-            self.path = self.planner.path
+            self.path = ut.to_ros_path(self.planner.path)
 
             if self.path is None:
                 return  # nothing to send yet

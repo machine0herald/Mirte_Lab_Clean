@@ -98,7 +98,7 @@ def generate_launch_description():
     )
 
     nav2_bt_navigator = Node(
-        package='backported_bt_navigator',
+        package='nav2_bt_navigator',
         executable='bt_navigator',
         name='bt_navigator',
         output='screen',
@@ -121,7 +121,6 @@ def generate_launch_description():
                 'controller_server',
                 'bt_navigator',
                 'behavior_server',
-                'coverage_server',
             ],
         }],
     )
@@ -133,18 +132,6 @@ def generate_launch_description():
     package='nav2_behaviors',
     executable='behavior_server',
     name='behavior_server',
-    output='screen',
-    parameters=[params_file],
-    )
-    
-    ####################
-    # OpenNav Coverage #
-    ####################
-    
-    opennav_coverage = Node(
-    package='opennav_coverage',
-    executable='opennav_coverage',
-    name='coverage_server',
     output='screen',
     parameters=[params_file],
     )
@@ -166,9 +153,4 @@ def generate_launch_description():
             nav2_lifecycle_manager,
             nav2_behavior_server,
         ]),
-        
-        TimerAction(period=40.0, actions=[
-            LogInfo(msg='Starting Mirte OpenNavCoverage stack'),
-            opennav_coverage
-            ])
     ])
