@@ -1,0 +1,3 @@
+#include "mirte_lc_moveit_cpp/moveit_action_server.hpp"
+
+RCLCPP_COMPONENTS_REGISTER_NODE(mirte_lc_moveit_cpp::MirteLCMoveItActionServer)
