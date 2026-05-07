@@ -29,9 +29,11 @@ def generate_launch_description():
     .robot_description(file_path="config/mirte_master.urdf.xacro")
     .robot_description_semantic(file_path="config/mirte_master.srdf")
     .trajectory_execution(file_path="config/moveit_controllers.yaml")
+    .robot_description_kinematics(file_path="config/kinematics.yaml")
     .planning_pipelines(
           pipelines=["ompl", "chomp", "pilz_industrial_motion_planner"]
       )
+    .moveit_cpp(file_path="config/moveit_cpp.yaml")
     .to_moveit_configs()
 
     )
@@ -40,11 +42,11 @@ def generate_launch_description():
     move_group_node = Node(
         package="moveit_ros_move_group",
         executable="move_group",
-        output="screen",
+        output="log",
         parameters=[
             moveit_config.to_dict(),
             {"use_sim_time": use_sim_time},
-
+            {'publish_robot_description_semantic': True}
         ],
         arguments=["--ros-args", "--log-level", "info"],
     )
@@ -72,7 +74,7 @@ def generate_launch_description():
         package='mirte_lc_moveit_cpp',
         executable='test_ik',
         name='moveit_node',
-        output='screen',
+        output='log',
         parameters=[
         moveit_config.robot_description,
         moveit_config.robot_description_semantic,
@@ -81,13 +83,33 @@ def generate_launch_description():
         ],
     )
 
+    moveit_action_server_node = Node(
+        package='mirte_lc_moveit_cpp',
+        executable='moveit_action_server',
+        name='moveit_action_server',
+        output='log',
+        parameters=[
+            moveit_config.to_dict(),
+            {"use_sim_time": use_sim_time},
+        ],
+    )
+
+    moveit_action_client_node = Node(
+        package='mirte_lc_moveit',
+        executable='moveit_action_client',
+        name='moveit_action_client',
+        output='log',
+    )
+
     return LaunchDescription(
         [
             use_sim_time_arg,
             SetParameter(name="use_sim_time", value=use_sim_time),
             move_group_node,
             TimerAction(period = 5.0, actions = [rviz_node]),
-            TimerAction(period = 15.0, actions = [test_ik_node]),
+            TimerAction(period = 20.0, actions = [moveit_action_server_node]),
+            # TimerAction(period = 10.0, actions = [moveit_action_client_node]),
+            # TimerAction(period = 15.0, actions = [test_ik_node]),
             # TimerAction(period = 20.0, actions = [custom_test_node]),
             # TimerAction(period = 10.0, actions = [moveit_test_node]),
             # TimerAction(period = 20.0, actions = [robot_state_node]),

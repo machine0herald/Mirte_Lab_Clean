@@ -29,6 +29,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'moveit_action_client = mirte_lc_moveit.moveit_action_client:main',
         ],
     },
 )
+
