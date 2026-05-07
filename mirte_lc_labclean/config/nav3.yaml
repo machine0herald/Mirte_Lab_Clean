@@ -30,7 +30,7 @@ amcl:
     save_pose_rate: 0.5
     sigma_hit: 0.2
     tf_broadcast: true
-    transform_tolerance: 1.0
+    transform_tolerance: 3.0
     update_min_a: 0.2
     update_min_d: 0.25
     z_hit: 0.5
@@ -161,6 +161,21 @@ controller_server:
       plugin: "nav2_controller::SimpleGoalChecker"
       xy_goal_tolerance: 0.25
       yaw_goal_tolerance: 0.25
+
+    # # Regulated Pure Pursuit
+    # FollowPath:
+    #   plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+
+    #   desired_linear_vel: 0.2
+    #   lookahead_dist: 0.4
+    #   min_lookahead_dist: 0.2
+    #   max_lookahead_dist: 0.8
+
+    #   rotate_to_heading_angular_vel: 0.0
+    #   use_rotate_to_heading: false
+
+    #   allow_reversing: true
+
     # DWB parameters
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
@@ -184,25 +199,33 @@ controller_server:
       vx_samples: 20
       vy_samples: 5
       vtheta_samples: 20
-      sim_time: 1.7
+      sim_time: 1.0
       linear_granularity: 0.05
       angular_granularity: 0.025
-      transform_tolerance: 0.2
+      transform_tolerance: 1.2
       xy_goal_tolerance: 0.25
       trans_stopped_velocity: 0.25
-      short_circuit_trajectory_evaluation: True
-      stateful: True
-      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-      BaseObstacle.scale: 0.02
-      PathAlign.scale: 32.0
-      PathAlign.forward_point_distance: 0.1
-      GoalAlign.scale: 24.0
+      short_circuit_trajectory_evaluation: False
+      stateful: False
+      critics: [
+                "RotateToGoal", 
+                "Oscillation", 
+                "BaseObstacle", 
+                "GoalAlign", 
+                "PathAlign", 
+                "PathDist", 
+                "GoalDist"
+                ]
+      BaseObstacle.scale: 1.0
+      PathAlign.scale: 1.0
+      PathAlign.forward_point_distance: 0.2
+      GoalAlign.scale: 1.0
       GoalAlign.forward_point_distance: 0.1
       PathDist.scale: 32.0
       GoalDist.scale: 24.0
-      RotateToGoal.scale: 32.0
-      RotateToGoal.slowing_factor: 5.0
-      RotateToGoal.lookahead_time: -1.0
+      RotateToGoal.scale: 0.0
+      RotateToGoal.slowing_factor: 0.0
+      RotateToGoal.lookahead_time: 1.0
 
 local_costmap:
   local_costmap:
@@ -336,7 +359,7 @@ behavior_server:
       plugin: "nav2_behaviors/AssistedTeleop"
     global_frame: odom
     robot_base_frame: base_link
-    transform_tolerance: 0.1
+    transform_tolerance: 1.2
     use_sim_time: true
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0

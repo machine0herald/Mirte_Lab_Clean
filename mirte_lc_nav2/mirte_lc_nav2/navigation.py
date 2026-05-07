@@ -2,11 +2,12 @@
 ros2 run mirte_lc_nav2 labclean_navigator
 ros2 lifecycle set labclean_navigator configure
 """
-
+import numpy as np
+np.float = float
 from typing import Optional
 from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Path, OccupancyGrid, Goals
-from nav2_msgs.action import NavigateThroughPoses
+from nav2_msgs.action import FollowPath, NavigateThroughPoses
 
 import rclpy
 from rclpy.executors import ExternalShutdownException
@@ -60,80 +61,88 @@ class LabCleanNavigator(Node):
         self._posegoal_publisher = None
         self._path_publisher = None
         self.costmap_sub = None
-        self.path = None
+        self.queue = []
         self.map = None
         self.counter = True
+        self.executing = False
+
+    def execute(self):
+        if len(self.queue) == 0:
+            self.get_logger().warn("Queue is empyty")
+            return
+
+        elif self.executing:
+            return
+
+        else:
+            self.executing = True
+            self.path_publisher()
 
     def path_publisher(self) -> None:
         """
         Publish a new path message when enabled.
         """
-        if self.counter:
-            if self.map is None:
-                self.get_logger().warn("Map not received yet")
-                return
-            self.planner.update_map(self.map)
 
-            self.path = ut.to_ros_path(self.planner.path)
+        path = ut.to_ros_path(self.queue[0])
 
-            if self.path is None:
-                return  # nothing to send yet
+        self.get_logger().info("New path generated, updating waypoints.")
 
-            self.get_logger().info("New path generated, updating waypoints.")
+        # goal = FollowPath.Goal()
+        # goal.path = path
+        goal = NavigateThroughPoses.Goal()
+        goal.poses = path.poses
 
-            goal = NavigateThroughPoses.Goal()
-            goal.poses = self.path.poses
-            for pose in goal.poses:
-                pose.header.frame_id = "map"
-
-            if self._verbose:
-                self.get_logger().info(
-                    f"Path publisher is active. Sending path goal request"
-                )
-
-            self._path_publisher.wait_for_server()
-
-            # Cancel if a previous goal is still executing
-            if hasattr(self, "goal_handle") and self.goal_handle is not None:
-                self.goal_handle.cancel_goal_async()
-
-            self._send_goal_future = self._path_publisher.send_goal_async(
-                goal, feedback_callback=self.feedback_callback
+        if self._verbose:
+            self.get_logger().info(
+                f"Path publisher is active. Sending path goal request: {goal}"
             )
 
-            self._send_goal_future.add_done_callback(self.goal_response_callback)
+        self._path_publisher.wait_for_server()
+
+        self._send_goal_future = self._path_publisher.send_goal_async(
+            goal, feedback_callback=self.feedback_callback
+        )
+        self._send_goal_future.add_done_callback(self.goal_response_callback)
 
     def goal_response_callback(self, future):
-        self.goal_handle = future.result()
+        goal_handle = future.result()
 
-        if not self.goal_handle.accepted:
+        if not goal_handle.accepted:
             self.get_logger().info("Goal rejected")
             return
 
-        self.get_logger().info("Goal accepted")
-
-        self._result_future = self.goal_handle.get_result_async()
+        self._result_future = goal_handle.get_result_async()
         self._result_future.add_done_callback(self.result_callback)
-        self.path = None
-        self.counter = False
+
+        self.get_logger().info("Goal accepted, popping from queue")
+        self.queue.pop(0)
 
     def feedback_callback(self, feedback_msg):
         feedback = feedback_msg.feedback
         if self._verbose:
-            self.get_logger().info(f"Distance remaining: {feedback.distance_remaining}")
+            # self.get_logger().info(f"Distance Remaining {feedback.distance_to_goal}")
+            # self.get_logger().info(f"Speed: {feedback.speed}")            
+            self.get_logger().info(f"Distance Remaining {feedback.distance_remaining}")
 
     def result_callback(self, future):
         result = future.result().result
         if self._verbose:
             self.get_logger().info(f"Path execution result: {result}")
             self.get_logger().info("Path execution complete")
-            self.trigger_shutdown()
+        self.executing = False
 
     def costmap_callback(self, msg):
         width = msg.info.width
         height = msg.info.height
         self.map = np.array(msg.data, dtype=np.int16).reshape((height, width))
-        self.path_publisher()
+        if self.counter:
+            if self.map is None:
+                self.get_logger().warn("Map not received yet")
+                return
+            self.planner.update_map(self.map)
+            self.queue.extend(self.planner.paths)
+            self.counter = None
+        self.execute()
 
     def on_configure(self, state: State) -> TransitionCallbackReturn:
         """
@@ -161,9 +170,13 @@ class LabCleanNavigator(Node):
                         self.costmap_callback,
                         10,
                     )
+                    # self._path_publisher = ActionClient(
+                    #     self, FollowPath, "/follow_path"
+                    # )                    
                     self._path_publisher = ActionClient(
                         self, NavigateThroughPoses, "/navigate_through_poses"
                     )
+
                 case "reactive":
                     self._goal_publisher = self.create_lifecycle_publisher(
                         PoseStamped, "/goal_pose", 10
@@ -179,26 +192,6 @@ class LabCleanNavigator(Node):
         except Exception as e:
             self.get_logger().error(str(e))
             return TransitionCallbackReturn.FAILURE
-
-    def startup(self, node_name="bt_navigator"):
-        # Waits for the node within the tester namespace to become active
-        print(f"Waiting for {node_name} to become active..")
-        node_service = f"{node_name}/get_state"
-        state_client = self.create_client(GetState, node_service)
-        while not state_client.wait_for_service(timeout_sec=1.0):
-            print(f"{node_service} service not available, waiting...")
-
-        req = GetState.Request()
-        state = "unknown"
-        while state != "active":
-            print(f"Getting {node_name} state...")
-            future = state_client.call_async(req)
-            rclpy.spin_until_future_complete(self, future)
-            if future.result() is not None:
-                state = future.result().current_state.label
-                print(f"Result of get_state: {state}")
-            time.sleep(2)
-        return
 
     def on_activate(self, state: State) -> TransitionCallbackReturn:
         # Differently to rclcpp, a lifecycle publisher transitions automatically between the

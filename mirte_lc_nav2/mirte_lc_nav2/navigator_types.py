@@ -7,13 +7,16 @@ from visualization_msgs.msg import Marker, MarkerArray
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 
-import utils as ut
+# import utils as ut
+# from utils import  LogType
 
+import mirte_lc_nav2.utils as ut
+from mirte_lc_nav2.utils import  LogType
 
 class SystematicNavigator():
-    def __init__(self, node, resolution=0.1, map_resolution=0.05, lethal_threshold=20.0):
+    def __init__(self, node=None, resolution=0.1, map_resolution=0.05, lethal_threshold=20.0):
         self.navigator_type = 'systematic'
-        self.path = None
+        self.paths = None
         self.map = None
         self.polymap = None
         self.threshold = lethal_threshold
@@ -28,7 +31,7 @@ class SystematicNavigator():
             self.decomp_publisher = self.node.create_publisher(
                 MarkerArray, f'/systematic_navigator/decomposed_map', 10)
 
-    def update_map(self, new_map, show=False):
+    def update_map(self, new_map, generate=True, decompose=True, show=False):
         self.map = new_map
 
         self.binary_costmap = np.zeros_like(self.map, dtype=np.uint8)
@@ -41,20 +44,34 @@ class SystematicNavigator():
         if margin_px % 2 == 0:
             margin_px += 1
 
-        contours, _ = cv2.findContours(self.binary_costmap, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+        contours, _ = cv2.findContours(self.binary_costmap, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        contours = [cv2.approxPolyDP(c, 0.005 * cv2.arcLength(c, True), True) for c in contours]
 
         if show:
             self.debug_save(self.binary_costmap, contours)
 
         contours = sorted(contours, key=cv2.contourArea, reverse=True)
-        self.contours = contours
+        outer_contour = contours[0]
+
+        # Filter out contours that lie outside the largest contour
+        filtered_contours = [outer_contour]
+
+        for contour in contours[1:]:  # skip outer
+            if len(contour) < 6:
+                continue
+
+            if self.is_inside(contour, outer_contour):
+                filtered_contours.append(contour)
+
+        self.contours = filtered_contours
 
         closed_contour = []
 
-        for contour in contours:
+        for contour in filtered_contours:
             if len(contour) < 6:
                 if self.node is not None:
-                    ut.log(self.node, ut.WARN, f"Skipping contour with {len(contour)} points")
+                    ut.log(self.node, LogType.WARN, f"Skipping contour with {len(contour)} points")
                 continue
 
             pts = contour[:, 0, :]
@@ -78,8 +95,36 @@ class SystematicNavigator():
             self.publish_polygon(closed_contour)
 
         self.polymap = closed_contour
-        self.generate_path()
+        self.generate_path(generate, decompose)
         return None
+
+    def is_inside(self, contour, outer_contour):
+        for pt in contour[:, 0, :]:
+            # returns >0 inside, 0 on edge, <0 outside
+            if cv2.pointPolygonTest(outer_contour, (float(pt[0]), float(pt[1])), False) < 0:
+                return False
+        return True
+
+    def world_to_pixel(self, polygon):
+        map_h, map_w = self.map.shape[:2]
+
+        coords = []
+        for coord in polygon:
+            px = int(coord[0] / self.map_resolution + 0.5 * map_w)
+            py = int(coord[1] / self.map_resolution + 0.5 * map_h)
+            coords.append([px, py])
+
+        return np.array(coords, dtype=np.int32)
+
+    def world_to_pixel_path(self, path):
+        map_h, map_w = self.map.shape[:2]
+
+        pts = np.array(path)
+
+        pts[:, 0] = pts[:, 0] / self.map_resolution + 0.5 * map_w
+        pts[:, 1] = pts[:, 1] / self.map_resolution + 0.5 * map_h
+
+        return pts.astype(np.int32)
 
     def publish_polygon(self, contours):
         msg = PolygonStamped()
@@ -127,7 +172,7 @@ class SystematicNavigator():
 
         self.decomp_publisher.publish(marker_array)
 
-    def debug_save(self, self.binary_costmap, contours):
+    def debug_save(self, contours):
         img = cv2.normalize(self.map.astype(np.float32), None, 0, 255, cv2.NORM_MINMAX)
         img = cv2.cvtColor(img.astype(np.uint8), cv2.COLOR_GRAY2BGR)
 
@@ -143,10 +188,10 @@ class SystematicNavigator():
         if self.decomp_map:
             self.decomp_publisher.publish()
 
-        if self.path:
-            self.path_publisher.publish()
+        if self.paths:
+            self.paths_publisher.publish()
 
-    def generate_path(self):
+    def generate_path(self, generate, decompose):
         pass
 
 
