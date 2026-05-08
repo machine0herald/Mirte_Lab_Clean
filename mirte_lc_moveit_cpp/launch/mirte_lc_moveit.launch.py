@@ -33,7 +33,7 @@ def generate_launch_description():
     .planning_pipelines(
           pipelines=["ompl", "chomp", "pilz_industrial_motion_planner"]
       )
-    .moveit_cpp(file_path="config/moveit_cpp.yaml")
+    .moveit_cpp(file_path=get_package_share_directory("mirte_lc_moveit_cpp") + "/config/moveit_cpp.yaml")
     .to_moveit_configs()
 
     )
