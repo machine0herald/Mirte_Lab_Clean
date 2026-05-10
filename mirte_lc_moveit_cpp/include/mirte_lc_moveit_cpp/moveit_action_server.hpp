@@ -203,9 +203,9 @@ private:
 
     move_group_->setGoalOrientationTolerance(3.14);
 
-    move_group_->setWorkspace(
-      -0.30, -0.30, 0.00,
-       0.30,  0.30, 0.30);
+    // move_group_->setWorkspace(
+    //   -0.30, -0.30, 0.00,
+    //    0.30,  0.30, 0.30);
 
     print_planner_info();
 
@@ -239,8 +239,7 @@ private:
      * IK
      */
 
-    auto target_state =
-      move_group_->getCurrentState(10.0);
+    auto target_state = current_state;
 
     bool found_ik =
       target_state->setFromIK(
