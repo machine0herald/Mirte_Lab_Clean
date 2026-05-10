@@ -9,6 +9,8 @@ from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Path, OccupancyGrid, Goals
 from nav2_msgs.action import FollowPath, NavigateThroughPoses
 
+from tf2_ros import Buffer, TransformListener
+
 import rclpy
 from rclpy.executors import ExternalShutdownException
 from rclpy.executors import SingleThreadedExecutor
@@ -21,22 +23,27 @@ from rclpy.action import ActionClient
 from lifecycle_msgs.srv import ChangeState
 from lifecycle_msgs.msg import Transition
 
-import mirte_lc_nav2.navigators as nv
-import mirte_lc_nav2.utils as ut
+# import mirte_lc_nav2.navigators as nv
+# import mirte_lc_nav2.utils as ut
+
+import navigators as nv
+import utils as ut
 
 import numpy as np
 import math
 
 
-def get_path_planner(name):
-    path_planners = {
-        "bous": nv.BousPath,
-        "spiral": nv.SpiralPath,
-        "straightline": nv.StraightLinePath,
-    }
-    if name in path_planners:
-        return path_planners[name]
-    raise ValueError(f"Unknown path planner: {name}")
+def lookup_planner(name):
+    planners = nv.PLANNERS
+    try:
+        return planners[name]
+    except Exception as e:
+        print(
+            f"{e}, Desired planner '{name}' does not exist, \
+            recognized types are: {planners.keys()}, \
+            Defaulting to Boustrophedon Planner"
+         )
+        return planners['BousPlanner']
 
 
 class LabCleanNavigator(Node):
@@ -54,7 +61,7 @@ class LabCleanNavigator(Node):
         super().__init__(node_name)
 
         # Set Planner Parameters
-        self._planner_name = self.declare_parameter("planner_type", "bous")
+        self._planner_name = self.declare_parameter("planner_type", "BousPlanner")
         self._verbose = self.declare_parameter("verbose", True)
 
         # ROS2 Interfaces
@@ -66,6 +73,10 @@ class LabCleanNavigator(Node):
         self.counter = True
         self.executing = False
 
+        self.tf_buffer = Buffer()
+        self.tf_listener = TransformListener(self.tf_buffer, self)
+
+    # ------------- Navigate Through Poses ----------------
     def execute(self):
         if len(self.queue) == 0:
             self.get_logger().warn("Queue is empyty")
@@ -75,7 +86,6 @@ class LabCleanNavigator(Node):
             return
 
         else:
-            self.executing = True
             self.path_publisher()
 
     def path_publisher(self) -> None:
@@ -99,6 +109,7 @@ class LabCleanNavigator(Node):
 
         self._path_publisher.wait_for_server()
 
+        self.executing = True
         self._send_goal_future = self._path_publisher.send_goal_async(
             goal, feedback_callback=self.feedback_callback
         )
@@ -111,25 +122,67 @@ class LabCleanNavigator(Node):
             self.get_logger().info("Goal rejected")
             return
 
+        self.goal_handle = goal_handle
+
         self._result_future = goal_handle.get_result_async()
         self._result_future.add_done_callback(self.result_callback)
 
-        self.get_logger().info("Goal accepted, popping from queue")
-        self.queue.pop(0)
+        self.get_logger().warn("Goal accepted, popping from queue")
 
     def feedback_callback(self, feedback_msg):
-        feedback = feedback_msg.feedback
-        if self._verbose:
-            # self.get_logger().info(f"Distance Remaining {feedback.distance_to_goal}")
-            # self.get_logger().info(f"Speed: {feedback.speed}")            
-            self.get_logger().info(f"Distance Remaining {feedback.distance_remaining}")
+        if self.executing:
+            feedback = feedback_msg.feedback
+            self.distance_remaining = feedback.distance_remaining
+            if self._verbose:
+                # self.get_logger().info(f"Distance Remaining {feedback.distance_to_goal}")
+                # self.get_logger().info(f"Speed: {feedback.speed}")            
+                self.get_logger().info(f"Distance Remaining {feedback.distance_remaining}")
+
+            if (0.0 < self.distance_remaining < 0.1):
+                self.get_logger().error(
+                    "Distance threshold reached, cancelling goal and treating as success"
+                )
+
+                self.goal_handle.cancel_goal_async()
+
+                # Manually advance queue
+                if len(self.queue) > 0:
+                    self.queue.pop(0)
+
+                self.executing = False
+
+                # Start next path immediately
+                self.execute()
+        else:
+            return
 
     def result_callback(self, future):
         result = future.result().result
         if self._verbose:
             self.get_logger().info(f"Path execution result: {result}")
             self.get_logger().info("Path execution complete")
-        self.executing = False
+        if self.executing:
+            if len(self.queue) > 0:
+                self.queue.pop(0)
+            self.executing = False
+
+    # ------------- Helper Functions ----------------
+    def get_robot_position(self):
+        try:
+            transform = self.tf_buffer.lookup_transform(
+                'map',
+                'base_link',
+                rclpy.time.Time()
+            )
+
+            x = transform.transform.translation.x
+            y = transform.transform.translation.y
+
+            return np.array([x, y])
+
+        except Exception as e:
+            self.get_logger().warn(f"Could not get robot pose: {e}")
+            return None
 
     def costmap_callback(self, msg):
         width = msg.info.width
@@ -139,11 +192,18 @@ class LabCleanNavigator(Node):
             if self.map is None:
                 self.get_logger().warn("Map not received yet")
                 return
-            self.planner.update_map(self.map)
+            
+            start = self.get_robot_position()
+            
+            if start is None:
+                return
+
+            self.planner.plan(self.map, start)
             self.queue.extend(self.planner.paths)
             self.counter = None
         self.execute()
 
+    # ------------- Lifecycle states ----------------
     def on_configure(self, state: State) -> TransitionCallbackReturn:
         """
         Configure the node, after a configuring transition is requested.
@@ -158,7 +218,7 @@ class LabCleanNavigator(Node):
             TransitionCallbackReturn.ERROR or any uncaught exceptions to "errorprocessing"
         """
         try:
-            self.planner = get_path_planner(self._planner_name.value)(self)
+            self.planner = lookup_planner(self._planner_name.value)(self)
             self.get_logger().info("on_configure() is called.")
 
             # Configure Navigators

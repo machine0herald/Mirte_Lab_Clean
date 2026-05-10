@@ -5,8 +5,8 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Polygon1
-        - /Path1
+        - /MarkerArray1/Status1
+        - /MarkerArray2
       Splitter Ratio: 0.5
     Tree Height: 209
   - Class: rviz_common/Help
@@ -894,7 +894,31 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /received_global_plan
+        Value: /plan
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /systematic_navigator/decomposed_map
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /systematic_navigator/planned_path
       Value: true
   Enabled: true
   Global Options:
@@ -921,25 +945,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 16.00508689880371
+      Distance: 14.552268981933594
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -1.0286396741867065
-        Y: -0.8668642044067383
-        Z: -0.9744077920913696
+        X: -1.180732011795044
+        Y: -3.5417001247406006
+        Z: -1.4646267890930176
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.8897974491119385
+      Pitch: 1.3147974014282227
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 4.678884983062744
+      Yaw: 3.8588852882385254
     Saved: ~
 Window Geometry:
   Displays:
@@ -959,5 +983,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1440
-  X: 255
-  Y: 84
+  X: 224
+  Y: 99

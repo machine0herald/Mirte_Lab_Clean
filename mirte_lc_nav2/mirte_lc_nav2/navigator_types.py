@@ -7,11 +7,11 @@ from visualization_msgs.msg import Marker, MarkerArray
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 
-# import utils as ut
-# from utils import  LogType
+import utils as ut
+from utils import  LogType
 
-import mirte_lc_nav2.utils as ut
-from mirte_lc_nav2.utils import  LogType
+# import mirte_lc_nav2.utils as ut
+# from mirte_lc_nav2.utils import  LogType
 
 class SystematicNavigator():
     def __init__(self, node=None, resolution=0.1, map_resolution=0.05, lethal_threshold=20.0):
@@ -26,12 +26,23 @@ class SystematicNavigator():
 
         if self.node is not None:
             self.polymap_publisher = self.node.create_publisher(
-                PolygonStamped, f'/systematic_navigator/map_contours', 10)
+                PolygonStamped, '/systematic_navigator/map_contours', 10
+                )
 
             self.decomp_publisher = self.node.create_publisher(
-                MarkerArray, f'/systematic_navigator/decomposed_map', 10)
+                MarkerArray, '/systematic_navigator/decomposed_map', 10
+                )
 
-    def update_map(self, new_map, generate=True, decompose=True, show=False):
+            self.path_publisher = self.node.create_publisher(
+                MarkerArray, '/systematic_navigator/planned_path', 10
+                )
+
+    def plan(self, new_map, start:np.ndarray = np.zeros(2), show=False) -> None:
+        self.start = start
+        self.update_map(new_map, show)
+        self.generate_path()
+
+    def update_map(self, new_map):
         self.map = new_map
 
         self.binary_costmap = np.zeros_like(self.map, dtype=np.uint8)
@@ -45,12 +56,7 @@ class SystematicNavigator():
             margin_px += 1
 
         contours, _ = cv2.findContours(self.binary_costmap, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
         contours = [cv2.approxPolyDP(c, 0.005 * cv2.arcLength(c, True), True) for c in contours]
-
-        if show:
-            self.debug_save(self.binary_costmap, contours)
-
         contours = sorted(contours, key=cv2.contourArea, reverse=True)
         outer_contour = contours[0]
 
@@ -58,44 +64,35 @@ class SystematicNavigator():
         filtered_contours = [outer_contour]
 
         for contour in contours[1:]:  # skip outer
-            if len(contour) < 6:
+            if len(contour) < 4:
+                ut.log(self.node, LogType.WARN, f"Skipping contour with {len(contour)} points")
                 continue
-
-            if self.is_inside(contour, outer_contour):
-                filtered_contours.append(contour)
+            filtered_contours.append(contour)
 
         self.contours = filtered_contours
-
+        
         closed_contour = []
-
         for contour in filtered_contours:
-            if len(contour) < 6:
-                if self.node is not None:
-                    ut.log(self.node, LogType.WARN, f"Skipping contour with {len(contour)} points")
-                continue
-
             pts = contour[:, 0, :]
 
-            map_height = self.map.shape[0]
-            map_width = self.map.shape[1]
+            self.map_height = self.map.shape[0]
+            self.map_width = self.map.shape[1]
 
             points = [
-                ((px - 0.5 * map_width) * self.map_resolution,
-                 (py - 0.5 * map_height) * self.map_resolution)
+                ((px - 0.5 * self.map_width) * self.map_resolution,
+                 (py - 0.5 * self.map_height) * self.map_resolution)
                 for px, py in pts
             ]
 
             if points[0] != points[-1]:
                 points.append(points[0])
-
-            if len(points) >= 4:
-                closed_contour.append(points)
+            
+            closed_contour.append(points)
 
         if self.node is not None:
             self.publish_polygon(closed_contour)
 
         self.polymap = closed_contour
-        self.generate_path(generate, decompose)
         return None
 
     def is_inside(self, contour, outer_contour):
@@ -171,6 +168,37 @@ class SystematicNavigator():
             marker_array.markers.append(marker)
 
         self.decomp_publisher.publish(marker_array)
+    
+    def publish_path(self):
+        marker_array = MarkerArray()
+
+        for path in self.paths:
+            marker = Marker()
+            marker.header.frame_id = "map"
+            marker.header.stamp = self.node.get_clock().now().to_msg()
+
+            marker.ns = "decomposition"
+            marker.id = 0
+            marker.type = Marker.LINE_STRIP
+            marker.action = Marker.ADD
+
+            marker.scale.x = 0.02
+
+            marker.color.r = 0.0
+            marker.color.g = 0.0
+            marker.color.b = 1.0
+            marker.color.a = 1.0
+
+            for p in path:
+                pt = PoseStamped().pose.position
+                pt.x = p[0]
+                pt.y = p[1]
+                pt.z = 0.0
+                marker.points.append(pt)
+
+            marker_array.markers.append(marker)
+
+        self.path_publisher.publish(marker_array)
 
     def debug_save(self, contours):
         img = cv2.normalize(self.map.astype(np.float32), None, 0, 255, cv2.NORM_MINMAX)
@@ -190,9 +218,6 @@ class SystematicNavigator():
 
         if self.paths:
             self.paths_publisher.publish()
-
-    def generate_path(self, generate, decompose):
-        pass
 
 
 class ReactiveNavigator():
