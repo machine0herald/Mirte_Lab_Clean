@@ -5,6 +5,7 @@
 #include <memory>
 #include <thread>
 #include <vector>
+#include <chrono>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
@@ -72,25 +73,51 @@ public:
 
   void initialize_moveit()
   {
-    move_group_ =
+     robot_model_loader_ =
+      std::make_shared<robot_model_loader::RobotModelLoader>(
+        shared_from_this());
+
+    // Mirte_arm initialization
+    
+    mirte_arm_move_group_ =
       std::make_shared<moveit::planning_interface::MoveGroupInterface>(
         shared_from_this(),
         "mirte_arm");
 
-    robot_model_loader_ =
-      std::make_shared<robot_model_loader::RobotModelLoader>(
-        shared_from_this());
+    mirte_arm_kinematic_model_ = robot_model_loader_->getModel();
 
-    kinematic_model_ = robot_model_loader_->getModel();
-
-    robot_state_ =
+    mirte_arm_robot_state_ =
       std::make_shared<moveit::core::RobotState>(
-        kinematic_model_);
+        mirte_arm_kinematic_model_);
 
-    robot_state_->setToDefaultValues();
+    mirte_arm_robot_state_->setToDefaultValues();
 
-    joint_model_group_ =
-      kinematic_model_->getJointModelGroup("mirte_arm");
+    mirte_arm_joint_model_group_ =
+      mirte_arm_kinematic_model_->getJointModelGroup("mirte_arm");
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+    mirte_arm_move_group_->setStartStateToCurrentState();
+    mirte_arm_move_group_->setNamedTarget("home");
+    mirte_arm_move_group_->move();
+
+    // Mirte_gripper initialization
+
+    mirte_gripper_move_group_ =
+      std::make_shared<moveit::planning_interface::MoveGroupInterface>(
+        shared_from_this(),
+        "mirte_gripper");
+
+    mirte_gripper_kinematic_model_ = robot_model_loader_->getModel();
+
+    mirte_gripper_robot_state_ =
+      std::make_shared<moveit::core::RobotState>(
+        mirte_gripper_kinematic_model_);
+
+    mirte_gripper_robot_state_->setToDefaultValues();
+
+    mirte_gripper_joint_model_group_ =
+      mirte_gripper_kinematic_model_->getJointModelGroup("mirte_gripper");
 
     RCLCPP_INFO(get_logger(), "MoveIt initialized");
   }
@@ -103,14 +130,23 @@ private:
   std::shared_ptr<robot_model_loader::RobotModelLoader>
     robot_model_loader_;
 
-  moveit::core::RobotModelPtr kinematic_model_;
+  moveit::core::RobotModelPtr mirte_arm_kinematic_model_;
 
-  moveit::core::RobotStatePtr robot_state_;
+  moveit::core::RobotStatePtr mirte_arm_robot_state_;
 
-  const moveit::core::JointModelGroup * joint_model_group_;
+  const moveit::core::JointModelGroup * mirte_arm_joint_model_group_;
 
   std::shared_ptr<moveit::planning_interface::MoveGroupInterface>
-    move_group_;
+    mirte_arm_move_group_;
+
+  moveit::core::RobotModelPtr mirte_gripper_kinematic_model_;
+
+  moveit::core::RobotStatePtr mirte_gripper_robot_state_;
+
+  const moveit::core::JointModelGroup * mirte_gripper_joint_model_group_;
+
+  std::shared_ptr<moveit::planning_interface::MoveGroupInterface>
+    mirte_gripper_move_group_;
 
   /*
    * Action server
@@ -127,12 +163,19 @@ private:
     const rclcpp_action::GoalUUID &,
     std::shared_ptr<const MoveToPosition::Goal> goal)
   {
-    RCLCPP_INFO(
-      get_logger(),
-      "Goal received: target pose [%.3f, %.3f, %.3f]",
-      goal->target_pose.position.x,
-      goal->target_pose.position.y,
-      goal->target_pose.position.z);
+    RCLCPP_INFO(get_logger(), "Action Contents: goal->target_pose = [%.3f, %.3f, %.3f]",
+      goal->mirte_arm_target_pose.position.x,
+      goal->mirte_arm_target_pose.position.y,
+      goal->mirte_arm_target_pose.position.z);
+
+    RCLCPP_INFO(get_logger(), "Action Contents: goal->mirte_arm_named_target = %s",
+      goal->mirte_arm_named_target.c_str());
+
+    RCLCPP_INFO(get_logger(), "Action Contents: goal->gripper_named_target = %s",
+      goal->mirte_gripper_named_target.c_str());
+
+    RCLCPP_INFO(get_logger(), "Action Contents: goal->gripper_joint_target = [%.3f]",
+      goal->mirte_gripper_joint_target);
 
     return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
   }
@@ -166,8 +209,7 @@ private:
    * Main execution
    */
 
-  void execute(
-    const std::shared_ptr<GoalHandleMoveToPosition> goal_handle)
+  void execute(const std::shared_ptr<GoalHandleMoveToPosition> goal_handle)
   {
     RCLCPP_INFO(
       get_logger(),
@@ -180,218 +222,338 @@ private:
 
     result->success = false;
 
-    print_move_group_info();
-
-    /*
-     * Current state
-     */
-
-    auto current_state =
-      move_group_->getCurrentState(10.0);
-
-    current_state->update();
-    current_state->enforceBounds();
-    current_state->update();
-
-    move_group_->setStartState(*current_state);
-
-    print_joint_values(current_state, "CURRENT");
-
-    /*
-     * Planner configuration
-     */
-
-    move_group_->setGoalOrientationTolerance(3.14);
-
-    // move_group_->setWorkspace(
-    //   -0.30, -0.30, 0.00,
-    //    0.30,  0.30, 0.30);
-
-    print_planner_info();
-
-    /*
-     * Target pose
-     */
-
-    geometry_msgs::msg::Pose target_pose =
-      goal->target_pose;
-
-    // target_pose.orientation =
-    //   move_group_->getCurrentPose("wrist")
-    //     .pose.orientation;
-
-    /*
-     * Collision check
-     */
-
-    planning_scene::PlanningScene planning_scene(
-      kinematic_model_);
-
-    bool collision =
-      planning_scene.isStateColliding(*current_state);
-
-    RCLCPP_INFO(
-      get_logger(),
-      "Collision: %s",
-      collision ? "true" : "false");
-
-    /*
-     * IK
-     */
-
-    auto target_state = current_state;
-
-    bool found_ik =
-      target_state->setFromIK(
-        joint_model_group_,
-        target_pose,
-        "wrist");
-
-    RCLCPP_INFO(
-      get_logger(),
-      "IK solution found: %s",
-      found_ik ? "true" : "false");
-
-    bool valid =
-      target_state->satisfiesBounds(
-        joint_model_group_);
-
-    RCLCPP_INFO(
-      get_logger(),
-      "Bounds valid: %s",
-      valid ? "true" : "false");
-
-    if (!found_ik)
-    {
-      RCLCPP_ERROR(
+    if (!goal->mirte_arm_named_target.empty()){
+      RCLCPP_INFO(
         get_logger(),
-        "IK failed");
+        "Named target specified: %s",
+        goal->mirte_arm_named_target.c_str());
 
-      goal_handle->abort(result);
+      mirte_arm_move_group_->setNamedTarget(
+        goal->mirte_arm_named_target);
+
+      mirte_arm_move_group_->setStartStateToCurrentState();
+      mirte_arm_move_group_->move();
+
+      result->success = true;
+      goal_handle->succeed(result);
+
+      RCLCPP_INFO(
+        get_logger(),
+        "Goal completed successfully");
 
       return;
     }
 
-    /*
-     * Target joints
-     */
+    if (goal->mirte_arm_target_pose.position.x != 0.0)
+    {
+      std::vector<double> mirte_arm_joint_values;
+      mirte_arm_move_group_->setGoalPositionTolerance(0.001);
+      mirte_arm_move_group_->setGoalJointTolerance(0.001);
 
-    target_state->update();
-    target_state->enforceBounds();
+      print_move_group_info();
 
-    std::vector<double> joint_values;
+      /*
+      * Current state
+      */
 
-    target_state->copyJointGroupPositions(
-      joint_model_group_,
-      joint_values);
+      auto mirte_arm_current_state = mirte_arm_move_group_->getCurrentState(10.0);
 
-    print_joint_values(target_state, "TARGET");
+      mirte_arm_current_state->update();
+      mirte_arm_current_state->enforceBounds();
+      mirte_arm_current_state->update();
 
-    move_group_->setPositionTarget(target_pose.position.x, target_pose.position.y, target_pose.position.z, "wrist");
+      mirte_arm_move_group_->setStartState(*mirte_arm_current_state);
 
-    /*
-     * Planning
-     */
+      print_joint_values(mirte_arm_current_state, "CURRENT");
 
-    auto [success, plan] =
-      [this]
+      /*
+      * Planner configuration
+      */
+
+
+      print_planner_info();
+
+      /*
+      * Target pose
+      */
+
+      geometry_msgs::msg::Pose mirte_arm_target_pose =
+        goal->mirte_arm_target_pose;
+      /*
+      * Collision check
+      */
+
+      planning_scene::PlanningScene planning_scene(
+        mirte_arm_kinematic_model_);
+
+      bool collision =
+        planning_scene.isStateColliding(*mirte_arm_current_state);
+
+      RCLCPP_INFO(
+        get_logger(),
+        "Collision: %s",
+        collision ? "true" : "false");
+
+      /*
+      * IK
+      */
+
+      auto mirte_arm_target_state = mirte_arm_current_state;
+
+      kinematics::KinematicsQueryOptions options;
+      options.return_approximate_solution = false;
+
+      bool found_ik = mirte_arm_target_state->setFromIK(
+        mirte_arm_joint_model_group_,
+        mirte_arm_target_pose,
+        "wrist",
+        0.0,
+        moveit::core::GroupStateValidityCallbackFn(),
+        options 
+      );
+
+      RCLCPP_INFO(
+        get_logger(),
+        "Exact IK solution found: %s, trying approximate IK. Disregard Target joint values.",
+        found_ik ? "true" : "false");
+
+      if (!found_ik){
+        kinematics::KinematicsQueryOptions options;
+        options.return_approximate_solution = true;
+
+        found_ik = mirte_arm_target_state->setFromIK(
+          mirte_arm_joint_model_group_,
+          mirte_arm_target_pose,
+          "wrist",
+          0.0,
+          moveit::core::GroupStateValidityCallbackFn(),
+          options 
+        );
+        RCLCPP_INFO(
+          get_logger(),
+          "Approximate IK solution found: %s",
+          found_ik ? "true" : "false");
+      }
+
+      bool valid =
+        mirte_arm_target_state->satisfiesBounds(
+          mirte_arm_joint_model_group_);
+
+      RCLCPP_INFO(
+        get_logger(),
+        "Bounds valid: %s",
+        valid ? "true" : "false");
+
+      if (!found_ik)
       {
-        moveit::planning_interface::
-          MoveGroupInterface::Plan msg;
+        RCLCPP_ERROR(
+          get_logger(),
+          "IK failed");
+        goal_handle->abort(result);
 
-        bool ok =
-          static_cast<bool>(
-            move_group_->plan(msg));
+        return;
+      }
 
-        return std::make_pair(ok, msg);
-      }();
+      /*
+      * Target joints
+      */
 
-    if (!success)
-    {
-      RCLCPP_ERROR(
-        get_logger(),
-        "Planning failed");
+      mirte_arm_target_state->update();
+      mirte_arm_target_state->enforceBounds();
 
-      goal_handle->abort(result);
+      mirte_arm_target_state->copyJointGroupPositions(
+        mirte_arm_joint_model_group_,
+        mirte_arm_joint_values);
 
-      return;
-    }
-    robot_trajectory::RobotTrajectory rt(
-    kinematic_model_,
-    "mirte_arm");
+      print_joint_values(mirte_arm_target_state, "TARGET");
 
-    rt.setRobotTrajectoryMsg(
-        *move_group_->getCurrentState(),
-        plan.trajectory_);
+      mirte_arm_move_group_->setPositionTarget(mirte_arm_target_pose.position.x, mirte_arm_target_pose.position.y, mirte_arm_target_pose.position.z, "wrist");
 
-    trajectory_processing::TimeOptimalTrajectoryGeneration totg;
+      /*
+      * Planning
+      */
 
-    bool timing_success = totg.computeTimeStamps(rt);
+      auto [success, plan] =
+        [this]
+        {
+          moveit::planning_interface::
+            MoveGroupInterface::Plan msg;
 
-    RCLCPP_INFO(
-        this->get_logger(),
-        "Time parameterization success: %s",
-        timing_success ? "true" : "false");
+          bool ok =
+            static_cast<bool>(
+              mirte_arm_move_group_->plan(msg));
 
-    rt.getRobotTrajectoryMsg(plan.trajectory_);
+          return std::make_pair(ok, msg);
+        }();
 
-    RCLCPP_INFO(
-      get_logger(),
-      "Planning successful");
+      if (!success)
+      {
+        RCLCPP_ERROR(
+          get_logger(),
+          "Initial planning failed, increasing tolerances");
+        mirte_arm_move_group_->setGoalPositionTolerance(0.001);
+        mirte_arm_move_group_->setGoalJointTolerance(0.01);
+        print_planner_info();
+        
+        auto [success, plan] =
+          [this]
+          {
+            moveit::planning_interface::
+              MoveGroupInterface::Plan msg;
 
-    /*
-     * Execution
-     */
+            bool ok =
+              static_cast<bool>(
+                mirte_arm_move_group_->plan(msg));
 
-    const auto& pts = plan.trajectory_.joint_trajectory.points;
+            return std::make_pair(ok, msg);
+          }();
 
-    RCLCPP_INFO(this->get_logger(),
-        "Trajectory contains %zu points",
-        pts.size());
+        if (!success){
+          RCLCPP_ERROR(
+            get_logger(),
+            "Planning failed");
+          goal_handle->abort(result);
+          return;
+        }
+      }
+      robot_trajectory::RobotTrajectory rt(
+      mirte_arm_kinematic_model_,
+      "mirte_arm");
 
-    for (size_t i = 0; i < pts.size(); ++i)
-    {
+      rt.setRobotTrajectoryMsg(
+          *mirte_arm_move_group_->getCurrentState(),
+          plan.trajectory_);
+
+      trajectory_processing::TimeOptimalTrajectoryGeneration totg;
+
+      bool timing_success = totg.computeTimeStamps(rt);
+
       RCLCPP_INFO(
           this->get_logger(),
-          "Point %zu time: %f",
-          i,
-          pts[i].time_from_start.sec +
-          pts[i].time_from_start.nanosec * 1e-9);
+          "Time parameterization success: %s",
+          timing_success ? "true" : "false");
+
+      rt.getRobotTrajectoryMsg(plan.trajectory_);
+
+      RCLCPP_INFO(
+        get_logger(),
+        "Planning successful");
+
+      /*
+      * Execution
+      */
+
+      const auto& pts = plan.trajectory_.joint_trajectory.points;
+
+      RCLCPP_INFO(this->get_logger(),
+          "Trajectory contains %zu points",
+          pts.size());
+
+      for (size_t i = 0; i < pts.size(); ++i)
+      {
+        RCLCPP_INFO(
+            this->get_logger(),
+            "Point %zu time: %f",
+            i,
+            pts[i].time_from_start.sec +
+            pts[i].time_from_start.nanosec * 1e-9);
+      }
+      mirte_arm_move_group_->execute(plan);
+
+      /*
+      * Final pose
+      */
+
+      auto current_pose =
+        mirte_arm_move_group_->getCurrentPose("wrist");
+
+      RCLCPP_INFO(
+        get_logger(),
+        "Current pose: "
+        "position = [%f, %f, %f], "
+        "orientation = [%f, %f, %f, %f]",
+        current_pose.pose.position.x,
+        current_pose.pose.position.y,
+        current_pose.pose.position.z,
+        current_pose.pose.orientation.x,
+        current_pose.pose.orientation.y,
+        current_pose.pose.orientation.z,
+        current_pose.pose.orientation.w);
+
+      mirte_arm_current_state = mirte_arm_move_group_->getCurrentState(10.0);
+      mirte_arm_current_state->copyJointGroupPositions(
+        mirte_arm_joint_model_group_,
+        mirte_arm_joint_values);
+
+      mirte_arm_joint_values[3] = -1.57;
+      mirte_arm_move_group_->setJointValueTarget(mirte_arm_joint_values);
+      mirte_arm_move_group_->move();
+
+      /*
+      * Finish action
+      */
+
+      result->success = true;
+
+      goal_handle->succeed(result);
+
+      RCLCPP_INFO(
+        get_logger(),
+        "Goal completed successfully");
+      
+      return;
     }
-    move_group_->execute(plan);
 
-    /*
-     * Final pose
-     */
+    if (!goal->mirte_gripper_named_target.empty()){
+      RCLCPP_INFO(
+        get_logger(),
+        "Named target specified: %s",
+        goal->mirte_gripper_named_target.c_str());
 
-    auto current_pose =
-      move_group_->getCurrentPose("wrist");
+      mirte_gripper_move_group_->setNamedTarget(
+        goal->mirte_gripper_named_target);
 
-    RCLCPP_INFO(
-      get_logger(),
-      "Current pose: "
-      "position = [%f, %f, %f], "
-      "orientation = [%f, %f, %f, %f]",
-      current_pose.pose.position.x,
-      current_pose.pose.position.y,
-      current_pose.pose.position.z,
-      current_pose.pose.orientation.x,
-      current_pose.pose.orientation.y,
-      current_pose.pose.orientation.z,
-      current_pose.pose.orientation.w);
+      mirte_gripper_move_group_->setStartStateToCurrentState();
+      mirte_gripper_move_group_->move();
 
-    /*
-     * Finish action
-     */
+      result->success = true;
+      goal_handle->succeed(result);
 
-    result->success = true;
+      RCLCPP_INFO(
+        get_logger(),
+        "Goal completed successfully");
 
-    goal_handle->succeed(result);
+      return;
+    }
 
-    RCLCPP_INFO(
-      get_logger(),
-      "Goal completed successfully");
+    if (goal->mirte_gripper_joint_target != 999){
+      RCLCPP_INFO(
+        get_logger(),
+        "Joint target specified: %f",
+        goal->mirte_gripper_joint_target);
+
+      std::vector<double> gripper_joint_values;
+      mirte_gripper_move_group_->getCurrentState()->copyJointGroupPositions(
+        mirte_gripper_joint_model_group_,
+        gripper_joint_values);
+
+      gripper_joint_values[0] = goal->mirte_gripper_joint_target;
+
+      mirte_gripper_move_group_->setJointValueTarget(gripper_joint_values);
+
+      mirte_gripper_move_group_->move();
+
+      result->success = true;
+      goal_handle->succeed(result);
+
+      RCLCPP_INFO(
+        get_logger(),
+        "Goal completed successfully");
+
+      return;
+    }
   }
+  
 
   /*
    * Helper functions
@@ -402,12 +564,12 @@ private:
     RCLCPP_INFO(
       get_logger(),
       "Pose Reference Frame: %s",
-      move_group_->getPoseReferenceFrame().c_str());
+      mirte_arm_move_group_->getPoseReferenceFrame().c_str());
 
     RCLCPP_INFO(
       get_logger(),
       "End Effector Link: %s",
-      move_group_->getEndEffectorLink().c_str());
+      mirte_arm_move_group_->getEndEffectorLink().c_str());
   }
 
   void print_planner_info()
@@ -415,22 +577,22 @@ private:
     RCLCPP_INFO(
       get_logger(),
       "Planning frame: %s",
-      move_group_->getPlanningFrame().c_str());
+      mirte_arm_move_group_->getPlanningFrame().c_str());
 
     RCLCPP_INFO(
       get_logger(),
       "Goal position tolerance: %f",
-      move_group_->getGoalPositionTolerance());
+      mirte_arm_move_group_->getGoalPositionTolerance());
 
     RCLCPP_INFO(
       get_logger(),
       "Goal orientation tolerance: %f",
-      move_group_->getGoalOrientationTolerance());
+      mirte_arm_move_group_->getGoalOrientationTolerance());
 
     RCLCPP_INFO(
       get_logger(),
       "Goal joint tolerance: %f",
-      move_group_->getGoalJointTolerance());
+      mirte_arm_move_group_->getGoalJointTolerance());
   }
 
   void print_joint_values(
@@ -438,13 +600,13 @@ private:
     const std::string & label)
   {
     const auto & joint_names =
-      joint_model_group_->getVariableNames();
+      mirte_arm_joint_model_group_->getVariableNames();
 
-    std::vector<double> joint_values;
+    std::vector<double> mirte_arm_joint_values;
 
     state->copyJointGroupPositions(
-      joint_model_group_,
-      joint_values);
+      mirte_arm_joint_model_group_,
+      mirte_arm_joint_values);
 
     for (size_t i = 0; i < joint_names.size(); ++i)
     {
@@ -453,7 +615,7 @@ private:
         "[%s] %s: %f",
         label.c_str(),
         joint_names[i].c_str(),
-        joint_values[i]);
+        mirte_arm_joint_values[i]);
     }
   }
 };

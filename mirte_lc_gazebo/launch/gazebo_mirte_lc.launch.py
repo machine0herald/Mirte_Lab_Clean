@@ -110,6 +110,6 @@ def generate_launch_description():
         SetParameter(name="use_sim_time", value='true'),
         gazebo_launch,
         TimerAction(period=10.0, actions=[moveit_launch]),
-        TimerAction(period=27.0, actions=[octomap]),
+        # TimerAction(period=27.0, actions=[octomap]),
         TimerAction(period=30.0, actions=[nav2]), 
     ])
