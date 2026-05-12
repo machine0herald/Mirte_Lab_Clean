@@ -17,16 +17,17 @@ ompl:
   # To optionally use Ruckig for jerk-limited smoothing, add this line to the request adapters below
   # default_planning_request_adapters/AddRuckigTrajectorySmoothing
   request_adapters: >-
-    default_planning_request_adapters/AddTimeOptimalParameterization
-    default_planning_request_adapters/FixWorkspaceBounds
-    default_planning_request_adapters/FixStartStateBounds
-    default_planning_request_adapters/FixStartStateCollision
-    default_planning_request_adapters/FixStartStatePathConstraints
+    default_planner_request_adapters/AddTimeOptimalParameterization
+    default_planner_request_adapters/FixWorkspaceBounds
+    default_planner_request_adapters/FixStartStateBounds
+    default_planner_request_adapters/FixStartStateCollision
+    default_planner_request_adapters/FixStartStatePathConstraints
   planner_configs:
     PRMstarkConfigDefault:
       type: geometric::PRMstar
   # Define planner(s) for each move_group
   mirte_arm:
+    enforce_constrained_state_space: true
     planner_configs:
       - PRMstarkConfigDefault
   # Add additional planning pipeline config here
