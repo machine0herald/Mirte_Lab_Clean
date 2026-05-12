@@ -7,11 +7,11 @@ from visualization_msgs.msg import Marker, MarkerArray
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 
-import utils as ut
-from utils import  LogType
+# import utils as ut
+# from utils import  LogType
 
-# import mirte_lc_nav2.utils as ut
-# from mirte_lc_nav2.utils import  LogType
+import mirte_lc_nav2.utils as ut
+from mirte_lc_nav2.utils import  LogType
 
 class SystematicNavigator():
     def __init__(self, node=None, resolution=0.1, map_resolution=0.05, lethal_threshold=20.0):
@@ -39,7 +39,7 @@ class SystematicNavigator():
 
     def plan(self, new_map, start:np.ndarray = np.zeros(2), show=False) -> None:
         self.start = start
-        self.update_map(new_map, show)
+        self.update_map(new_map)
         self.generate_path()
 
     def update_map(self, new_map):

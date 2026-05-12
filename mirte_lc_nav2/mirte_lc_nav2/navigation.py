@@ -23,11 +23,11 @@ from rclpy.action import ActionClient
 from lifecycle_msgs.srv import ChangeState
 from lifecycle_msgs.msg import Transition
 
-# import mirte_lc_nav2.navigators as nv
-# import mirte_lc_nav2.utils as ut
+import mirte_lc_nav2.navigators as nv
+import mirte_lc_nav2.utils as ut
 
-import navigators as nv
-import utils as ut
+# import navigators as nv
+# import utils as ut
 
 import numpy as np
 import math
@@ -61,7 +61,7 @@ class LabCleanNavigator(Node):
         super().__init__(node_name)
 
         # Set Planner Parameters
-        self._planner_name = self.declare_parameter("planner_type", "BousPlanner")
+        self._planner_name = self.declare_parameter("planner_type", "SkeletonPlanner")
         self._verbose = self.declare_parameter("verbose", True)
 
         # ROS2 Interfaces
@@ -82,11 +82,11 @@ class LabCleanNavigator(Node):
             self.get_logger().warn("Queue is empyty")
             return
 
-        elif self.executing:
+        if self.executing:
+            self.get_logger().info("Already executing a goal.")
             return
 
-        else:
-            self.path_publisher()
+        self.path_publisher()
 
     def path_publisher(self) -> None:
         """
@@ -134,25 +134,22 @@ class LabCleanNavigator(Node):
             feedback = feedback_msg.feedback
             self.distance_remaining = feedback.distance_remaining
             if self._verbose:
-                # self.get_logger().info(f"Distance Remaining {feedback.distance_to_goal}")
-                # self.get_logger().info(f"Speed: {feedback.speed}")            
                 self.get_logger().info(f"Distance Remaining {feedback.distance_remaining}")
 
-            if (0.0 < self.distance_remaining < 0.1):
-                self.get_logger().error(
-                    "Distance threshold reached, cancelling goal and treating as success"
-                )
-
+            # Adjusted logic to ensure proper goal handling
+            if self.distance_remaining < 0.1:
+                self.get_logger().info("Goal reached successfully.")
                 self.goal_handle.cancel_goal_async()
 
-                # Manually advance queue
+                # Manually advance queue only if there are remaining goals
                 if len(self.queue) > 0:
                     self.queue.pop(0)
 
                 self.executing = False
 
-                # Start next path immediately
-                self.execute()
+                # Start next path only if queue is not empty
+                if len(self.queue) > 0:
+                    self.execute()
         else:
             return
 
@@ -165,6 +162,10 @@ class LabCleanNavigator(Node):
             if len(self.queue) > 0:
                 self.queue.pop(0)
             self.executing = False
+
+            # Start next path only if queue is not empty
+            if len(self.queue) > 0:
+                self.execute()
 
     # ------------- Helper Functions ----------------
     def get_robot_position(self):

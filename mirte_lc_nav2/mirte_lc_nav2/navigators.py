@@ -3,12 +3,12 @@ import cv2
 
 import rclpy
 
-# from mirte_lc_nav2.navigator_types import SystematicNavigator, ReactiveNavigator
-# import mirte_lc_nav2.utils as ut
-# from mirte_lc_nav2.utils import LogType
-from navigator_types import SystematicNavigator, ReactiveNavigator
-import utils as ut
-from utils import LogType
+from mirte_lc_nav2.navigator_types import SystematicNavigator, ReactiveNavigator
+import mirte_lc_nav2.utils as ut
+from mirte_lc_nav2.utils import LogType
+# from navigator_types import SystematicNavigator, ReactiveNavigator
+# import utils as ut
+# from utils import LogType
 
 import trajgenpy as tjp
 from trajgenpy import Geometries
