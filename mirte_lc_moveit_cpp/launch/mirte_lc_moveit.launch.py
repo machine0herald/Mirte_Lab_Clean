@@ -70,36 +70,16 @@ def generate_launch_description():
         ],
     )
 
-    test_ik_node = Node(
-        package='mirte_lc_moveit_cpp',
-        executable='test_ik',
-        name='moveit_node',
-        output='log',
-        parameters=[
-        moveit_config.robot_description,
-        moveit_config.robot_description_semantic,
-        moveit_config.planning_pipelines,
-        moveit_config.robot_description_kinematics,
-        ],
-    )
-
-    moveit_action_server_node = Node(
-        package='mirte_lc_moveit_cpp',
-        executable='moveit_action_server',
-        name='moveit_action_server',
-        output='log',
-        parameters=[
-            moveit_config.to_dict(),
-            {"use_sim_time": use_sim_time},
-        ],
-    )
-
-    moveit_action_client_node = Node(
-        package='mirte_lc_moveit',
-        executable='moveit_action_client',
-        name='moveit_action_client',
-        output='log',
-    )
+    # moveit_action_server_node = Node(
+    #     package='mirte_lc_moveit_cpp',
+    #     executable='moveit_action_server',
+    #     name='moveit_action_server',
+    #     output='log',
+    #     parameters=[
+    #         moveit_config.to_dict(),
+    #         {"use_sim_time": use_sim_time},
+    #     ],
+    # )
 
     return LaunchDescription(
         [
@@ -107,11 +87,6 @@ def generate_launch_description():
             SetParameter(name="use_sim_time", value=use_sim_time),
             move_group_node,
             TimerAction(period = 5.0, actions = [rviz_node]),
-            TimerAction(period = 20.0, actions = [moveit_action_server_node]),
-            # TimerAction(period = 10.0, actions = [moveit_action_client_node]),
-            # TimerAction(period = 15.0, actions = [test_ik_node]),
-            # TimerAction(period = 20.0, actions = [custom_test_node]),
-            # TimerAction(period = 10.0, actions = [moveit_test_node]),
-            # TimerAction(period = 20.0, actions = [robot_state_node]),
+            # TimerAction(period = 20.0, actions = [moveit_action_server_node]),
         ]
     )

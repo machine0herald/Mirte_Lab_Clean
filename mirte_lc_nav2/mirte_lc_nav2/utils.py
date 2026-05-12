@@ -12,6 +12,10 @@ import math
 
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
+
+import numpy as np
+np.float = float
+
 from tf_transformations import quaternion_from_euler
 
 
@@ -24,7 +28,6 @@ def to_ros_path(points, frame_id="map", spacing=0.1):
     - resamples path at consistent spacing
     - generates orientations from path tangent
     """
-
     # -----------------------------------------
     # Remove duplicates
     # -----------------------------------------
