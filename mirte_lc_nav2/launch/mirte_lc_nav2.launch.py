@@ -136,6 +136,17 @@ def generate_launch_description():
     parameters=[params_file],
     )
     
+    ################################
+    # Lab cleanup navigation stack #
+    ################################
+    nav2_labclean = Node(
+        package='mirte_lc_nav2',
+        executable='labclean_navigator',
+        name='labclean_navigator',
+        output='screen',
+    )
+
+
     return LaunchDescription([
         SetParameter(name="use_sim_time", value='true'),
         TimerAction(period=20.0, actions=[
@@ -152,5 +163,10 @@ def generate_launch_description():
             nav2_bt_navigator,
             nav2_lifecycle_manager,
             nav2_behavior_server,
+        ]),
+
+        TimerAction(period=80.0, actions=[
+            LogInfo(msg='Starting Lab cleanup Navigation stack'),
+            nav2_labclean,
         ]),
     ])

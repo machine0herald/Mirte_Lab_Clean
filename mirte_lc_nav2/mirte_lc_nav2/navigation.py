@@ -93,6 +93,9 @@ class LabCleanNavigator(Node):
         Publish a new path message when enabled.
         """
 
+        if not isinstance(self.queue[0], (list, tuple, np.ndarray)):
+            self.get_logger().error(f"Invalid queue[0] type for path conversion: {type(self.queue[0])}")
+            return
         path = ut.to_ros_path(self.queue[0])
 
         self.get_logger().info("New path generated, updating waypoints.")
@@ -137,7 +140,7 @@ class LabCleanNavigator(Node):
                 self.get_logger().info(f"Distance Remaining {feedback.distance_remaining}")
 
             # Adjusted logic to ensure proper goal handling
-            if self.distance_remaining < 0.1:
+            if 0 < self.distance_remaining < 0.1:
                 self.get_logger().info("Goal reached successfully.")
                 self.goal_handle.cancel_goal_async()
 
@@ -200,6 +203,12 @@ class LabCleanNavigator(Node):
                 return
 
             self.planner.plan(self.map, start)
+            if self.planner.paths is None:
+                self.get_logger().error("Planner returned no paths (planner.paths is None)")
+                return
+            if len(self.planner.paths) == 0:
+                self.get_logger().warn("Planner returned empty paths")
+                return
             self.queue.extend(self.planner.paths)
             self.counter = None
         self.execute()

@@ -260,7 +260,7 @@ controller_server:
       vx_std: 0.2
       vy_std: 0.0
       wz_std: 0.4
-      vx_max: 0.5
+      vx_max: 0.8
       vx_min: -0.35
       vy_max: 0.0
       wz_max: 1.9
@@ -421,7 +421,7 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.3
+        inflation_radius: 0.6
       always_send_full_costmap: True
 
 map_server:

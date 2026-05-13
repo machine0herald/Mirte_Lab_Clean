@@ -321,12 +321,15 @@ class SkeletonPath(SystematicNavigator):
 
         # Convert the visited nodes to array (n, 2) format
         self.path = np.array([self.waypoints[node] for node in ordered_nodes])
-        return path[::2]
+        
+        # Return path segments for compatibility with LabCleanNavigator
+        return [self.path]
 
     def generate_path(self):
         self.read()
         self.set_waypoints()
-        self.plan_path()
+        self.paths = self.plan_path()
+        self.publish_path()
 
 
 class TreePath(SystematicNavigator):
