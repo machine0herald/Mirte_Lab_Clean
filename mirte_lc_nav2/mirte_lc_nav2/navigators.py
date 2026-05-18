@@ -332,10 +332,16 @@ class SkeletonPath(SystematicNavigator):
         self.publish_path()
 
 
-class TreePath(SystematicNavigator):
-    name = "TreePlanner"
+class SpanningTreePath(SystematicNavigator):
+    name = "SpanningTreePlanner"
     def __init__(self, node=None, resolution=0.1):
         super().__init__(resolution)
+    
+    def generate_spanning_tree(self):
+        G = nx.grid_2d_graph(5, 5)
+        tree = nx.dfs_tree(G, source=(0, 0))
+        
+        return
 
     def generate_path(self):
         return
@@ -344,6 +350,6 @@ class TreePath(SystematicNavigator):
 PLANNERS = {
     BousPath.name: BousPath,
     SkeletonPath.name: SkeletonPath,
-    TreePath.name: TreePath,
+    SpanningTreePath.name: SpanningTreePath,
     StraightLinePath.name: StraightLinePath,
 }

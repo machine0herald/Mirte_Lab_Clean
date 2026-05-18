@@ -1,29 +1,89 @@
 import rclpy
 import numpy as np
-from rclpy.node import Node
-from geometry_msgs.msg import Twist
-from lifecycle_msgs.srv import ChangeState
-from lifecycle_msgs.msg import Transition
+from rclpy.node import Node, Timer
+from rclpy.action import (
+    ActionServer,
+    ActionClient,
+    CancelResponse,
+    GoalResponse,
+)
+
+from std_msgs.msg import String, Bool
+from explore_light_msgs.msg import ExploreStatus
+from mirte_lc_msgs.action import NavigateCoverage
 
 class LabcleanManager(Node):
 
     def __init__(self):
         super().__init__('labclean_manager')
+        self.explored = False
 
-        self.mapping_lifecycle = self.create_client(
-            ChangeState,
-            '/nav2/localization/change_state'
+        self.exploration_sub = self.create_subscription(
+            ExploreStatus,
+            '/exploration/status',
+            self.exploration_callback,
+            10
         )
+        
+        self.navigation_client = ActionClient(
+            self, NavigateCoverage, 'labclean_navigator/coverage'
+            )
+        
+        # Publishers to control the Lifecycle of navigation and exploration nodes        
+        self.exploration_controller = self.create_publisher(Bool, 'explore/resume', 10)
+        self.navigation_controller = self.create_publisher(Bool, 'labclean_navigator/active', 10)
+        
+    def exploration_callback(self, msg):
+        if msg.status == ExploreStatus.STATUS_COMPLETED:
+            self.get_logger().info('Exploration completed, starting labclean navigation')
+            if not self.explored:
+                self.explored = True
+                self.send_coverage_goal()
 
-        while not self.client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info('Waiting for lifecycle service...')
+        elif msg.status == ExploreStatus.STATUS_ACTIVE:
+            self.get_logger().info('Exploration active')
     
-    def change_state(self, transition_id):
-        req = ChangeState.Request()
-        req.transition.id = transition_id
-        future = self.mapping_lifecycle.call_async(req)
+    def send_coverage_goal(self):
+        goal_msg = NavigateCoverage.Goal()
+        goal_msg.planner_type = NavigateCoverage.Goal.SPANNING_TREE
+        goal_msg.verbose = True
+        
+        self.navigation_client.wait_for_server()
+        self.navigation_client.send_goal_async(
+            goal_msg,
+            feedback_callback=self.nav_feedback_callback,
+        ).add_done_callback(self.goal_response_callback)
+        
+    def nav_feedback_callback(self, feedback_msg):
+        feedback = feedback_msg.feedback
+        idx = feedback.current_segment
+        total_segments = feedback.total_segments
+        
+        if total_segments > 0:
+            progress = float(idx + 1) / float(total_segments) * 100.0
+            self.get_logger().info(f'Labclean navigation progress: {progress:.2f}%')
+            
+    def goal_response_callback(self, future):
+        goal_handle = future.result()
+        if not goal_handle.accepted:
+            self.get_logger().error('Labclean navigation goal rejected')
+            return
+        
+        self.get_logger().info('Labclean navigation goal accepted')
 
-        rclpy.spin_until_future_complete(self, future)
 
-        if future.result() is not None:
-            self.get_logger().info(f'Successfully requested {transition_id} of node {self.get_name()}')
+def main(args=None):
+    rclpy.init(args=args)
+    node = LabcleanManager()
+
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info("Shutting down LabcleanManager")
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()

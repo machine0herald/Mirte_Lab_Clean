@@ -177,12 +177,12 @@ class SystematicNavigator():
             marker.header.frame_id = "map"
             marker.header.stamp = self.node.get_clock().now().to_msg()
 
-            marker.ns = "decomposition"
+            marker.ns = "path"
             marker.id = 0
             marker.type = Marker.LINE_STRIP
             marker.action = Marker.ADD
 
-            marker.scale.x = 0.02
+            marker.scale.x = 0.1
 
             marker.color.r = 0.0
             marker.color.g = 0.0

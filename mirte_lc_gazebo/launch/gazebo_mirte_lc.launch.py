@@ -19,6 +19,8 @@ import os
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 
+from launch.actions import DeclareLaunchArgument, LogInfo
+
 
 def generate_launch_description():
 
@@ -105,11 +107,27 @@ def generate_launch_description():
             {'filter_ground_plane': True},
         ]
     )
+    
+    ####################
+    # Labclean Manager #
+    ####################
+    labclean_manager = Node(
+        package='mirte_lc_labclean',
+        executable='labclean_manager',
+        name='labclean_manager',
+        output='screen',
+        parameters=[
+            {'use_sim_time': True},
+        ]
+    )
 
     return LaunchDescription([
         SetParameter(name="use_sim_time", value='true'),
         gazebo_launch,
         TimerAction(period=10.0, actions=[moveit_launch]),
         # TimerAction(period=27.0, actions=[octomap]),
-        TimerAction(period=30.0, actions=[nav2]), 
+        TimerAction(period=30.0, actions=[nav2]),
+        TimerAction(period=155.0, actions=[
+            LogInfo(msg='Starting Labclean Manager'),
+            labclean_manager]), 
     ])

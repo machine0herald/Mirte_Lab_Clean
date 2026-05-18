@@ -1,5 +1,5 @@
 '''
-ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
+ros2 launch mirte_lc_nav2 mirte_lc_nav2.launch.py
 '''
 
 from launch import LaunchDescription
@@ -29,6 +29,7 @@ import os
 def generate_launch_description():
 
     mirte_navigation = get_package_share_directory('mirte_navigation')
+    m_explore_ros2 = get_package_share_directory('explore_lite')
     params_file = os.path.join(
         get_package_share_directory('mirte_lc_labclean'),
         'config',
@@ -145,7 +146,22 @@ def generate_launch_description():
         name='labclean_navigator',
         output='screen',
     )
-
+    
+    ##############################
+    # M-explore navigation stack #
+    ##############################
+    m_explore_nav = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                m_explore_ros2,
+                'launch',
+                'explore.launch.py'
+            )
+        ),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+        }.items()
+    )
 
     return LaunchDescription([
         SetParameter(name="use_sim_time", value='true'),
@@ -168,5 +184,10 @@ def generate_launch_description():
         TimerAction(period=80.0, actions=[
             LogInfo(msg='Starting Lab cleanup Navigation stack'),
             nav2_labclean,
+        ]),
+        
+        TimerAction(period=120.0, actions=[
+            LogInfo(msg='Starting M-explore Navigation stack'),
+            m_explore_nav,
         ]),
     ])

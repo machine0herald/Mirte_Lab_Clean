@@ -37,8 +37,3 @@
     rosdep install -y --from-paths src/ --ignore-src --rosdistro humble
     colcon build --symlink-install
     ```
-
-6. Run install script for Fields2Cover
-    ```sh
-    sudo install_Fields.sh
-    ```

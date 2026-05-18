@@ -4,7 +4,7 @@ octomap_server:
     frame_id: "map"
 
     resolution: 0.05
-    max_depth: 16
+    max_depth: 1
 
     use_sim_time: true
     latch: true
