@@ -29,11 +29,11 @@ import os
 def generate_launch_description():
 
     mirte_navigation = get_package_share_directory('mirte_navigation')
-    m_explore_ros2 = get_package_share_directory('explore_lite')
+    fbe_mapping = get_package_share_directory('mirte_lc_nav2')
     params_file = os.path.join(
-        get_package_share_directory('mirte_lc_labclean'),
+        fbe_mapping,
         'config',
-        'nav3.yaml'
+        'nav2_coverage_params.yaml'
     )
     
     use_sim_time_arg = DeclareLaunchArgument(
@@ -153,9 +153,9 @@ def generate_launch_description():
     m_explore_nav = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                m_explore_ros2,
+                fbe_mapping,
                 'launch',
-                'explore.launch.py'
+                'fbe.launch.py'
             )
         ),
         launch_arguments={
@@ -181,12 +181,12 @@ def generate_launch_description():
             nav2_behavior_server,
         ]),
 
-        TimerAction(period=80.0, actions=[
+        TimerAction(period=50.0, actions=[
             LogInfo(msg='Starting Lab cleanup Navigation stack'),
             nav2_labclean,
         ]),
         
-        TimerAction(period=120.0, actions=[
+        TimerAction(period=50.0, actions=[
             LogInfo(msg='Starting M-explore Navigation stack'),
             m_explore_nav,
         ]),

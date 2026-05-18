@@ -127,7 +127,7 @@ def generate_launch_description():
         TimerAction(period=10.0, actions=[moveit_launch]),
         # TimerAction(period=27.0, actions=[octomap]),
         TimerAction(period=30.0, actions=[nav2]),
-        TimerAction(period=155.0, actions=[
+        TimerAction(period=80.0, actions=[
             LogInfo(msg='Starting Labclean Manager'),
             labclean_manager]), 
     ])

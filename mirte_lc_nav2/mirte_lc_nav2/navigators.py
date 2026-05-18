@@ -335,12 +335,11 @@ class SkeletonPath(SystematicNavigator):
 class SpanningTreePath(SystematicNavigator):
     name = "SpanningTreePlanner"
     def __init__(self, node=None, resolution=0.1):
-        super().__init__(resolution)
+        super().__init__(node, resolution)
     
     def generate_spanning_tree(self):
         G = nx.grid_2d_graph(5, 5)
         tree = nx.dfs_tree(G, source=(0, 0))
-        
         return
 
     def generate_path(self):

@@ -9,7 +9,7 @@ from rclpy.action import (
 )
 
 from std_msgs.msg import String, Bool
-from explore_light_msgs.msg import ExploreStatus
+from explore_lite_msgs.msg import ExploreStatus
 from mirte_lc_msgs.action import NavigateCoverage
 
 class LabcleanManager(Node):
@@ -20,7 +20,7 @@ class LabcleanManager(Node):
 
         self.exploration_sub = self.create_subscription(
             ExploreStatus,
-            '/exploration/status',
+            '/explore/status',
             self.exploration_callback,
             10
         )
@@ -34,18 +34,18 @@ class LabcleanManager(Node):
         self.navigation_controller = self.create_publisher(Bool, 'labclean_navigator/active', 10)
         
     def exploration_callback(self, msg):
-        if msg.status == ExploreStatus.STATUS_COMPLETED:
+        if msg.status == ExploreStatus.RETURNED_TO_ORIGIN:
             self.get_logger().info('Exploration completed, starting labclean navigation')
             if not self.explored:
                 self.explored = True
                 self.send_coverage_goal()
 
-        elif msg.status == ExploreStatus.STATUS_ACTIVE:
+        elif msg.status == ExploreStatus.EXPLORATION_IN_PROGRESS:
             self.get_logger().info('Exploration active')
     
     def send_coverage_goal(self):
         goal_msg = NavigateCoverage.Goal()
-        goal_msg.planner_type = NavigateCoverage.Goal.SPANNING_TREE
+        goal_msg.planner_type = NavigateCoverage.Goal.BOUSTROPHEDON
         goal_msg.verbose = True
         
         self.navigation_client.wait_for_server()

@@ -29,7 +29,7 @@ setup(
     entry_points={
         'console_scripts': [
             'test_node = mirte_lc_labclean.test_node:main',
-            'labclean_manager = mirte_lc_labclean.labclean_manager:main',
+            'labclean_manager = mirte_lc_labclean.mirte_lc:main',
         ],
     },
 )
