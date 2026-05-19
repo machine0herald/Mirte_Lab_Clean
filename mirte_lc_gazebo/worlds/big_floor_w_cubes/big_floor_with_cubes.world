@@ -16,171 +16,25 @@
       <pose>3 1 2 0 0 0</pose>
       <direction>0 0 -1</direction>
     </light>
-    <model name="_static_Office chair.001">
-      <link name="_static_Office chair.001_link">
-        <visual name="_static_Office chair.001">
+    <model name="_static_room">
+      <link name="_static_room_link">
+        <visual name="_static_room">
           <geometry>
             <mesh>
               <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
               <submesh>
-                <name>_static_Office chair.001</name>
+                <name>_static_room</name>
               </submesh>
             </mesh>
           </geometry>
         </visual>
-        <collision name="_static_Office chair.001_collision">
+        <collision name="_static_room_collision">
           <geometry>
             <box>
-              <size>0.55961 0.62281 1.13249</size>
+              <size>35.45285 12.35319 4.22303</size>
             </box>
           </geometry>
-          <pose>7.70654 3.66870 0.58611 0 0 0</pose>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0 0 0 0</pose>
-      <static>true</static>
-    </model>
-    <model name="_static_Office chair.003">
-      <link name="_static_Office chair.003_link">
-        <visual name="_static_Office chair.003">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Office chair.003</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="_static_Office chair.003_collision">
-          <geometry>
-            <box>
-              <size>0.58162 0.63295 1.13249</size>
-            </box>
-          </geometry>
-          <pose>-6.05632 -2.74608 0.58611 0 0 0</pose>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0 0 0 0</pose>
-      <static>true</static>
-    </model>
-    <model name="_static_Office chair.004">
-      <link name="_static_Office chair.004_link">
-        <visual name="_static_Office chair.004">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Office chair.004</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="_static_Office chair.004_collision">
-          <geometry>
-            <box>
-              <size>0.55797 0.62211 1.13249</size>
-            </box>
-          </geometry>
-          <pose>6.53002 1.89325 0.58611 0 0 0</pose>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0 0 0 0</pose>
-      <static>true</static>
-    </model>
-    <model name="_static_Room">
-      <link name="_static_Room_link">
-        <visual name="_static_Room">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Room</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="_static_Room_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Room</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0 0 0 0</pose>
-      <static>true</static>
-    </model>
-    <model name="_static_Office chair.005">
-      <link name="_static_Office chair.005_link">
-        <visual name="_static_Office chair.005">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Office chair.005</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="_static_Office chair.005_collision">
-          <geometry>
-            <box>
-              <size>0.62753 0.64070 1.13249</size>
-            </box>
-          </geometry>
-          <pose>-7.86976 -4.93375 0.58611 0 0 0</pose>
+          <pose>0.00000 0.00000 0.00000 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
@@ -216,7 +70,7 @@
               <size>0.55418 0.61936 1.13249</size>
             </box>
           </geometry>
-          <pose>-7.61959 -2.86998 0.58611 0 0 0</pose>
+          <pose>-7.72297 -2.74916 0.58611 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
@@ -360,7 +214,7 @@
               <size>0.55272 0.61299 1.13249</size>
             </box>
           </geometry>
-          <pose>-6.48216 -5.09515 0.58611 0 0 0</pose>
+          <pose>-3.54066 1.62556 0.58611 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
@@ -396,7 +250,7 @@
               <size>0.58162 0.63295 1.13249</size>
             </box>
           </geometry>
-          <pose>-8.34865 4.31762 0.58611 0 0 0</pose>
+          <pose>-5.27184 4.82403 0.58611 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
@@ -432,7 +286,7 @@
               <size>0.58162 0.63295 1.13249</size>
             </box>
           </geometry>
-          <pose>-7.46901 4.31762 0.58611 0 0 0</pose>
+          <pose>-4.39220 4.82403 0.58611 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
@@ -468,43 +322,7 @@
               <size>0.58162 0.63295 1.13249</size>
             </box>
           </geometry>
-          <pose>-6.29278 4.31762 0.58611 0 0 0</pose>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0 0 0 0</pose>
-      <static>true</static>
-    </model>
-    <model name="_static_Office chair.014">
-      <link name="_static_Office chair.014_link">
-        <visual name="_static_Office chair.014">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Office chair.014</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="_static_Office chair.014_collision">
-          <geometry>
-            <box>
-              <size>0.64763 0.64767 1.13249</size>
-            </box>
-          </geometry>
-          <pose>0.59841 2.17484 0.58611 0 0 0</pose>
+          <pose>-3.21597 4.82403 0.58611 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
@@ -598,95 +416,19 @@
       <pose>0 0 0 0 0 0</pose>
       <static>true</static>
     </model>
-    <model name="_static_Desk.004">
-      <link name="_static_Desk.004_link">
-        <visual name="_static_Desk.004">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Desk.004</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="_static_Desk.004_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Desk.004</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0 0 0 0</pose>
-      <static>true</static>
-    </model>
-    <model name="_static_Desk.005">
-      <link name="_static_Desk.005_link">
-        <visual name="_static_Desk.005">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Desk.005</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="_static_Desk.005_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Desk.005</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0 0 0 0</pose>
-      <static>true</static>
-    </model>
     <model name="cubes">
       <link name="cubes_link">
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00042590</ixx>
-            <iyy>0.00034131</iyy>
-            <izz>0.00025426</izz>
+            <ixx>0.00020081</ixx>
+            <iyy>0.00011786</iyy>
+            <izz>0.00030473</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>9.44981 4.23437 16.16943 0 0 0</pose>
+          <pose>-5.82773 0.26152 0.03457 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -731,14 +473,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00059835</ixx>
-            <iyy>0.00059814</iyy>
-            <izz>0.00072411</izz>
+            <ixx>0.00081204</ixx>
+            <iyy>0.00085776</iyy>
+            <izz>0.00129594</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>9.58981 5.14582 16.16831 0 0 0</pose>
+          <pose>-13.30181 -1.45605 0.05368 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -783,14 +525,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00029602</ixx>
-            <iyy>0.00011553</iyy>
-            <izz>0.00038190</izz>
+            <ixx>0.00161034</ixx>
+            <iyy>0.00160146</iyy>
+            <izz>0.00192019</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>13.08274 5.24242 16.14836 0 0 0</pose>
+          <pose>-13.00804 1.36170 0.07402 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -835,14 +577,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00052690</ixx>
-            <iyy>0.00025564</iyy>
-            <izz>0.00075436</izz>
+            <ixx>0.00075433</ixx>
+            <iyy>0.00062444</iyy>
+            <izz>0.00020273</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>12.88707 4.34308 16.14819 0 0 0</pose>
+          <pose>-11.49447 0.63563 0.07200 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -887,14 +629,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00080364</ixx>
-            <iyy>0.00081837</iyy>
-            <izz>0.00068487</izz>
+            <ixx>0.00106251</ixx>
+            <iyy>0.00124065</iyy>
+            <izz>0.00066031</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>16.87808 6.89294 16.17918 0 0 0</pose>
+          <pose>-7.75380 1.42113 0.07964 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -939,14 +681,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00045688</ixx>
-            <iyy>0.00070612</iyy>
-            <izz>0.00105145</izz>
+            <ixx>0.00004467</ixx>
+            <iyy>0.00014921</iyy>
+            <izz>0.00017422</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>16.10695 5.53372 16.15462 0 0 0</pose>
+          <pose>7.15415 -4.29044 0.03543 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -991,14 +733,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00040329</ixx>
-            <iyy>0.00070466</iyy>
-            <izz>0.00089241</izz>
+            <ixx>0.00145718</ixx>
+            <iyy>0.00117988</iyy>
+            <izz>0.00142442</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>15.90245 5.12958 16.15967 0 0 0</pose>
+          <pose>6.68139 1.20296 0.07265 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1043,14 +785,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00032594</ixx>
-            <iyy>0.00024170</iyy>
-            <izz>0.00043100</izz>
+            <ixx>0.00025285</ixx>
+            <iyy>0.00026992</iyy>
+            <izz>0.00024995</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>18.18157 5.39332 16.15601 0 0 0</pose>
+          <pose>1.66801 -3.04455 0.05023 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1095,14 +837,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00055779</ixx>
-            <iyy>0.00060880</iyy>
-            <izz>0.00014794</izz>
+            <ixx>0.00096716</ixx>
+            <iyy>0.00108039</iyy>
+            <izz>0.00199493</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>16.20987 4.51899 16.18078 0 0 0</pose>
+          <pose>-0.14828 -2.88470 0.03888 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1147,14 +889,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00058114</ixx>
-            <iyy>0.00058493</iyy>
-            <izz>0.00073498</izz>
+            <ixx>0.00070962</ixx>
+            <iyy>0.00087492</iyy>
+            <izz>0.00028927</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>19.81542 4.60419 16.16712 0 0 0</pose>
+          <pose>-1.46092 -1.55309 0.07408 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1199,14 +941,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00042366</ixx>
-            <iyy>0.00067260</iyy>
-            <izz>0.00106458</izz>
+            <ixx>0.00104127</ixx>
+            <iyy>0.00047991</iyy>
+            <izz>0.00093647</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>16.55867 4.10724 16.14858 0 0 0</pose>
+          <pose>-0.93803 0.67469 0.05962 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1251,14 +993,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00041940</ixx>
-            <iyy>0.00041431</iyy>
-            <izz>0.00050623</izz>
+            <ixx>0.00072290</ixx>
+            <iyy>0.00100898</iyy>
+            <izz>0.00170815</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>11.02095 -2.59408 16.16385 0 0 0</pose>
+          <pose>13.55459 1.97732 0.03597 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1303,14 +1045,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00060845</ixx>
-            <iyy>0.00071461</iyy>
-            <izz>0.00061917</izz>
+            <ixx>0.00149470</ixx>
+            <iyy>0.00159940</iyy>
+            <izz>0.00180495</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>11.96652 0.27484 16.17418 0 0 0</pose>
+          <pose>4.89531 5.41470 0.07397 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1355,14 +1097,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00036504</ixx>
-            <iyy>0.00033093</iyy>
-            <izz>0.00067038</izz>
+            <ixx>0.00130167</ixx>
+            <iyy>0.00116648</iyy>
+            <izz>0.00085571</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>18.64914 3.39317 16.14788 0 0 0</pose>
+          <pose>-9.28550 5.92374 0.07918 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1407,14 +1149,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00057306</ixx>
-            <iyy>0.00089102</iyy>
-            <izz>0.00064047</izz>
+            <ixx>0.00020034</ixx>
+            <iyy>0.00020553</iyy>
+            <izz>0.00009294</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>18.43961 2.36381 16.17684 0 0 0</pose>
+          <pose>-4.92767 -2.87993 0.05167 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1459,14 +1201,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00026662</ixx>
-            <iyy>0.00028015</iyy>
-            <izz>0.00026815</izz>
+            <ixx>0.00092285</ixx>
+            <iyy>0.00056352</iyy>
+            <izz>0.00071531</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>19.15675 1.06700 16.16213 0 0 0</pose>
+          <pose>-5.79014 -4.48028 0.06401 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1511,14 +1253,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00035251</ixx>
-            <iyy>0.00035846</iyy>
-            <izz>0.00030467</izz>
+            <ixx>0.00111660</ixx>
+            <iyy>0.00131354</iyy>
+            <izz>0.00091513</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>17.97517 1.13986 16.16638 0 0 0</pose>
+          <pose>-5.51315 -5.46764 0.07767 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1563,14 +1305,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00020138</ixx>
-            <iyy>0.00020495</iyy>
-            <izz>0.00022034</izz>
+            <ixx>0.00082902</ixx>
+            <iyy>0.00089673</iyy>
+            <izz>0.00033448</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>12.75858 -0.80180 16.15839 0 0 0</pose>
+          <pose>8.36866 -3.24132 0.07568 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1615,14 +1357,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00035269</ixx>
-            <iyy>0.00030742</iyy>
-            <izz>0.00022378</izz>
+            <ixx>0.00077162</ixx>
+            <iyy>0.00046530</iyy>
+            <izz>0.00031901</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>12.85679 -1.80214 16.16727 0 0 0</pose>
+          <pose>7.84329 5.39090 0.06711 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1667,14 +1409,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00060644</ixx>
-            <iyy>0.00060283</iyy>
-            <izz>0.00033188</izz>
+            <ixx>0.00117594</ixx>
+            <iyy>0.00084906</iyy>
+            <izz>0.00085547</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>15.30669 -0.05575 16.17797 0 0 0</pose>
+          <pose>10.02956 4.73197 0.07188 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1719,14 +1461,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00026450</ixx>
-            <iyy>0.00026244</iyy>
-            <izz>0.00042532</izz>
+            <ixx>0.00069426</ixx>
+            <iyy>0.00061179</iyy>
+            <izz>0.00128056</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>15.55028 0.47395 16.15404 0 0 0</pose>
+          <pose>16.58735 1.33959 0.03618 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1771,14 +1513,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00119885</ixx>
-            <iyy>0.00123886</iyy>
-            <izz>0.00166755</izz>
+            <ixx>0.00069567</ixx>
+            <iyy>0.00093563</iyy>
+            <izz>0.00095302</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>19.80138 -0.28170 16.17568 0 0 0</pose>
+          <pose>12.58126 0.48320 0.06190 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1823,14 +1565,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00043305</ixx>
-            <iyy>0.00070701</iyy>
-            <izz>0.00076606</izz>
+            <ixx>0.00012911</ixx>
+            <iyy>0.00024385</iyy>
+            <izz>0.00037241</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>16.47388 -1.71723 16.16537 0 0 0</pose>
+          <pose>15.31829 -2.07710 0.03091 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1875,14 +1617,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00024111</ixx>
-            <iyy>0.00027210</iyy>
-            <izz>0.00035100</izz>
+            <ixx>0.00017720</ixx>
+            <iyy>0.00011932</iyy>
+            <izz>0.00008550</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>16.35095 -2.74667 16.15729 0 0 0</pose>
+          <pose>2.45854 5.07945 0.04779 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1927,14 +1669,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00071493</ixx>
-            <iyy>0.00077124</iyy>
-            <izz>0.00084841</izz>
+            <ixx>0.00073329</ixx>
+            <iyy>0.00069072</iyy>
+            <izz>0.00053466</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>20.99583 -7.07044 16.17262 0 0 0</pose>
+          <pose>-0.01905 4.33333 0.06652 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1979,14 +1721,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00048147</ixx>
-            <iyy>0.00024459</iyy>
-            <izz>0.00066171</izz>
+            <ixx>0.00142763</ixx>
+            <iyy>0.00118250</iyy>
+            <izz>0.00112519</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>16.22531 -3.48991 16.15151 0 0 0</pose>
+          <pose>-4.96279 -1.63964 0.07720 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2031,14 +1773,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00054451</ixx>
-            <iyy>0.00055287</iyy>
-            <izz>0.00102941</izz>
+            <ixx>0.00083451</ixx>
+            <iyy>0.00085137</iyy>
+            <izz>0.00003420</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>11.53266 -6.41333 16.15179 0 0 0</pose>
+          <pose>-4.97785 -1.94818 0.07977 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2083,14 +1825,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00042746</ixx>
-            <iyy>0.00045513</iyy>
-            <izz>0.00068272</izz>
+            <ixx>0.00046119</ixx>
+            <iyy>0.00044485</iyy>
+            <izz>0.00054354</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>11.53396 -5.19983 16.15900 0 0 0</pose>
+          <pose>-3.35323 -2.51609 0.05332 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2135,14 +1877,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00049099</ixx>
-            <iyy>0.00047041</iyy>
-            <izz>0.00029099</izz>
+            <ixx>0.00116213</ixx>
+            <iyy>0.00119579</iyy>
+            <izz>0.00074343</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>18.57191 -6.88263 16.17340 0 0 0</pose>
+          <pose>-0.60413 -4.61836 0.07921 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2187,14 +1929,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00032263</ixx>
-            <iyy>0.00029880</iyy>
-            <izz>0.00057462</izz>
+            <ixx>0.00008630</ixx>
+            <iyy>0.00018110</iyy>
+            <izz>0.00026182</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>16.72937 -5.73343 16.15007 0 0 0</pose>
+          <pose>1.15445 -5.38941 0.03289 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2239,14 +1981,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00044114</ixx>
-            <iyy>0.00027392</iyy>
-            <izz>0.00029253</izz>
+            <ixx>0.00154148</ixx>
+            <iyy>0.00172246</iyy>
+            <izz>0.00172332</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>1.12430 7.00944 16.16686 0 0 0</pose>
+          <pose>-14.84108 3.70611 0.07807 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2291,14 +2033,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00053312</ixx>
-            <iyy>0.00059539</iyy>
-            <izz>0.00096448</izz>
+            <ixx>0.00041862</ixx>
+            <iyy>0.00112733</iyy>
+            <izz>0.00101800</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>-2.32204 5.90250 16.15738 0 0 0</pose>
+          <pose>-11.06651 3.24533 0.05814 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2343,14 +2085,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00059934</ixx>
-            <iyy>0.00043079</iyy>
-            <izz>0.00095846</izz>
+            <ixx>0.00000753</ixx>
+            <iyy>0.00070456</iyy>
+            <izz>0.00070054</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>4.57548 5.72864 16.15206 0 0 0</pose>
+          <pose>-9.10199 2.66632 0.03416 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2395,14 +2137,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00079138</ixx>
-            <iyy>0.00078094</iyy>
-            <izz>0.00079079</izz>
+            <ixx>0.00065712</ixx>
+            <iyy>0.00065125</iyy>
+            <izz>0.00025301</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>-0.49113 4.89041 16.17593 0 0 0</pose>
+          <pose>-15.66487 0.22416 0.06979 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2447,14 +2189,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00012720</ixx>
-            <iyy>0.00012750</iyy>
-            <izz>0.00014994</izz>
+            <ixx>0.00109325</ixx>
+            <iyy>0.00122546</iyy>
+            <izz>0.00141948</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>-3.10219 4.76890 16.15422 0 0 0</pose>
+          <pose>-15.56276 -1.50676 0.06673 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2499,14 +2241,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00049905</ixx>
-            <iyy>0.00048558</iyy>
-            <izz>0.00070508</izz>
+            <ixx>0.00082135</ixx>
+            <iyy>0.00103137</iyy>
+            <izz>0.00042915</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>3.76906 4.27737 16.16217 0 0 0</pose>
+          <pose>-8.20826 -2.10141 0.07621 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2551,14 +2293,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00016524</ixx>
-            <iyy>0.00026880</iyy>
-            <izz>0.00041278</izz>
+            <ixx>0.00021331</ixx>
+            <iyy>0.00037576</iyy>
+            <izz>0.00058060</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>-5.03452 3.29705 16.14734 0 0 0</pose>
+          <pose>-9.28310 -3.61211 0.03356 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2603,14 +2345,14 @@
         <inertial>
           <mass>1.00000</mass>
           <inertia>
-            <ixx>0.00023511</ixx>
-            <iyy>0.00024392</iyy>
-            <izz>0.00027474</izz>
+            <ixx>0.00003311</ixx>
+            <iyy>0.00041653</iyy>
+            <izz>0.00038553</izz>
             <ixy>0</ixy>
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>3.87178 2.86921 16.15919 0 0 0</pose>
+          <pose>-8.72185 -5.17340 0.03981 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -2649,2382 +2391,6 @@
         </collision>
       </link>
       <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.038">
-      <link name="cubes.038_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00085983</ixx>
-            <iyy>0.00083411</iyy>
-            <izz>0.00072807</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>3.15613 2.57054 16.17975 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.038">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.038</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.038_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.038</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.039">
-      <link name="cubes.039_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00015785</ixx>
-            <iyy>0.00017529</iyy>
-            <izz>0.00016246</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>5.36866 1.98890 16.15769 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.039">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.039</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.039_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.039</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.040">
-      <link name="cubes.040_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00010972</ixx>
-            <iyy>0.00046850</iyy>
-            <izz>0.00048445</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-2.55697 0.98875 16.15355 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.040">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.040</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.040_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.040</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.041">
-      <link name="cubes.041_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00035034</ixx>
-            <iyy>0.00045010</iyy>
-            <izz>0.00062719</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>3.86304 0.02770 16.15781 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.041">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.041</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.041_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.041</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.042">
-      <link name="cubes.042_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00068271</ixx>
-            <iyy>0.00059789</iyy>
-            <izz>0.00021836</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-3.72743 -1.85943 16.18161 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.042">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.042</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.042_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.042</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.043">
-      <link name="cubes.043_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00051415</ixx>
-            <iyy>0.00055773</iyy>
-            <izz>0.00051006</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>5.92788 -2.56156 16.17072 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.043">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.043</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.043_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.043</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.044">
-      <link name="cubes.044_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00032879</ixx>
-            <iyy>0.00041429</iyy>
-            <izz>0.00028067</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-3.48171 -3.25842 16.16803 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.044">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.044</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.044_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.044</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.045">
-      <link name="cubes.045_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00011431</ixx>
-            <iyy>0.00034425</iyy>
-            <izz>0.00037215</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-2.64291 -3.82359 16.15307 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.045">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.045</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.045_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.045</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.046">
-      <link name="cubes.046_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00035230</ixx>
-            <iyy>0.00067176</iyy>
-            <izz>0.00049676</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>2.75731 -3.97994 16.16981 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.046">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.046</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.046_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.046</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.047">
-      <link name="cubes.047_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00031761</ixx>
-            <iyy>0.00030515</iyy>
-            <izz>0.00035821</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>1.63787 -4.58666 16.16161 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.047">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.047</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.047_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.047</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.048">
-      <link name="cubes.048_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00011089</ixx>
-            <iyy>0.00010531</iyy>
-            <izz>0.00018779</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>5.66430 -5.01818 16.14822 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.048">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.048</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.048_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.048</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.049">
-      <link name="cubes.049_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00073513</ixx>
-            <iyy>0.00077369</iyy>
-            <izz>0.00083064</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-0.13011 -5.81897 16.17358 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.049">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.049</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.049_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.049</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.050">
-      <link name="cubes.050_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00051185</ixx>
-            <iyy>0.00053321</iyy>
-            <izz>0.00027601</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-1.65671 -6.45701 16.17566 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.050">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.050</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.050_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.050</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.051">
-      <link name="cubes.051_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00022730</ixx>
-            <iyy>0.00018683</iyy>
-            <izz>0.00030242</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-1.25756 -6.81744 16.15463 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.051">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.051</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.051_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.051</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.052">
-      <link name="cubes.052_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00024247</ixx>
-            <iyy>0.00022623</iyy>
-            <izz>0.00034315</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-11.72375 -3.23812 16.15541 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.052">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.052</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.052_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.052</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.053">
-      <link name="cubes.053_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00063193</ixx>
-            <iyy>0.00065547</iyy>
-            <izz>0.00062806</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-16.01551 -6.89743 16.17314 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.053">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.053</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.053_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.053</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.054">
-      <link name="cubes.054_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00056903</ixx>
-            <iyy>0.00033064</iyy>
-            <izz>0.00074312</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-18.43231 -3.09586 16.15701 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.054">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.054</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.054_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.054</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.055">
-      <link name="cubes.055_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00026029</ixx>
-            <iyy>0.00013970</iyy>
-            <izz>0.00023751</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-19.00023 3.13356 16.15730 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.055">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.055</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.055_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.055</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.056">
-      <link name="cubes.056_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00026649</ixx>
-            <iyy>0.00032206</iyy>
-            <izz>0.00010986</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-13.76409 5.18928 16.16849 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.056">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.056</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.056_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.056</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.057">
-      <link name="cubes.057_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00049375</ixx>
-            <iyy>0.00044585</iyy>
-            <izz>0.00063547</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-17.08801 -0.92063 16.16305 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.057">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.057</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.057_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.057</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.058">
-      <link name="cubes.058_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00022233</ixx>
-            <iyy>0.00041299</iyy>
-            <izz>0.00026882</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-8.03642 1.94371 16.16514 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.058">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.058</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.058_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.058</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.059">
-      <link name="cubes.059_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00029070</ixx>
-            <iyy>0.00030172</iyy>
-            <izz>0.00012886</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-8.65252 0.46803 16.16806 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.059">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.059</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.059_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.059</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.060">
-      <link name="cubes.060_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00052731</ixx>
-            <iyy>0.00060076</iyy>
-            <izz>0.00048771</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-11.31340 0.61718 16.17268 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.060">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.060</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.060_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.060</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.061">
-      <link name="cubes.061_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00107295</ixx>
-            <iyy>0.00100042</iyy>
-            <izz>0.00118739</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-9.96473 5.70908 16.17815 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.061">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.061</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.061_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.061</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.062">
-      <link name="cubes.062_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00064618</ixx>
-            <iyy>0.00071633</iyy>
-            <izz>0.00029803</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-16.56129 4.94161 16.18165 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.062">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.062</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.062_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.062</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.063">
-      <link name="cubes.063_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00073180</ixx>
-            <iyy>0.00075471</iyy>
-            <izz>0.00112030</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-19.73246 -0.56015 16.16513 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.063">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.063</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.063_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.063</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.064">
-      <link name="cubes.064_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00018919</ixx>
-            <iyy>0.00015766</iyy>
-            <izz>0.00031641</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-19.81652 -4.31878 16.14845 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.064">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.064</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.064_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.064</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.065">
-      <link name="cubes.065_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00058626</ixx>
-            <iyy>0.00033098</iyy>
-            <izz>0.00053665</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-17.12705 -4.18734 16.16558 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.065">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.065</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.065_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.065</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.066">
-      <link name="cubes.066_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00051224</ixx>
-            <iyy>0.00051818</iyy>
-            <izz>0.00009414</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-14.59832 -6.87372 16.17916 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.066">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.066</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.066_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.066</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.067">
-      <link name="cubes.067_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00057858</ixx>
-            <iyy>0.00049102</iyy>
-            <izz>0.00077960</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-13.73143 -4.40456 16.16255 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.067">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.067</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.067_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.067</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.068">
-      <link name="cubes.068_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00042993</ixx>
-            <iyy>0.00072153</iyy>
-            <izz>0.00078905</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-12.71363 -4.00417 16.16500 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.068">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.068</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.068_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.068</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.069">
-      <link name="cubes.069_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00039968</ixx>
-            <iyy>0.00022007</iyy>
-            <izz>0.00030035</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-11.09926 -4.16312 16.16358 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.069">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.069</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.069_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.069</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.070">
-      <link name="cubes.070_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00022404</ixx>
-            <iyy>0.00048513</iyy>
-            <izz>0.00061131</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-9.91614 -3.53305 16.15380 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.070">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.070</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.070_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.070</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.071">
-      <link name="cubes.071_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00028790</ixx>
-            <iyy>0.00051099</iyy>
-            <izz>0.00042102</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>9.56987 -5.49372 16.16550 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.071">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.071</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.071_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.071</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.072">
-      <link name="cubes.072_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00066023</ixx>
-            <iyy>0.00068969</iyy>
-            <izz>0.00049627</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>11.30012 3.64080 16.17747 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.072">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.072</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.072_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.072</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.073">
-      <link name="cubes.073_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00074297</ixx>
-            <iyy>0.00076248</iyy>
-            <izz>0.00089578</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>10.27887 -3.74457 16.17193 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.073">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.073</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.073_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.073</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.074">
-      <link name="cubes.074_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00017203</ixx>
-            <iyy>0.00021199</iyy>
-            <izz>0.00009433</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>9.88218 -1.64547 16.16254 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.074">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.074</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.074_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.074</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.075">
-      <link name="cubes.075_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00053542</ixx>
-            <iyy>0.00032873</iyy>
-            <izz>0.00047272</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>2.02634 1.53561 16.16592 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.075">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.075</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.075_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.075</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.076">
-      <link name="cubes.076_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00085010</ixx>
-            <iyy>0.00077419</iyy>
-            <izz>0.00093642</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>0.67449 -3.49649 16.17381 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.076">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.076</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.076_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.076</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.077">
-      <link name="cubes.077_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00071502</ixx>
-            <iyy>0.00077537</iyy>
-            <izz>0.00095844</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-1.49412 -0.74810 16.16994 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.077">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.077</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.077_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.077</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.078">
-      <link name="cubes.078_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00013678</ixx>
-            <iyy>0.00006396</iyy>
-            <izz>0.00012244</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>0.60461 0.45606 16.15253 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.078">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.078</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.078_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.078</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.079">
-      <link name="cubes.079_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00048075</ixx>
-            <iyy>0.00059944</iyy>
-            <izz>0.00045239</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-0.05092 -0.50020 16.17238 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.079">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.079</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.079_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.079</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.080">
-      <link name="cubes.080_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00042736</ixx>
-            <iyy>0.00033603</iyy>
-            <izz>0.00014763</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-0.81820 -1.52481 16.17208 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.080">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.080</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.080_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.080</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.081">
-      <link name="cubes.081_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00056038</ixx>
-            <iyy>0.00056129</iyy>
-            <izz>0.00012380</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>-7.89323 -1.16265 16.18038 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.081">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.081</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.081_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.081</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="cubes.082">
-      <link name="cubes.082_link">
-        <inertial>
-          <mass>1.00000</mass>
-          <inertia>
-            <ixx>0.00020104</ixx>
-            <iyy>0.00027152</iyy>
-            <izz>0.00042149</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-          <pose>8.64125 -0.13562 16.15044 0 0 0</pose>
-        </inertial>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-        <visual name="cubes.082">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.082</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="cubes.082_collision">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>cubes.082</name>
-              </submesh>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0.1 0 0 0</pose>
-    </model>
-    <model name="_static_Office chair.002">
-      <link name="_static_Office chair.002_link">
-        <visual name="_static_Office chair.002">
-          <geometry>
-            <mesh>
-              <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
-              <submesh>
-                <name>_static_Office chair.002</name>
-              </submesh>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name="_static_Office chair.002_collision">
-          <geometry>
-            <box>
-              <size>0.59453 0.63332 1.13249</size>
-            </box>
-          </geometry>
-          <pose>8.75566 3.73891 0.58611 0 0 0</pose>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0 0 0 0</pose>
-      <static>true</static>
     </model>
   </world>
 </sdf>
