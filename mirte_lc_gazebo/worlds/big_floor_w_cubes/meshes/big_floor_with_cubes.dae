@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 4.2.17 LTS commit date:2026-01-19, commit time:19:10, hash:76b996a81c95</authoring_tool>
     </contributor>
-    <created>2026-05-19T16:46:55</created>
-    <modified>2026-05-19T16:46:55</modified>
+    <created>2026-05-19T16:57:07</created>
+    <modified>2026-05-19T16:57:07</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -1427,13 +1427,23 @@
     </effect>
     <effect id="Material_005-effect">
       <profile_COMMON>
+        <newparam sid="Untitled_023-surface">
+          <surface type="2D">
+            <init_from>Untitled_023</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Untitled_023-sampler">
+          <sampler2D>
+            <source>Untitled_023-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0 0.552446 1 1</color>
+              <texture texture="Untitled_023-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.5</float>
@@ -1851,17 +1861,24 @@
     </effect>
     <effect id="metal_painted_001-effect">
       <profile_COMMON>
+        <newparam sid="Untitled-surface">
+          <surface type="2D">
+            <init_from>Untitled</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Untitled-sampler">
+          <sampler2D>
+            <source>Untitled-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <lambert>
             <emission>
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <color sid="diffuse">0.04144942 0.04144942 0.04144942 1</color>
+              <texture texture="Untitled-sampler" texcoord="UVMap"/>
             </diffuse>
-            <reflectivity>
-              <float sid="specular">1</float>
-            </reflectivity>
             <index_of_refraction>
               <float sid="ior">1.45</float>
             </index_of_refraction>
@@ -1881,23 +1898,6 @@
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
-            </index_of_refraction>
-          </lambert>
-        </technique>
-      </profile_COMMON>
-    </effect>
-    <effect id="Material_008-effect">
-      <profile_COMMON>
-        <technique sid="common">
-          <lambert>
-            <emission>
-              <color sid="emission">0 0 0 1</color>
-            </emission>
-            <diffuse>
-              <color sid="diffuse">1 0 0.4836245 1</color>
-            </diffuse>
-            <index_of_refraction>
-              <float sid="ior">1.5</float>
             </index_of_refraction>
           </lambert>
         </technique>
@@ -1946,6 +1946,9 @@
     </image>
     <image id="PBR_Desk_Albedo_jpg_006" name="PBR_Desk_Albedo_jpg_006">
       <init_from>PBR_Desk_Albedo.jpg.006.jpg</init_from>
+    </image>
+    <image id="Untitled" name="Untitled">
+      <init_from>Untitled.png</init_from>
     </image>
     <image id="Untitled_001" name="Untitled_001">
       <init_from>Untitled.001.png</init_from>
@@ -2006,6 +2009,9 @@
     </image>
     <image id="Untitled_022" name="Untitled_022">
       <init_from>Untitled.022.png</init_from>
+    </image>
+    <image id="Untitled_023" name="Untitled_023">
+      <init_from>Untitled.023.png</init_from>
     </image>
   </library_images>
   <library_materials>
@@ -2242,9 +2248,6 @@
     </material>
     <material id="plastic_smooth_001-material" name="plastic smooth.001">
       <instance_effect url="#plastic_smooth_001-effect"/>
-    </material>
-    <material id="Material_008-material" name="Material.008">
-      <instance_effect url="#Material_008-effect"/>
     </material>
     <material id="Desk-material" name="Desk">
       <instance_effect url="#Desk-effect"/>
@@ -3464,7 +3467,7 @@
         <vertices id="COR_652-mesh-vertices">
           <input semantic="POSITION" source="#COR_652-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_652-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_652-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3496,7 +3499,7 @@
         <vertices id="COR_651-mesh-vertices">
           <input semantic="POSITION" source="#COR_651-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_651-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_651-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3528,7 +3531,7 @@
         <vertices id="COR_650-mesh-vertices">
           <input semantic="POSITION" source="#COR_650-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_650-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_650-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3560,7 +3563,7 @@
         <vertices id="COR_649-mesh-vertices">
           <input semantic="POSITION" source="#COR_649-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_649-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_649-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3592,7 +3595,7 @@
         <vertices id="COR_648-mesh-vertices">
           <input semantic="POSITION" source="#COR_648-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_648-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_648-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3624,7 +3627,7 @@
         <vertices id="COR_647-mesh-vertices">
           <input semantic="POSITION" source="#COR_647-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_647-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_647-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3656,7 +3659,7 @@
         <vertices id="COR_646-mesh-vertices">
           <input semantic="POSITION" source="#COR_646-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_646-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_646-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3688,7 +3691,7 @@
         <vertices id="COR_645-mesh-vertices">
           <input semantic="POSITION" source="#COR_645-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_645-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_645-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3720,7 +3723,7 @@
         <vertices id="COR_644-mesh-vertices">
           <input semantic="POSITION" source="#COR_644-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_644-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_644-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3752,7 +3755,7 @@
         <vertices id="COR_643-mesh-vertices">
           <input semantic="POSITION" source="#COR_643-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_643-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_643-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3784,7 +3787,7 @@
         <vertices id="COR_642-mesh-vertices">
           <input semantic="POSITION" source="#COR_642-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_642-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_642-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3816,7 +3819,7 @@
         <vertices id="COR_641-mesh-vertices">
           <input semantic="POSITION" source="#COR_641-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_641-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_641-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3848,7 +3851,7 @@
         <vertices id="COR_640-mesh-vertices">
           <input semantic="POSITION" source="#COR_640-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_640-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_640-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3880,7 +3883,7 @@
         <vertices id="COR_639-mesh-vertices">
           <input semantic="POSITION" source="#COR_639-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_639-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_639-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3912,7 +3915,7 @@
         <vertices id="COR_638-mesh-vertices">
           <input semantic="POSITION" source="#COR_638-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_638-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_638-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3944,7 +3947,7 @@
         <vertices id="COR_637-mesh-vertices">
           <input semantic="POSITION" source="#COR_637-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_637-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_637-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -3976,7 +3979,7 @@
         <vertices id="COR_636-mesh-vertices">
           <input semantic="POSITION" source="#COR_636-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_636-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_636-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4008,7 +4011,7 @@
         <vertices id="COR_635-mesh-vertices">
           <input semantic="POSITION" source="#COR_635-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_635-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_635-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4040,7 +4043,7 @@
         <vertices id="COR_634-mesh-vertices">
           <input semantic="POSITION" source="#COR_634-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_634-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_634-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4072,7 +4075,7 @@
         <vertices id="COR_633-mesh-vertices">
           <input semantic="POSITION" source="#COR_633-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_633-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_633-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4104,7 +4107,7 @@
         <vertices id="COR_632-mesh-vertices">
           <input semantic="POSITION" source="#COR_632-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_632-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_632-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4136,7 +4139,7 @@
         <vertices id="COR_631-mesh-vertices">
           <input semantic="POSITION" source="#COR_631-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_631-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_631-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4168,7 +4171,7 @@
         <vertices id="COR_630-mesh-vertices">
           <input semantic="POSITION" source="#COR_630-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_630-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_630-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4200,7 +4203,7 @@
         <vertices id="COR_629-mesh-vertices">
           <input semantic="POSITION" source="#COR_629-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_629-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_629-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4232,7 +4235,7 @@
         <vertices id="COR_628-mesh-vertices">
           <input semantic="POSITION" source="#COR_628-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_628-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_628-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4264,7 +4267,7 @@
         <vertices id="COR_627-mesh-vertices">
           <input semantic="POSITION" source="#COR_627-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_627-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_627-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4296,7 +4299,7 @@
         <vertices id="COR_626-mesh-vertices">
           <input semantic="POSITION" source="#COR_626-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_626-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_626-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4328,7 +4331,7 @@
         <vertices id="COR_625-mesh-vertices">
           <input semantic="POSITION" source="#COR_625-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_625-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_625-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4360,7 +4363,7 @@
         <vertices id="COR_624-mesh-vertices">
           <input semantic="POSITION" source="#COR_624-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_624-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_624-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4392,7 +4395,7 @@
         <vertices id="COR_623-mesh-vertices">
           <input semantic="POSITION" source="#COR_623-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_623-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_623-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4424,7 +4427,7 @@
         <vertices id="COR_622-mesh-vertices">
           <input semantic="POSITION" source="#COR_622-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_622-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_622-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4456,7 +4459,7 @@
         <vertices id="COR_621-mesh-vertices">
           <input semantic="POSITION" source="#COR_621-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_621-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_621-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4488,7 +4491,7 @@
         <vertices id="COR_620-mesh-vertices">
           <input semantic="POSITION" source="#COR_620-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_620-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_620-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4520,7 +4523,7 @@
         <vertices id="COR_619-mesh-vertices">
           <input semantic="POSITION" source="#COR_619-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_619-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_619-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4552,7 +4555,7 @@
         <vertices id="COR_618-mesh-vertices">
           <input semantic="POSITION" source="#COR_618-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_618-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_618-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4584,7 +4587,7 @@
         <vertices id="COR_617-mesh-vertices">
           <input semantic="POSITION" source="#COR_617-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_617-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_617-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4616,7 +4619,7 @@
         <vertices id="COR_616-mesh-vertices">
           <input semantic="POSITION" source="#COR_616-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_616-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_616-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4648,7 +4651,7 @@
         <vertices id="COR_615-mesh-vertices">
           <input semantic="POSITION" source="#COR_615-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_615-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_615-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4680,7 +4683,7 @@
         <vertices id="COR_614-mesh-vertices">
           <input semantic="POSITION" source="#COR_614-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_614-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_614-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4712,7 +4715,7 @@
         <vertices id="COR_613-mesh-vertices">
           <input semantic="POSITION" source="#COR_613-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_613-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_613-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4744,7 +4747,7 @@
         <vertices id="COR_612-mesh-vertices">
           <input semantic="POSITION" source="#COR_612-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_612-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_612-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4776,7 +4779,7 @@
         <vertices id="COR_611-mesh-vertices">
           <input semantic="POSITION" source="#COR_611-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_611-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_611-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4808,7 +4811,7 @@
         <vertices id="COR_610-mesh-vertices">
           <input semantic="POSITION" source="#COR_610-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_610-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_610-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4840,7 +4843,7 @@
         <vertices id="COR_609-mesh-vertices">
           <input semantic="POSITION" source="#COR_609-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_609-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_609-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4872,7 +4875,7 @@
         <vertices id="COR_608-mesh-vertices">
           <input semantic="POSITION" source="#COR_608-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_608-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_608-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4904,7 +4907,7 @@
         <vertices id="COR_607-mesh-vertices">
           <input semantic="POSITION" source="#COR_607-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_607-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_607-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4936,7 +4939,7 @@
         <vertices id="COR_606-mesh-vertices">
           <input semantic="POSITION" source="#COR_606-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_606-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_606-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -4968,7 +4971,7 @@
         <vertices id="COR_605-mesh-vertices">
           <input semantic="POSITION" source="#COR_605-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_605-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_605-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5000,7 +5003,7 @@
         <vertices id="COR_604-mesh-vertices">
           <input semantic="POSITION" source="#COR_604-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_604-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_604-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5032,7 +5035,7 @@
         <vertices id="COR_603-mesh-vertices">
           <input semantic="POSITION" source="#COR_603-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_603-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_603-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5064,7 +5067,7 @@
         <vertices id="COR_602-mesh-vertices">
           <input semantic="POSITION" source="#COR_602-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_602-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_602-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5096,7 +5099,7 @@
         <vertices id="COR_601-mesh-vertices">
           <input semantic="POSITION" source="#COR_601-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_601-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_601-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5128,7 +5131,7 @@
         <vertices id="COR_600-mesh-vertices">
           <input semantic="POSITION" source="#COR_600-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_600-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_600-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5160,7 +5163,7 @@
         <vertices id="COR_599-mesh-vertices">
           <input semantic="POSITION" source="#COR_599-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_599-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_599-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5192,7 +5195,7 @@
         <vertices id="COR_598-mesh-vertices">
           <input semantic="POSITION" source="#COR_598-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_598-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_598-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5224,7 +5227,7 @@
         <vertices id="COR_597-mesh-vertices">
           <input semantic="POSITION" source="#COR_597-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_597-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_597-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5256,7 +5259,7 @@
         <vertices id="COR_596-mesh-vertices">
           <input semantic="POSITION" source="#COR_596-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_596-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_596-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5288,7 +5291,7 @@
         <vertices id="COR_595-mesh-vertices">
           <input semantic="POSITION" source="#COR_595-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_595-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_595-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5320,7 +5323,7 @@
         <vertices id="COR_594-mesh-vertices">
           <input semantic="POSITION" source="#COR_594-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_594-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_594-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5352,7 +5355,7 @@
         <vertices id="COR_593-mesh-vertices">
           <input semantic="POSITION" source="#COR_593-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_593-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_593-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5384,7 +5387,7 @@
         <vertices id="COR_592-mesh-vertices">
           <input semantic="POSITION" source="#COR_592-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_592-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_592-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5416,7 +5419,7 @@
         <vertices id="COR_591-mesh-vertices">
           <input semantic="POSITION" source="#COR_591-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_591-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_591-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5448,7 +5451,7 @@
         <vertices id="COR_590-mesh-vertices">
           <input semantic="POSITION" source="#COR_590-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_590-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_590-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5480,7 +5483,7 @@
         <vertices id="COR_589-mesh-vertices">
           <input semantic="POSITION" source="#COR_589-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_589-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_589-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5512,7 +5515,7 @@
         <vertices id="COR_588-mesh-vertices">
           <input semantic="POSITION" source="#COR_588-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_588-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_588-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5544,7 +5547,7 @@
         <vertices id="COR_587-mesh-vertices">
           <input semantic="POSITION" source="#COR_587-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_587-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_587-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5576,7 +5579,7 @@
         <vertices id="COR_586-mesh-vertices">
           <input semantic="POSITION" source="#COR_586-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_586-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_586-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5608,7 +5611,7 @@
         <vertices id="COR_585-mesh-vertices">
           <input semantic="POSITION" source="#COR_585-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_585-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_585-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5640,7 +5643,7 @@
         <vertices id="COR_584-mesh-vertices">
           <input semantic="POSITION" source="#COR_584-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_584-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_584-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5672,7 +5675,7 @@
         <vertices id="COR_583-mesh-vertices">
           <input semantic="POSITION" source="#COR_583-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_583-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_583-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5704,7 +5707,7 @@
         <vertices id="COR_582-mesh-vertices">
           <input semantic="POSITION" source="#COR_582-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_582-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_582-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5736,7 +5739,7 @@
         <vertices id="COR_581-mesh-vertices">
           <input semantic="POSITION" source="#COR_581-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_581-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_581-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5768,7 +5771,7 @@
         <vertices id="COR_580-mesh-vertices">
           <input semantic="POSITION" source="#COR_580-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_580-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_580-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5800,7 +5803,7 @@
         <vertices id="COR_579-mesh-vertices">
           <input semantic="POSITION" source="#COR_579-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_579-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_579-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5832,7 +5835,7 @@
         <vertices id="COR_578-mesh-vertices">
           <input semantic="POSITION" source="#COR_578-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_578-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_578-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5864,7 +5867,7 @@
         <vertices id="COR_577-mesh-vertices">
           <input semantic="POSITION" source="#COR_577-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_577-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_577-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5896,7 +5899,7 @@
         <vertices id="COR_576-mesh-vertices">
           <input semantic="POSITION" source="#COR_576-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_576-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_576-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5928,7 +5931,7 @@
         <vertices id="COR_575-mesh-vertices">
           <input semantic="POSITION" source="#COR_575-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_575-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_575-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5960,7 +5963,7 @@
         <vertices id="COR_574-mesh-vertices">
           <input semantic="POSITION" source="#COR_574-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_574-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_574-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -5992,7 +5995,7 @@
         <vertices id="COR_573-mesh-vertices">
           <input semantic="POSITION" source="#COR_573-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_573-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_573-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -6024,7 +6027,7 @@
         <vertices id="COR_572-mesh-vertices">
           <input semantic="POSITION" source="#COR_572-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_572-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_572-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 0 1 7 1 1 1 3 2 2 2 0 2 3 3 6 3 5 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 0 7 2 7 7 7 3 8 5 8 2 8 3 9 4 9 6 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -6056,7 +6059,7 @@
         <vertices id="COR_571-mesh-vertices">
           <input semantic="POSITION" source="#COR_571-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_571-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_571-mesh-normals" offset="1"/>
           <p>1 0 3 0 0 0 2 1 1 1 0 1 3 2 2 2 0 2 4 3 5 3 3 3 5 4 7 4 2 4 7 5 4 5 1 5 1 6 4 6 3 6 2 7 7 7 1 7 3 8 5 8 2 8 4 9 6 9 5 9 5 10 6 10 7 10 7 11 6 11 4 11</p>
@@ -6088,7 +6091,7 @@
         <vertices id="COR_570-mesh-vertices">
           <input semantic="POSITION" source="#COR_570-mesh-positions"/>
         </vertices>
-        <triangles material="Material_008-material" count="12">
+        <triangles material="metal_painted_001-material" count="12">
           <input semantic="VERTEX" source="#COR_570-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#COR_570-mesh-normals" offset="1"/>
           <p>0 0 3 0 1 0 1 1 4 1 0 1 4 2 7 2 6 2 6 3 3 3 2 3 4 4 2 4 0 4 3 5 5 5 1 5 0 6 2 6 3 6 1 7 5 7 4 7 4 8 5 8 7 8 6 9 7 9 3 9 4 10 6 10 2 10 3 11 7 11 5 11</p>
@@ -6621,831 +6624,831 @@
         </instance_geometry>
       </node>
       <node id="cubes_082" name="cubes.082" type="NODE">
-        <matrix sid="transform">1 0 0 8.64125 0 1 0 -0.1356156 0 0 1 0.008752935 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 8.64125 0 1 0 -0.1356156 0 0 1 0.01875293 0 0 0 1</matrix>
         <instance_geometry url="#COR_652-mesh" name="cubes.082">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_081" name="cubes.081" type="NODE">
-        <matrix sid="transform">1 0 0 -7.893229 0 1 0 -1.162652 0 0 1 0.03868784 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -7.893229 0 1 0 -1.162652 0 0 1 0.04868784 0 0 0 1</matrix>
         <instance_geometry url="#COR_651-mesh" name="cubes.081">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_080" name="cubes.080" type="NODE">
-        <matrix sid="transform">1 0 0 -0.8181998 0 1 0 -1.524813 0 0 1 0.03039169 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -0.8181998 0 1 0 -1.524813 0 0 1 0.04039169 0 0 0 1</matrix>
         <instance_geometry url="#COR_650-mesh" name="cubes.080">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_079" name="cubes.079" type="NODE">
-        <matrix sid="transform">1 0 0 -0.0509243 0 1 0 -0.5002047 0 0 1 0.03068729 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -0.0509243 0 1 0 -0.5002047 0 0 1 0.04068729 0 0 0 1</matrix>
         <instance_geometry url="#COR_649-mesh" name="cubes.079">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_078" name="cubes.078" type="NODE">
-        <matrix sid="transform">1 0 0 0.6046081 0 1 0 0.4560565 0 0 1 0.01083796 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 0.6046081 0 1 0 0.4560565 0 0 1 0.02083796 0 0 0 1</matrix>
         <instance_geometry url="#COR_648-mesh" name="cubes.078">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_077" name="cubes.077" type="NODE">
-        <matrix sid="transform">1 0 0 -1.494117 0 1 0 -0.7480976 0 0 1 0.02824824 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -1.494117 0 1 0 -0.7480976 0 0 1 0.03824824 0 0 0 1</matrix>
         <instance_geometry url="#COR_647-mesh" name="cubes.077">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_076" name="cubes.076" type="NODE">
-        <matrix sid="transform">1 0 0 0.6744947 0 1 0 -3.496486 0 0 1 0.03212091 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 0.6744947 0 1 0 -3.496486 0 0 1 0.04212091 0 0 0 1</matrix>
         <instance_geometry url="#COR_646-mesh" name="cubes.076">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_075" name="cubes.075" type="NODE">
-        <matrix sid="transform">1 0 0 2.02634 0 1 0 1.535611 0 0 1 0.0242315 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 2.02634 0 1 0 1.535611 0 0 1 0.0342315 0 0 0 1</matrix>
         <instance_geometry url="#COR_645-mesh" name="cubes.075">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_074" name="cubes.074" type="NODE">
-        <matrix sid="transform">1 0 0 9.882177 0 1 0 -1.645467 0 0 1 0.02084627 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 9.882177 0 1 0 -1.645467 0 0 1 0.03084627 0 0 0 1</matrix>
         <instance_geometry url="#COR_644-mesh" name="cubes.074">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_073" name="cubes.073" type="NODE">
-        <matrix sid="transform">1 0 0 10.27887 0 1 0 -3.744566 0 0 1 0.03024171 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 10.27887 0 1 0 -3.744566 0 0 1 0.04024171 0 0 0 1</matrix>
         <instance_geometry url="#COR_643-mesh" name="cubes.073">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_072" name="cubes.072" type="NODE">
-        <matrix sid="transform">1 0 0 11.30012 0 1 0 3.640797 0 0 1 0.03578466 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 11.30012 0 1 0 3.640797 0 0 1 0.04578466 0 0 0 1</matrix>
         <instance_geometry url="#COR_642-mesh" name="cubes.072">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_071" name="cubes.071" type="NODE">
-        <matrix sid="transform">1 0 0 9.569871 0 1 0 -5.493724 0 0 1 0.0238081 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 9.569871 0 1 0 -5.493724 0 0 1 0.0338081 0 0 0 1</matrix>
         <instance_geometry url="#COR_641-mesh" name="cubes.071">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_070" name="cubes.070" type="NODE">
-        <matrix sid="transform">1 0 0 -9.916137 0 1 0 -3.533046 0 0 1 0.0121155 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -9.916137 0 1 0 -3.533046 0 0 1 0.0221155 0 0 0 1</matrix>
         <instance_geometry url="#COR_640-mesh" name="cubes.070">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_069" name="cubes.069" type="NODE">
-        <matrix sid="transform">1 0 0 -11.09926 0 1 0 -4.163116 0 0 1 0.02188796 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -11.09926 0 1 0 -4.163116 0 0 1 0.03188796 0 0 0 1</matrix>
         <instance_geometry url="#COR_639-mesh" name="cubes.069">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_068" name="cubes.068" type="NODE">
-        <matrix sid="transform">1 0 0 -12.71363 0 1 0 -4.004165 0 0 1 0.02331479 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -12.71363 0 1 0 -4.004165 0 0 1 0.03331479 0 0 0 1</matrix>
         <instance_geometry url="#COR_638-mesh" name="cubes.068">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_067" name="cubes.067" type="NODE">
-        <matrix sid="transform">1 0 0 -13.73143 0 1 0 -4.404564 0 0 1 0.02085611 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -13.73143 0 1 0 -4.404564 0 0 1 0.03085611 0 0 0 1</matrix>
         <instance_geometry url="#COR_637-mesh" name="cubes.067">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_066" name="cubes.066" type="NODE">
-        <matrix sid="transform">1 0 0 -14.59832 0 1 0 -6.873716 0 0 1 0.03747477 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -14.59832 0 1 0 -6.873716 0 0 1 0.04747476 0 0 0 1</matrix>
         <instance_geometry url="#COR_636-mesh" name="cubes.066">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_065" name="cubes.065" type="NODE">
-        <matrix sid="transform">1 0 0 -17.12705 0 1 0 -4.187335 0 0 1 0.02389265 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -17.12705 0 1 0 -4.187335 0 0 1 0.03389265 0 0 0 1</matrix>
         <instance_geometry url="#COR_635-mesh" name="cubes.065">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_064" name="cubes.064" type="NODE">
-        <matrix sid="transform">1 0 0 -19.81652 0 1 0 -4.318779 0 0 1 0.006758365 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -19.81652 0 1 0 -4.318779 0 0 1 0.01675836 0 0 0 1</matrix>
         <instance_geometry url="#COR_634-mesh" name="cubes.064">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_063" name="cubes.063" type="NODE">
-        <matrix sid="transform">1 0 0 -19.73246 0 1 0 -0.5601514 0 0 1 0.02343705 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -19.73246 0 1 0 -0.5601514 0 0 1 0.03343705 0 0 0 1</matrix>
         <instance_geometry url="#COR_633-mesh" name="cubes.063">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_062" name="cubes.062" type="NODE">
-        <matrix sid="transform">1 0 0 -16.56129 0 1 0 4.941605 0 0 1 0.03995984 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -16.56129 0 1 0 4.941605 0 0 1 0.04995984 0 0 0 1</matrix>
         <instance_geometry url="#COR_632-mesh" name="cubes.062">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_061" name="cubes.061" type="NODE">
-        <matrix sid="transform">1 0 0 -9.964733 0 1 0 5.709085 0 0 1 0.0364559 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -9.964733 0 1 0 5.709085 0 0 1 0.0464559 0 0 0 1</matrix>
         <instance_geometry url="#COR_631-mesh" name="cubes.061">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_060" name="cubes.060" type="NODE">
-        <matrix sid="transform">1 0 0 -11.3134 0 1 0 0.61718 0 0 1 0.03099161 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -11.3134 0 1 0 0.61718 0 0 1 0.04099161 0 0 0 1</matrix>
         <instance_geometry url="#COR_630-mesh" name="cubes.060">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_059" name="cubes.059" type="NODE">
-        <matrix sid="transform">1 0 0 -8.65252 0 1 0 0.4680297 0 0 1 0.02636833 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -8.65252 0 1 0 0.4680297 0 0 1 0.03636833 0 0 0 1</matrix>
         <instance_geometry url="#COR_629-mesh" name="cubes.059">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_058" name="cubes.058" type="NODE">
-        <matrix sid="transform">1 0 0 -8.036416 0 1 0 1.943707 0 0 1 0.02344734 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -8.036416 0 1 0 1.943707 0 0 1 0.03344734 0 0 0 1</matrix>
         <instance_geometry url="#COR_628-mesh" name="cubes.058">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_057" name="cubes.057" type="NODE">
-        <matrix sid="transform">1 0 0 -17.08801 0 1 0 -0.9206349 0 0 1 0.02135886 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -17.08801 0 1 0 -0.9206349 0 0 1 0.03135885 0 0 0 1</matrix>
         <instance_geometry url="#COR_627-mesh" name="cubes.057">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_056" name="cubes.056" type="NODE">
-        <matrix sid="transform">1 0 0 -13.76409 0 1 0 5.189276 0 0 1 0.02679714 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -13.76409 0 1 0 5.189276 0 0 1 0.03679714 0 0 0 1</matrix>
         <instance_geometry url="#COR_626-mesh" name="cubes.056">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_055" name="cubes.055" type="NODE">
-        <matrix sid="transform">1 0 0 -19.00023 0 1 0 3.133557 0 0 1 0.01561174 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -19.00023 0 1 0 3.133557 0 0 1 0.02561174 0 0 0 1</matrix>
         <instance_geometry url="#COR_625-mesh" name="cubes.055">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_054" name="cubes.054" type="NODE">
-        <matrix sid="transform">1 0 0 -18.43231 0 1 0 -3.095861 0 0 1 0.01532448 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -18.43231 0 1 0 -3.095861 0 0 1 0.02532448 0 0 0 1</matrix>
         <instance_geometry url="#COR_624-mesh" name="cubes.054">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_053" name="cubes.053" type="NODE">
-        <matrix sid="transform">1 0 0 -16.01551 0 1 0 -6.897427 0 0 1 0.03144887 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -16.01551 0 1 0 -6.897427 0 0 1 0.04144888 0 0 0 1</matrix>
         <instance_geometry url="#COR_623-mesh" name="cubes.053">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_052" name="cubes.052" type="NODE">
-        <matrix sid="transform">1 0 0 -11.72375 0 1 0 -3.238124 0 0 1 0.01372384 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -11.72375 0 1 0 -3.238124 0 0 1 0.02372384 0 0 0 1</matrix>
         <instance_geometry url="#COR_622-mesh" name="cubes.052">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_051" name="cubes.051" type="NODE">
-        <matrix sid="transform">1 0 0 -1.257563 0 1 0 -6.817438 0 0 1 0.0129448 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -1.257563 0 1 0 -6.817438 0 0 1 0.02294479 0 0 0 1</matrix>
         <instance_geometry url="#COR_621-mesh" name="cubes.051">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_050" name="cubes.050" type="NODE">
-        <matrix sid="transform">1 0 0 -1.656707 0 1 0 -6.457009 0 0 1 0.03396485 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -1.656707 0 1 0 -6.457009 0 0 1 0.04396485 0 0 0 1</matrix>
         <instance_geometry url="#COR_620-mesh" name="cubes.050">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_049" name="cubes.049" type="NODE">
-        <matrix sid="transform">1 0 0 -0.1301055 0 1 0 -5.818968 0 0 1 0.03189394 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -0.1301055 0 1 0 -5.818968 0 0 1 0.04189394 0 0 0 1</matrix>
         <instance_geometry url="#COR_619-mesh" name="cubes.049">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_048" name="cubes.048" type="NODE">
-        <matrix sid="transform">1 0 0 5.664302 0 1 0 -5.018182 0 0 1 0.006527144 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 5.664302 0 1 0 -5.018182 0 0 1 0.01652714 0 0 0 1</matrix>
         <instance_geometry url="#COR_618-mesh" name="cubes.048">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_047" name="cubes.047" type="NODE">
-        <matrix sid="transform">1 0 0 1.637875 0 1 0 -4.586661 0 0 1 0.01992051 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 1.637875 0 1 0 -4.586661 0 0 1 0.02992051 0 0 0 1</matrix>
         <instance_geometry url="#COR_617-mesh" name="cubes.047">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_046" name="cubes.046" type="NODE">
-        <matrix sid="transform">1 0 0 2.757307 0 1 0 -3.979938 0 0 1 0.02812396 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 2.757307 0 1 0 -3.979938 0 0 1 0.03812397 0 0 0 1</matrix>
         <instance_geometry url="#COR_616-mesh" name="cubes.046">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_045" name="cubes.045" type="NODE">
-        <matrix sid="transform">1 0 0 -2.642908 0 1 0 -3.823595 0 0 1 0.01138538 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -2.642908 0 1 0 -3.823595 0 0 1 0.02138538 0 0 0 1</matrix>
         <instance_geometry url="#COR_615-mesh" name="cubes.045">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_044" name="cubes.044" type="NODE">
-        <matrix sid="transform">1 0 0 -3.481713 0 1 0 -3.258421 0 0 1 0.02633708 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -3.481713 0 1 0 -3.258421 0 0 1 0.03633708 0 0 0 1</matrix>
         <instance_geometry url="#COR_614-mesh" name="cubes.044">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_043" name="cubes.043" type="NODE">
-        <matrix sid="transform">1 0 0 5.927882 0 1 0 -2.561555 0 0 1 0.02902904 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 5.927882 0 1 0 -2.561555 0 0 1 0.03902904 0 0 0 1</matrix>
         <instance_geometry url="#COR_613-mesh" name="cubes.043">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_042" name="cubes.042" type="NODE">
-        <matrix sid="transform">1 0 0 -3.727425 0 1 0 -1.859433 0 0 1 0.03991653 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -3.727425 0 1 0 -1.859433 0 0 1 0.04991654 0 0 0 1</matrix>
         <instance_geometry url="#COR_612-mesh" name="cubes.042">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_041" name="cubes.041" type="NODE">
-        <matrix sid="transform">1 0 0 3.863044 0 1 0 0.02769853 0 0 1 0.01612002 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 3.863044 0 1 0 0.02769853 0 0 1 0.02612002 0 0 0 1</matrix>
         <instance_geometry url="#COR_611-mesh" name="cubes.041">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_040" name="cubes.040" type="NODE">
-        <matrix sid="transform">1 0 0 -2.556968 0 1 0 0.9887533 0 0 1 0.01186028 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -2.556968 0 1 0 0.9887533 0 0 1 0.02186028 0 0 0 1</matrix>
         <instance_geometry url="#COR_610-mesh" name="cubes.040">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_039" name="cubes.039" type="NODE">
-        <matrix sid="transform">1 0 0 5.368655 0 1 0 1.988899 0 0 1 0.016 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 5.368655 0 1 0 1.988899 0 0 1 0.026 0 0 0 1</matrix>
         <instance_geometry url="#COR_609-mesh" name="cubes.039">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_038" name="cubes.038" type="NODE">
-        <matrix sid="transform">1 0 0 3.156129 0 1 0 2.570543 0 0 1 0.03806331 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 3.156129 0 1 0 2.570543 0 0 1 0.04806331 0 0 0 1</matrix>
         <instance_geometry url="#COR_608-mesh" name="cubes.038">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_037" name="cubes.037" type="NODE">
-        <matrix sid="transform">1 0 0 3.871784 0 1 0 2.869214 0 0 1 0.01750557 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 3.871784 0 1 0 2.869214 0 0 1 0.02750557 0 0 0 1</matrix>
         <instance_geometry url="#COR_607-mesh" name="cubes.037">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_036" name="cubes.036" type="NODE">
-        <matrix sid="transform">1 0 0 -5.03452 0 1 0 3.297054 0 0 1 0.005647908 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -5.03452 0 1 0 3.297054 0 0 1 0.01564791 0 0 0 1</matrix>
         <instance_geometry url="#COR_606-mesh" name="cubes.036">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_035" name="cubes.035" type="NODE">
-        <matrix sid="transform">1 0 0 3.769057 0 1 0 4.277374 0 0 1 0.02047746 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 3.769057 0 1 0 4.277374 0 0 1 0.03047746 0 0 0 1</matrix>
         <instance_geometry url="#COR_605-mesh" name="cubes.035">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_034" name="cubes.034" type="NODE">
-        <matrix sid="transform">1 0 0 -3.102185 0 1 0 4.768897 0 0 1 0.01253462 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -3.102185 0 1 0 4.768897 0 0 1 0.02253462 0 0 0 1</matrix>
         <instance_geometry url="#COR_604-mesh" name="cubes.034">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_033" name="cubes.033" type="NODE">
-        <matrix sid="transform">1 0 0 -0.4911332 0 1 0 4.890412 0 0 1 0.03423925 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -0.4911332 0 1 0 4.890412 0 0 1 0.04423925 0 0 0 1</matrix>
         <instance_geometry url="#COR_603-mesh" name="cubes.033">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_032" name="cubes.032" type="NODE">
-        <matrix sid="transform">1 0 0 4.575476 0 1 0 5.728635 0 0 1 0.01036859 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 4.575476 0 1 0 5.728635 0 0 1 0.02036859 0 0 0 1</matrix>
         <instance_geometry url="#COR_602-mesh" name="cubes.032">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_031" name="cubes.031" type="NODE">
-        <matrix sid="transform">1 0 0 -2.322043 0 1 0 5.902503 0 0 1 0.01568627 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 -2.322043 0 1 0 5.902503 0 0 1 0.02568627 0 0 0 1</matrix>
         <instance_geometry url="#COR_601-mesh" name="cubes.031">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_030" name="cubes.030" type="NODE">
-        <matrix sid="transform">1 0 0 1.124296 0 1 0 7.009439 0 0 1 0.02517446 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 1.124296 0 1 0 7.009439 0 0 1 0.03517446 0 0 0 1</matrix>
         <instance_geometry url="#COR_600-mesh" name="cubes.030">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_029" name="cubes.029" type="NODE">
-        <matrix sid="transform">1 0 0 16.72937 0 1 0 -5.733427 0 0 1 0.008378326 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 16.72937 0 1 0 -5.733427 0 0 1 0.01837832 0 0 0 1</matrix>
         <instance_geometry url="#COR_599-mesh" name="cubes.029">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_028" name="cubes.028" type="NODE">
-        <matrix sid="transform">1 0 0 18.57191 0 1 0 -6.882625 0 0 1 0.03171115 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 18.57191 0 1 0 -6.882625 0 0 1 0.04171115 0 0 0 1</matrix>
         <instance_geometry url="#COR_598-mesh" name="cubes.028">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_027" name="cubes.027" type="NODE">
-        <matrix sid="transform">1 0 0 11.53396 0 1 0 -5.199835 0 0 1 0.01731435 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 11.53396 0 1 0 -5.199835 0 0 1 0.02731435 0 0 0 1</matrix>
         <instance_geometry url="#COR_597-mesh" name="cubes.027">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_026" name="cubes.026" type="NODE">
-        <matrix sid="transform">1 0 0 11.53266 0 1 0 -6.413326 0 0 1 0.01009794 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 11.53266 0 1 0 -6.413326 0 0 1 0.02009794 0 0 0 1</matrix>
         <instance_geometry url="#COR_596-mesh" name="cubes.026">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_025" name="cubes.025" type="NODE">
-        <matrix sid="transform">1 0 0 16.22531 0 1 0 -3.489912 0 0 1 0.009824966 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 16.22531 0 1 0 -3.489912 0 0 1 0.01982497 0 0 0 1</matrix>
         <instance_geometry url="#COR_595-mesh" name="cubes.025">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_024" name="cubes.024" type="NODE">
-        <matrix sid="transform">1 0 0 20.99583 0 1 0 -7.070437 0 0 1 0.03093042 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 20.99583 0 1 0 -7.070437 0 0 1 0.04093042 0 0 0 1</matrix>
         <instance_geometry url="#COR_594-mesh" name="cubes.024">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_023" name="cubes.023" type="NODE">
-        <matrix sid="transform">1 0 0 16.35095 0 1 0 -2.746674 0 0 1 0.01559864 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 16.35095 0 1 0 -2.746674 0 0 1 0.02559864 0 0 0 1</matrix>
         <instance_geometry url="#COR_593-mesh" name="cubes.023">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_022" name="cubes.022" type="NODE">
-        <matrix sid="transform">1 0 0 16.47388 0 1 0 -1.717227 0 0 1 0.0236858 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 16.47388 0 1 0 -1.717227 0 0 1 0.0336858 0 0 0 1</matrix>
         <instance_geometry url="#COR_592-mesh" name="cubes.022">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_021" name="cubes.021" type="NODE">
-        <matrix sid="transform">1 0 0 19.80138 0 1 0 -0.2817042 0 0 1 0.033989 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 19.80138 0 1 0 -0.2817042 0 0 1 0.043989 0 0 0 1</matrix>
         <instance_geometry url="#COR_591-mesh" name="cubes.021">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_020" name="cubes.020" type="NODE">
-        <matrix sid="transform">1 0 0 15.55028 0 1 0 0.4739458 0 0 1 0.01234624 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 15.55028 0 1 0 0.4739458 0 0 1 0.02234624 0 0 0 1</matrix>
         <instance_geometry url="#COR_590-mesh" name="cubes.020">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_019" name="cubes.019" type="NODE">
-        <matrix sid="transform">1 0 0 15.30669 0 1 0 -0.05574515 0 0 1 0.03627782 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 15.30669 0 1 0 -0.05574515 0 0 1 0.04627782 0 0 0 1</matrix>
         <instance_geometry url="#COR_589-mesh" name="cubes.019">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_018" name="cubes.018" type="NODE">
-        <matrix sid="transform">1 0 0 12.85679 0 1 0 -1.802144 0 0 1 0.02558374 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 12.85679 0 1 0 -1.802144 0 0 1 0.03558374 0 0 0 1</matrix>
         <instance_geometry url="#COR_588-mesh" name="cubes.018">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_017" name="cubes.017" type="NODE">
-        <matrix sid="transform">1 0 0 12.75858 0 1 0 -0.8018046 0 0 1 0.01670238 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 12.75858 0 1 0 -0.8018046 0 0 1 0.02670238 0 0 0 1</matrix>
         <instance_geometry url="#COR_587-mesh" name="cubes.017">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_016" name="cubes.016" type="NODE">
-        <matrix sid="transform">1 0 0 17.97517 0 1 0 1.139856 0 0 1 0.02468773 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 17.97517 0 1 0 1.139856 0 0 1 0.03468773 0 0 0 1</matrix>
         <instance_geometry url="#COR_586-mesh" name="cubes.016">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_015" name="cubes.015" type="NODE">
-        <matrix sid="transform">1 0 0 19.15675 0 1 0 1.067004 0 0 1 0.02044325 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 19.15675 0 1 0 1.067004 0 0 1 0.03044325 0 0 0 1</matrix>
         <instance_geometry url="#COR_585-mesh" name="cubes.015">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_014" name="cubes.014" type="NODE">
-        <matrix sid="transform">1 0 0 18.43961 0 1 0 2.363814 0 0 1 0.03514833 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 18.43961 0 1 0 2.363814 0 0 1 0.04514833 0 0 0 1</matrix>
         <instance_geometry url="#COR_584-mesh" name="cubes.014">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_013" name="cubes.013" type="NODE">
-        <matrix sid="transform">1 0 0 18.64914 0 1 0 3.39317 0 0 1 0.006194812 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 18.64914 0 1 0 3.39317 0 0 1 0.01619481 0 0 0 1</matrix>
         <instance_geometry url="#COR_583-mesh" name="cubes.013">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_012" name="cubes.012" type="NODE">
-        <matrix sid="transform">1 0 0 11.96652 0 1 0 0.2748426 0 0 1 0.03249408 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 11.96652 0 1 0 0.2748426 0 0 1 0.04249408 0 0 0 1</matrix>
         <instance_geometry url="#COR_582-mesh" name="cubes.012">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_011" name="cubes.011" type="NODE">
-        <matrix sid="transform">1 0 0 11.02095 0 1 0 -2.594077 0 0 1 0.0221641 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 11.02095 0 1 0 -2.594077 0 0 1 0.0321641 0 0 0 1</matrix>
         <instance_geometry url="#COR_581-mesh" name="cubes.011">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_010" name="cubes.010" type="NODE">
-        <matrix sid="transform">1 0 0 16.55867 0 1 0 4.107237 0 0 1 0.006893915 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 16.55867 0 1 0 4.107237 0 0 1 0.01689392 0 0 0 1</matrix>
         <instance_geometry url="#COR_580-mesh" name="cubes.010">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_009" name="cubes.009" type="NODE">
-        <matrix sid="transform">1 0 0 19.81542 0 1 0 4.604193 0 0 1 0.02542783 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 19.81542 0 1 0 4.604193 0 0 1 0.03542783 0 0 0 1</matrix>
         <instance_geometry url="#COR_579-mesh" name="cubes.009">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_008" name="cubes.008" type="NODE">
-        <matrix sid="transform">1 0 0 16.20987 0 1 0 4.518991 0 0 1 0.03908945 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 16.20987 0 1 0 4.518991 0 0 1 0.04908945 0 0 0 1</matrix>
         <instance_geometry url="#COR_578-mesh" name="cubes.008">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_007" name="cubes.007" type="NODE">
-        <matrix sid="transform">1 0 0 18.18157 0 1 0 5.393321 0 0 1 0.01431579 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 18.18157 0 1 0 5.393321 0 0 1 0.02431579 0 0 0 1</matrix>
         <instance_geometry url="#COR_577-mesh" name="cubes.007">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_006" name="cubes.006" type="NODE">
-        <matrix sid="transform">1 0 0 15.90245 0 1 0 5.12958 0 0 1 0.01797982 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 15.90245 0 1 0 5.12958 0 0 1 0.02797982 0 0 0 1</matrix>
         <instance_geometry url="#COR_576-mesh" name="cubes.006">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_005" name="cubes.005" type="NODE">
-        <matrix sid="transform">1 0 0 16.10695 0 1 0 5.533715 0 0 1 0.01293522 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 16.10695 0 1 0 5.533715 0 0 1 0.02293522 0 0 0 1</matrix>
         <instance_geometry url="#COR_575-mesh" name="cubes.005">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_004" name="cubes.004" type="NODE">
-        <matrix sid="transform">1 0 0 16.87808 0 1 0 6.892941 0 0 1 0.03749256 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 16.87808 0 1 0 6.892941 0 0 1 0.04749256 0 0 0 1</matrix>
         <instance_geometry url="#COR_574-mesh" name="cubes.004">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_003" name="cubes.003" type="NODE">
-        <matrix sid="transform">1 0 0 12.88707 0 1 0 4.343078 0 0 1 0.006502588 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 12.88707 0 1 0 4.343078 0 0 1 0.01650259 0 0 0 1</matrix>
         <instance_geometry url="#COR_573-mesh" name="cubes.003">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_002" name="cubes.002" type="NODE">
-        <matrix sid="transform">1 0 0 13.08274 0 1 0 5.242424 0 0 1 0.006668145 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 13.08274 0 1 0 5.242424 0 0 1 0.01666814 0 0 0 1</matrix>
         <instance_geometry url="#COR_572-mesh" name="cubes.002">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes_001" name="cubes.001" type="NODE">
-        <matrix sid="transform">1 0 0 9.589808 0 1 0 5.145821 0 0 1 0.02661939 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 9.589808 0 1 0 5.145821 0 0 1 0.03661939 0 0 0 1</matrix>
         <instance_geometry url="#COR_571-mesh" name="cubes.001">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
       </node>
       <node id="cubes" name="cubes" type="NODE">
-        <matrix sid="transform">1 0 0 9.449806 0 1 0 4.234369 0 0 1 0.02773823 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 9.449806 0 1 0 4.234369 0 0 1 0.03773823 0 0 0 1</matrix>
         <instance_geometry url="#COR_570-mesh" name="cubes">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_008-material" target="#Material_008-material"/>
+              <instance_material symbol="metal_painted_001-material" target="#metal_painted_001-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
