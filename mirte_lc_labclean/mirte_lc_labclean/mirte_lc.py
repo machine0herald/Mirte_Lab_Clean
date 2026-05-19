@@ -26,12 +26,12 @@ class LabcleanManager(Node):
         )
         
         self.navigation_client = ActionClient(
-            self, NavigateCoverage, 'labclean_navigator/coverage'
+            self, NavigateCoverage, '/labclean_navigator/coverage'
             )
         
         # Publishers to control the Lifecycle of navigation and exploration nodes        
         self.exploration_controller = self.create_publisher(Bool, 'explore/resume', 10)
-        self.navigation_controller = self.create_publisher(Bool, 'labclean_navigator/active', 10)
+        self.navigation_controller = self.create_publisher(Bool, '/labclean_navigator/active', 10)
         
     def exploration_callback(self, msg):
         if msg.status == ExploreStatus.RETURNED_TO_ORIGIN:
