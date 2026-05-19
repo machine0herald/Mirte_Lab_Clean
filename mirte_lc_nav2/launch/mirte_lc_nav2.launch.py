@@ -1,5 +1,5 @@
 '''
-ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
+ros2 launch mirte_lc_nav2 mirte_lc_nav2.launch.py
 '''
 
 from launch import LaunchDescription
@@ -29,10 +29,11 @@ import os
 def generate_launch_description():
 
     mirte_navigation = get_package_share_directory('mirte_navigation')
+    fbe_mapping = get_package_share_directory('mirte_lc_nav2')
     params_file = os.path.join(
-        get_package_share_directory('mirte_lc_labclean'),
+        fbe_mapping,
         'config',
-        'nav3.yaml'
+        'nav2_coverage_params.yaml'
     )
     
     use_sim_time_arg = DeclareLaunchArgument(
@@ -136,6 +137,32 @@ def generate_launch_description():
     parameters=[params_file],
     )
     
+    ################################
+    # Lab cleanup navigation stack #
+    ################################
+    nav2_labclean = Node(
+        package='mirte_lc_nav2',
+        executable='labclean_navigator',
+        name='labclean_navigator',
+        output='screen',
+    )
+    
+    ##############################
+    # M-explore navigation stack #
+    ##############################
+    m_explore_nav = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                fbe_mapping,
+                'launch',
+                'fbe.launch.py'
+            )
+        ),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+        }.items()
+    )
+
     return LaunchDescription([
         SetParameter(name="use_sim_time", value='true'),
         TimerAction(period=20.0, actions=[
@@ -152,5 +179,15 @@ def generate_launch_description():
             nav2_bt_navigator,
             nav2_lifecycle_manager,
             nav2_behavior_server,
+        ]),
+
+        TimerAction(period=50.0, actions=[
+            LogInfo(msg='Starting Lab cleanup Navigation stack'),
+            nav2_labclean,
+        ]),
+        
+        TimerAction(period=50.0, actions=[
+            LogInfo(msg='Starting M-explore Navigation stack'),
+            m_explore_nav,
         ]),
     ])
