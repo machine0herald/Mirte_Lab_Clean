@@ -14,7 +14,53 @@ import mirte_lc_nav2.utils as ut
 from mirte_lc_nav2.utils import  LogType
 
 class SystematicNavigator():
+    """
+        Base class for systematic coverage path planners.
+
+        This class provides shared functionality for:
+        - Occupancy map preprocessing
+        - Contour extraction
+        - Coordinate conversion
+        - ROS visualization publishing
+        - Debug visualization
+
+        Child classes should implement their own `generate_path()`
+        method to produce coverage trajectories.
+
+        Attributes
+        ----------
+        navigator_type : str
+            Identifier for the planner category.
+        paths : list | None
+            Generated coverage paths.
+        map : np.ndarray | None
+            Occupancy grid map.
+        polymap : list | None
+            Polygon representation of the map contours.
+        threshold : float
+            Occupancy threshold used to classify obstacles.
+        resolution : float
+            Planner waypoint resolution in meters.
+        map_resolution : float
+            Resolution of the occupancy map in meters/pixel.
+        node : rclpy.node.Node | None
+            ROS2 node used for logging and publishers.
+    """
     def __init__(self, node=None, resolution=0.1, map_resolution=0.05, lethal_threshold=20.0):
+        """
+            Initialize the systematic navigator.
+
+            Parameters
+            ----------
+            node : rclpy.node.Node | None, optional
+                ROS2 node instance.
+            resolution : float, optional
+                Desired waypoint spacing in meters.
+            map_resolution : float, optional
+                Occupancy map resolution in meters/pixel.
+            lethal_threshold : float, optional
+                Threshold above which cells are considered occupied.
+        """
         self.navigator_type = 'systematic'
         self.paths = None
         self.map = None
@@ -38,11 +84,45 @@ class SystematicNavigator():
                 )
 
     def plan(self, new_map, start:np.ndarray = np.zeros(2), show=False) -> None:
+        """
+            Generate a coverage plan for a given occupancy map.
+
+            Parameters
+            ----------
+            new_map : np.ndarray
+                Occupancy grid map.
+            start : np.ndarray, optional
+                Starting robot position in world coordinates.
+            show : bool, optional
+                Unused visualization flag.
+
+            Returns
+            -------
+            None
+        """
         self.start = start
         self.update_map(new_map)
         self.generate_path()
 
     def update_map(self, new_map):
+        """
+            Convert an occupancy map into polygon contours.
+
+            This function:
+            - Thresholds the occupancy map
+            - Extracts contours
+            - Converts contours to world coordinates
+            - Stores the polygon map representation
+
+            Parameters
+            ----------
+            new_map : np.ndarray
+                Occupancy grid map.
+
+            Returns
+            -------
+            None
+        """
         self.map = new_map
 
         self.binary_costmap = np.zeros_like(self.map, dtype=np.uint8)
@@ -92,17 +172,114 @@ class SystematicNavigator():
         if self.node is not None:
             self.publish_polygon(closed_contour)
 
-        self.polymap = closed_contour
+        self.polymap = self.find_polygon_groups(closed_contour)
         return None
 
     def is_inside(self, contour, outer_contour):
+        """
+            Check whether a contour lies completely inside another contour.
+
+            Parameters
+            ----------
+            contour : np.ndarray
+                Contour to test.
+            outer_contour : np.ndarray
+                Reference contour.
+
+            Returns
+            -------
+            bool
+                True if the contour lies inside the outer contour,
+                otherwise False.
+        """
         for pt in contour[:, 0, :]:
             # returns >0 inside, 0 on edge, <0 outside
             if cv2.pointPolygonTest(outer_contour, (float(pt[0]), float(pt[1])), False) < 0:
                 return False
         return True
+    
+    def find_polygon_groups(self, polymap: list) -> list:
+        """
+            Group contours into polygons with holes.
+
+            The largest contour is assumed to be the outer boundary,
+            while contained contours are treated as holes.
+
+            Parameters
+            ----------
+            polymap : list
+                List of contours.
+
+            Returns
+            -------
+            list
+                Nested contour groups.
+        """
+        sorted_polymap = sorted(polymap, key=lambda c: cv2.contourArea(c), reverse=True)
+        outer_contours = [sorted_polymap[0]]
+        sorted_polymap.pop(0)
+        grouped_polygons = []
+        
+        for outer in outer_contours:
+            group = [outer]
+                for contour in sorted_polymap:
+                    if self.is_inside(contour, outer) or self.is_inside(outer, contour):
+                        group.append(contour)
+                        
+                    else:
+                        outer.append(contour)
+            group = sorted(group, key=lambda c: cv2.contourArea(c), reverse=True)
+            grouped_polygons.append(group)
+        return grouped_polygons
+
+    def set_waypoints(self, waypoints, resolution, distance=0.0) -> nx.Graph:
+        """
+            Takes skeleton tree image and generates
+            a network graph from the tree.
+        """
+        # # Set the waypoints and create a tree for the waypoints
+
+        tree = KDTree(waypoints)
+
+        graph = nx.Graph()
+
+        for i, p in enumerate(waypoints):
+            graph.add_node(i, pos=tuple(p))
+
+            indices = tree.query_ball_point(p, resolution * 0.8)
+
+            for j in indices:
+                if i == j:
+                    continue
+                graph.add_edge(i, j)
+        return graph
+
+    def find_leaf_nodes(self, graph) -> list:
+        leaf_nodes = [node for node in graph.nodes if graph.degree(node) == 1]
+        return leaf_nodes
+    
+    def find_nearest_leaf_node(self, graph, current_position: np.ndarray, leaf_nodes: list) -> int:
+        nearest_leaf_node = min(
+            leaf_nodes, key=lambda x: np.linalg.norm(
+                current_position - np.array(graph.nodes[x]['pos'])
+                )
+            )
+        return nearest_leaf_node
 
     def world_to_pixel(self, polygon):
+        """
+            Convert polygon coordinates from world space to pixel space.
+
+            Parameters
+            ----------
+            polygon : list
+                Polygon coordinates in meters.
+
+            Returns
+            -------
+            np.ndarray
+                Polygon coordinates in pixel space.
+        """
         map_h, map_w = self.map.shape[:2]
 
         coords = []
@@ -114,6 +291,19 @@ class SystematicNavigator():
         return np.array(coords, dtype=np.int32)
 
     def world_to_pixel_path(self, path):
+        """
+            Convert path coordinates from world space to pixel space.
+
+            Parameters
+            ----------
+            path : np.ndarray
+                Path coordinates in meters.
+
+            Returns
+            -------
+            np.ndarray
+                Path coordinates in pixel space.
+        """
         map_h, map_w = self.map.shape[:2]
 
         pts = np.array(path)
@@ -124,6 +314,18 @@ class SystematicNavigator():
         return pts.astype(np.int32)
 
     def publish_polygon(self, contours):
+        """
+            Publish polygon contours as a ROS PolygonStamped message.
+
+            Parameters
+            ----------
+            contours : list
+                List of contour coordinate lists.
+
+            Returns
+            -------
+            None
+        """
         msg = PolygonStamped()
         msg.header.frame_id = "map"
         msg.header.stamp = self.node.get_clock().now().to_msg()
@@ -139,6 +341,15 @@ class SystematicNavigator():
         self.polymap_publisher.publish(msg)
 
     def publish_decomposition(self):
+        """
+            Publish decomposed coverage cells as RViz markers.
+
+            Each decomposition cell is visualized as a colored line strip.
+
+            Returns
+            -------
+            None
+        """
         marker_array = MarkerArray()
 
         for i, cell in enumerate(self.cells):
@@ -153,9 +364,9 @@ class SystematicNavigator():
 
             marker.scale.x = 0.02
 
-            marker.color.r = float(i % 3 == 0)
-            marker.color.g = float(i % 3 == 1)
-            marker.color.b = float(i % 3 == 2)
+            marker.color.r = 1.0
+            marker.color.g = 0.0
+            marker.color.b = 1.0
             marker.color.a = 1.0
 
             for p in cell.exterior.coords:
@@ -170,6 +381,13 @@ class SystematicNavigator():
         self.decomp_publisher.publish(marker_array)
     
     def publish_path(self):
+        """
+            Publish planned coverage paths as RViz markers.
+
+            Returns
+            -------
+            None
+        """
         marker_array = MarkerArray()
 
         for path in self.paths:
@@ -201,6 +419,18 @@ class SystematicNavigator():
         self.path_publisher.publish(marker_array)
 
     def debug_save(self, contours):
+        """
+            Save a debug visualization of the occupancy map and contours.
+
+            Parameters
+            ----------
+            contours : list
+                Contours to overlay on the map image.
+
+            Returns
+            -------
+            None
+        """
         img = cv2.normalize(self.map.astype(np.float32), None, 0, 255, cv2.NORM_MINMAX)
         img = cv2.cvtColor(img.astype(np.uint8), cv2.COLOR_GRAY2BGR)
 
@@ -210,6 +440,18 @@ class SystematicNavigator():
         cv2.imwrite(path, img)
 
     def publish_info(self):
+        """
+            Publish all available planner visualization data.
+
+            Publishes:
+            - Polygon contours
+            - Decomposition cells
+            - Planned paths
+
+            Returns
+            -------
+            None
+        """
         if self.poly_map:
             self.polymap_publisher.publish()
 
