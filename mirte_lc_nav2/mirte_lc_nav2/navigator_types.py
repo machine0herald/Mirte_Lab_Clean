@@ -13,6 +13,9 @@ from geometry_msgs.msg import PoseStamped
 import mirte_lc_nav2.utils as ut
 from mirte_lc_nav2.utils import  LogType
 
+import networkx as nx
+from scipy.spatial import KDTree
+
 class SystematicNavigator():
     """
         Base class for systematic coverage path planners.
@@ -172,7 +175,7 @@ class SystematicNavigator():
         if self.node is not None:
             self.publish_polygon(closed_contour)
 
-        self.polymap = self.find_polygon_groups(closed_contour)
+        self.polymap = self.find_polygon_groups(np.array(closed_contour))
         return None
 
     def is_inside(self, contour, outer_contour):
@@ -198,7 +201,7 @@ class SystematicNavigator():
                 return False
         return True
     
-    def find_polygon_groups(self, polymap: list) -> list:
+    def find_polygon_groups(self, polymap: np.ndarray) -> list:
         """
             Group contours into polygons with holes.
 
@@ -222,12 +225,12 @@ class SystematicNavigator():
         
         for outer in outer_contours:
             group = [outer]
-                for contour in sorted_polymap:
-                    if self.is_inside(contour, outer) or self.is_inside(outer, contour):
-                        group.append(contour)
-                        
-                    else:
-                        outer.append(contour)
+            for contour in sorted_polymap:
+                if self.is_inside(contour, outer) or self.is_inside(outer, contour):
+                    group.append(contour)
+                    
+                else:
+                    outer.append(contour)
             group = sorted(group, key=lambda c: cv2.contourArea(c), reverse=True)
             grouped_polygons.append(group)
         return grouped_polygons
