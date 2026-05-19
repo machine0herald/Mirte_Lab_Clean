@@ -2,6 +2,8 @@
 ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
 '''
 
+from sympy import true
+
 from launch import LaunchDescription
 from launch.actions import (
     IncludeLaunchDescription,
@@ -62,6 +64,16 @@ def generate_launch_description():
         }.items()
     )
 
+    #####################
+    # Perception Launch #
+    #####################
+
+    PCnode = Node(
+        package='mirte_lc_vision',
+        executable= 'pc_node',
+        name='pc_node',
+    )
+
     ####################
     # Navigation Stack #
     ####################
@@ -100,10 +112,14 @@ def generate_launch_description():
             ('cloud_in', '/camera/points'),
         ],
         parameters=[
-            {'use_sim_time': True},
-            { 'occupancy_max_z': 0.5 },
-            { 'point_cloud_max_z': 0.5 },
-            {'resolution': 0.05},
+            {'frame_id': 'odom'},
+            {'base_frame_id': 'base_link'},
+            {'resolution': 0.0075},
+            {'sensor_model.max_range': 1.0},
+            {'point_cloud_min_z':  0.0},
+            {'point_cloud_max_z':  0.2},
+            {'occupancy_min_z': 0.0},
+            {'occupancy_max_z': 0.2},
             {'filter_ground_plane': True},
         ]
     )
