@@ -27,6 +27,7 @@ setup(
     entry_points={
         'console_scripts': [
             'vision_test = mirte_lc_vision.test_vision:main',
+            'object_locator = mirte_lc_vision.object_locator:main',
         ],
     },
 )
