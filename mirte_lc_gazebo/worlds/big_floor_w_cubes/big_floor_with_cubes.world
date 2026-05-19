@@ -30,47 +30,13 @@
         </visual>
         <collision name="_static_room_collision">
           <geometry>
-            <box>
-              <size>35.45285 12.35319 4.22303</size>
-            </box>
-          </geometry>
-          <pose>0.44284 -0.00410 1.62837 0 0 0</pose>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <friction>
-              <ode/>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-          </surface>
-        </collision>
-      </link>
-      <pose>0 0 0 0 0 0</pose>
-      <static>true</static>
-    </model>
-    <model name="_static_bottom plane">
-      <link name="_static_bottom plane_link">
-        <visual name="_static_bottom plane">
-          <geometry>
             <mesh>
               <uri>model://big_floor_with_cubes/meshes/big_floor_with_cubes.dae</uri>
               <submesh>
-                <name>_static_bottom plane</name>
+                <name>_static_room</name>
               </submesh>
             </mesh>
           </geometry>
-        </visual>
-        <collision name="_static_bottom plane_collision">
-          <geometry>
-            <box>
-              <size>35.45285 12.35319 1.00000</size>
-            </box>
-          </geometry>
-          <pose>-0.40280 0.07732 -0.47000 0 0 0</pose>
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
