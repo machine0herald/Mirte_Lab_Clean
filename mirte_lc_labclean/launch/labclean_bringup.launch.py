@@ -1,5 +1,5 @@
 '''
-ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
+ros2 launch mirte_lc_labclean gazebo_mirte_lc.launch.py
 '''
 
 from sympy import true
@@ -26,27 +26,9 @@ from launch.actions import DeclareLaunchArgument, LogInfo
 
 def generate_launch_description():
 
-    mirte_gazebo = get_package_share_directory('mirte_lc_gazebo')
     mirte_lc_nav = get_package_share_directory('mirte_lc_nav2')
     mirte_lc_labclean_pkg = get_package_share_directory('mirte_lc_labclean')
     twist_mux_yaml = os.path.join(mirte_lc_labclean_pkg, 'config', 'twist_mux.yaml')
-
-    #################
-    # Gazebo launch #
-    #################
-    gazebo_launch = IncludeLaunchDescription(
-        AnyLaunchDescriptionSource(
-            os.path.join(
-                mirte_gazebo,
-                'launch',
-                'gazebo_mirte_master_empty.launch.xml'
-            )
-        ),
-        launch_arguments={
-            'gui': 'True',
-            'world': 'src/mirte_lc/mirte_lc_gazebo/worlds/floor_with_cubes_2/floor_with_cubes_2.world',
-        }.items()
-    )
 
     #######################
     # Mirte Moveit Launch #
@@ -140,25 +122,19 @@ def generate_launch_description():
     ###################
     # Foxglove Bridge #
     ###################
-    foxglove_bridge = IncludeLaunchDescription(
-        AnyLaunchDescriptionSource(
+    foxglove_bridge = IncludelaunchDescription(
+        PythonLaunchDescriptionSource(
             os.path.join(
                 get_package_share_directory('foxglove_bridge'),
                 'launch',
-                'foxglove_bridge_launch.xml'
+                'foxglove_bridge.launch.py'
             )
-        ),
-        launch_arguments={
-            'use_sim_time': 'true',
-            'address': '0.0.0.0',
-            'port': '8766',
-        }.items()
+        )
     )
 
     return LaunchDescription([
         SetParameter(name="use_sim_time", value='true'),
         foxglove_bridge,
-        gazebo_launch,
         TimerAction(period=10.0, actions=[moveit_launch]),
         # TimerAction(period=27.0, actions=[octomap]),
         TimerAction(period=30.0, actions=[nav2]),
