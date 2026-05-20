@@ -482,7 +482,7 @@
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>-13.30181 -1.45605 0.05368 0 0 0</pose>
+          <pose>-9.80411 -1.45605 0.05368 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -534,7 +534,7 @@
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>-13.00804 1.36170 0.07402 0 0 0</pose>
+          <pose>-9.51035 1.36170 0.07402 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1002,7 +1002,7 @@
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>13.55459 1.97732 0.03597 0 0 0</pose>
+          <pose>15.31171 1.97732 0.03597 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -1522,7 +1522,7 @@
             <ixz>0</ixz>
             <iyz>0</iyz>
           </inertia>
-          <pose>12.58126 0.48320 0.06190 0 0 0</pose>
+          <pose>14.33838 0.48320 0.06190 0 0 0</pose>
         </inertial>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
