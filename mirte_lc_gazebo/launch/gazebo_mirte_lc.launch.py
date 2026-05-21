@@ -27,9 +27,23 @@ from launch.actions import DeclareLaunchArgument, LogInfo
 def generate_launch_description():
 
     mirte_gazebo = get_package_share_directory('mirte_lc_gazebo')
-    mirte_lc_nav = get_package_share_directory('mirte_lc_nav2')
     mirte_lc_labclean_pkg = get_package_share_directory('mirte_lc_labclean')
-    twist_mux_yaml = os.path.join(mirte_lc_labclean_pkg, 'config', 'twist_mux.yaml')
+    
+    ###########################
+    # Mirte Lab Clean Bringup #
+    ###########################
+    mirte_lc_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                mirte_lc_labclean_pkg,
+                'launch',
+                'labclean_bringup.launch.py',
+            )
+        ),
+        launch_arguments={
+            "use_sim_time": "true"    
+        }.items()
+    )
 
     #################
     # Gazebo launch #
@@ -48,121 +62,8 @@ def generate_launch_description():
         }.items()
     )
 
-    #######################
-    # Mirte Moveit Launch #
-    #######################
-    moveit_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                get_package_share_directory('mirte_lc_moveit_cpp'),
-                'launch',
-                'mirte_lc_moveit.launch.py'
-            )
-        ),
-        launch_arguments={
-            'use_sim_time': 'true'
-        }.items()
-    )
-
-    #####################
-    # Perception Launch #
-    #####################
-
-    PCnode = Node(
-        package='mirte_lc_vision',
-        executable= 'pc_node',
-        name='pc_node',
-    )
-
-    ####################
-    # Navigation Stack #
-    ####################
-    nav2 = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                mirte_lc_nav,
-                'launch',
-                'mirte_lc_nav2.launch.py')
-        ),
-        launch_arguments={
-            'use_sim_time': 'true',
-        }.items()
-    )
-
-    ##################
-    # Twist Mux Node #
-    ##################
-    twist_mux = Node(
-        package= 'twist_mux',
-        executable= 'twist_mux',
-        parameters= [twist_mux_yaml, 
-                    {'use_sim_time': True}],
-        remappings= [('cmd_vel_out', 'cmd_vel')],
-    )
-
-    ##################
-    # Octomap Server #
-    ##################
-    octomap = Node(
-        package='octomap_server',
-        executable='octomap_server_node',
-        name='octomap_server_node',
-        output='screen',
-        remappings=[
-            ('cloud_in', '/camera/points'),
-        ],
-        parameters=[
-            {'frame_id': 'odom'},
-            {'base_frame_id': 'base_link'},
-            {'resolution': 0.0075},
-            {'sensor_model.max_range': 1.0},
-            {'point_cloud_min_z':  0.0},
-            {'point_cloud_max_z':  0.2},
-            {'occupancy_min_z': 0.0},
-            {'occupancy_max_z': 0.2},
-            {'filter_ground_plane': True},
-        ]
-    )
-    
-    ####################
-    # Labclean Manager #
-    ####################
-    labclean_manager = Node(
-        package='mirte_lc_labclean',
-        executable='labclean_manager',
-        name='labclean_manager',
-        output='screen',
-        parameters=[
-            {'use_sim_time': True},
-        ]
-    )
-
-    ###################
-    # Foxglove Bridge #
-    ###################
-    foxglove_bridge = IncludeLaunchDescription(
-        AnyLaunchDescriptionSource(
-            os.path.join(
-                get_package_share_directory('foxglove_bridge'),
-                'launch',
-                'foxglove_bridge_launch.xml'
-            )
-        ),
-        launch_arguments={
-            'use_sim_time': 'true',
-            'address': '0.0.0.0',
-            'port': '8766',
-        }.items()
-    )
-
     return LaunchDescription([
         SetParameter(name="use_sim_time", value='true'),
-        foxglove_bridge,
         gazebo_launch,
-        TimerAction(period=10.0, actions=[moveit_launch]),
-        # TimerAction(period=27.0, actions=[octomap]),
-        TimerAction(period=30.0, actions=[nav2]),
-        TimerAction(period=80.0, actions=[
-            LogInfo(msg='Starting Labclean Manager'),
-            labclean_manager]),
+        TimerAction(period=10.0, actions=[mirte_lc_launch]),
     ])

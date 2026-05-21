@@ -164,7 +164,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        SetParameter(name="use_sim_time", value='true'),
+        SetParameter(name="use_sim_time", value=use_sim_time),
         TimerAction(period=20.0, actions=[
             LogInfo(msg='Starting Slam Toolbox'),
             slam_toolbox

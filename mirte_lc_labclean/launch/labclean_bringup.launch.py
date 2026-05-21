@@ -26,6 +26,24 @@ from launch.actions import DeclareLaunchArgument, LogInfo
 
 def generate_launch_description():
 
+    ###############
+    # Launch Args #
+    ###############
+    use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='false'
+    )
+    
+    #################
+    # Launch Config #
+    #################
+    use_sim_time = LaunchConfiguration(
+        "use_sim_time",
+    )
+    
+    ##################
+    # File Locations #
+    ##################
     mirte_lc_nav = get_package_share_directory('mirte_lc_nav2')
     mirte_lc_labclean_pkg = get_package_share_directory('mirte_lc_labclean')
     twist_mux_yaml = os.path.join(mirte_lc_labclean_pkg, 'config', 'twist_mux.yaml')
@@ -42,14 +60,13 @@ def generate_launch_description():
             )
         ),
         launch_arguments={
-            'use_sim_time': 'true'
+            'use_sim_time': use_sim_time
         }.items()
     )
 
     #####################
     # Perception Launch #
     #####################
-
     PCnode = Node(
         package='mirte_lc_vision',
         executable= 'pc_node',
@@ -67,7 +84,7 @@ def generate_launch_description():
                 'mirte_lc_nav2.launch.py')
         ),
         launch_arguments={
-            'use_sim_time': 'true',
+            'use_sim_time': use_sim_time,
         }.items()
     )
 
@@ -78,7 +95,7 @@ def generate_launch_description():
         package= 'twist_mux',
         executable= 'twist_mux',
         parameters= [twist_mux_yaml, 
-                    {'use_sim_time': True}],
+                    {'use_sim_time': use_sim_time}],
         remappings= [('cmd_vel_out', 'cmd_vel')],
     )
 
@@ -115,25 +132,28 @@ def generate_launch_description():
         name='labclean_manager',
         output='screen',
         parameters=[
-            {'use_sim_time': True},
+            {'use_sim_time': use_sim_time},
         ]
     )
 
     ###################
     # Foxglove Bridge #
     ###################
-    foxglove_bridge = IncludelaunchDescription(
-        PythonLaunchDescriptionSource(
+    foxglove_bridge = IncludeLaunchDescription(
+        AnyLaunchDescriptionSource(
             os.path.join(
                 get_package_share_directory('foxglove_bridge'),
                 'launch',
-                'foxglove_bridge.launch.py'
+                'foxglove_bridge_launch.xml'
             )
-        )
+        ),
+        launch_arguments={
+            "address": "0.0.0.0",
+            "port": "8766",
+        }.items()
     )
 
     return LaunchDescription([
-        SetParameter(name="use_sim_time", value='true'),
         foxglove_bridge,
         TimerAction(period=10.0, actions=[moveit_launch]),
         # TimerAction(period=27.0, actions=[octomap]),
