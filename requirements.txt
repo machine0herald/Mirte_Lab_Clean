@@ -1,4 +1,10 @@
-open3d 
-opencv_python
-matplotlib
+shapely
 trajgenpy
+geojson
+scikit-image
+scipy
+matplotlib
+opencv-python
+networkx
+numpy
+ipywidgets
