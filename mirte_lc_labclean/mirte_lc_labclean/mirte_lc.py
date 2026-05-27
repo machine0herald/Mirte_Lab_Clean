@@ -49,6 +49,7 @@ class LabcleanManager(Node):
         goal_msg.verbose = True
         
         self.navigation_client.wait_for_server()
+
         self.navigation_client.send_goal_async(
             goal_msg,
             feedback_callback=self.nav_feedback_callback,

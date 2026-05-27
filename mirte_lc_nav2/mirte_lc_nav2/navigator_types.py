@@ -231,11 +231,13 @@ class SystematicNavigator():
         for outer in outer_contours:
             group = [outer]
             for contour in sorted_polymap:
-                if self.is_inside(contour, outer) or self.is_inside(outer, contour):
+                if contour is outer:
+                    continue
+                if self.is_inside(contour, outer):
                     group.append(contour)
                     
                 else:
-                    outer.append(contour)
+                    outer_contours.append(contour)
             group = sorted(group, key=polygon_area, reverse=True)
             grouped_polygons.append(group)
         return grouped_polygons

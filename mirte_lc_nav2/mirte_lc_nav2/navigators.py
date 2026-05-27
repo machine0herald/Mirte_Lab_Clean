@@ -201,23 +201,26 @@ class SkeletonPath(SystematicNavigator):
             Generates a skeleton tree image
             of the same size as self.map.
         '''
-        contour_map = np.zeros_like(self.map)
-        self.origin = np.array([
-            self.map_height / 2,
-            self.map_width / 2
-        ])        
-        self.contour_img = cv2.drawContours(contour_map, [self.contours[0]], -1, (255), -1)
-        # Get the skeleton of the area
-        skeleton_map = skeletonize(contour_map)
-        self.skeleton_map = skeleton_map.astype(np.uint8) * 255
-    
-        # Convert every point in the skeleton into Cartesian coordinates
-        skeleton_points = np.array(np.where(skeleton_map)).T
-        self.skeleton_points = skeleton_points
-        self.waypoints = np.zeros_like(skeleton_points).astype(np.float64)
-        for i, point in enumerate(skeleton_points):
-            self.waypoints[i] = (point - self.origin[:2]) * self.map_resolution
-        self.waypoints = self.waypoints[:, ::-1]
+        self.waypoint_groups = []
+        for group in self.polymap:
+            contour_map = np.zeros_like(self.map)
+            self.origin = np.array([
+                self.map_height / 2,
+                self.map_width / 2
+            ])
+            for contour in group:
+                self.contour_img = cv2.drawContours(contour_map, [contour], -1, (255), -1)
+            # Get the skeleton of the area
+            skeleton_map = skeletonize(contour_map)
+            self.skeleton_map = skeleton_map.astype(np.uint8) * 255
+        
+            # Convert every point in the skeleton into Cartesian coordinates
+            skeleton_points = np.array(np.where(skeleton_map)).T
+            waypoints = np.zeros_like(skeleton_points).astype(np.float64)
+            for i, point in enumerate(skeleton_points):
+                self.waypoints[i] = (point - self.origin[:2]) * self.map_resolution
+            waypoints = self.waypoints[:, ::-1]
+            self.waypoint_groups.append(waypoints)
 
     def find_nearest_leaf_node_along_path(
         self,
@@ -292,7 +295,7 @@ class SkeletonPath(SystematicNavigator):
         self.path = np.array([self.waypoints[node] for node in ordered_nodes])
         
         # Return path segments for compatibility with LabCleanNavigator
-        return [self.path]
+        return self.path
 
     def generate_path(self):
         self.read()
