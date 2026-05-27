@@ -2,6 +2,8 @@
 ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
 '''
 
+import math
+
 from sympy import true
 
 from launch import LaunchDescription
@@ -44,7 +46,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             'gui': 'True',
-            'world': 'src/mirte_lc/mirte_lc_gazebo/worlds/floor_with_cubes/floor_with_cubes.world',
+            'world': 'src/mirte_lc/mirte_lc_gazebo/worlds/floor_with_cubes_2/floor_with_cubes_2.world',
         }.items()
     )
 
@@ -65,7 +67,7 @@ def generate_launch_description():
     )
 
     #####################
-    # Perception Launch #
+    # Perception Launch #  -0.05},
     #####################
 
     PCnode = Node(
@@ -114,13 +116,14 @@ def generate_launch_description():
         parameters=[
             {'frame_id': 'odom'},
             {'base_frame_id': 'base_link'},
-            {'resolution': 0.0075},
+            {'resolution': 0.01},
             {'sensor_model.max_range': 1.0},
-            {'point_cloud_min_z':  0.0},
+            {'point_cloud_min_z':  0.01},
             {'point_cloud_max_z':  0.2},
-            {'occupancy_min_z': 0.0},
+            {'occupancy_min_z': 0.01},
             {'occupancy_max_z': 0.2},
-            {'filter_ground_plane': True},
+            {'filter_ground_plane': False},
+            {'ground_filter/distance': 0.01},
         ]
     )
     
@@ -143,7 +146,7 @@ def generate_launch_description():
         TimerAction(period=10.0, actions=[moveit_launch]),
         # TimerAction(period=27.0, actions=[octomap]),
         TimerAction(period=30.0, actions=[nav2]),
-        TimerAction(period=80.0, actions=[
+        TimerAction(period=60.0, actions=[
             LogInfo(msg='Starting Labclean Manager'),
             labclean_manager]), 
     ])

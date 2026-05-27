@@ -18,6 +18,9 @@ import open3d as o3d
 from sklearn.cluster import DBSCAN
 from scipy.spatial.transform import Rotation as Rot
 
+# from mirte_lc_msgs import DetectedObject
+# from mirte_lc_msgs import DetectedObjectArray
+
 
 class ObjectLocator(Node):
 
@@ -25,7 +28,7 @@ class ObjectLocator(Node):
 
         super().__init__('object_locator')
         self.points = np.empty((0, 3))
-        self.maxDim = 0.25
+        self.maxDim = 0.06
 
         ############################################################
         # Octomap reset service
@@ -43,13 +46,15 @@ class ObjectLocator(Node):
 
         self.request = std_srvs.srv.Empty.Request()
 
+        self.client.call_async(self.request)
+
         ############################################################
         # Point cloud subscriber
         ############################################################
 
         self.subscription = self.create_subscription(
             PointCloud2,
-            '/octomap_point_cloud_centers',
+            '/camera/points',
             self.cloud_callback,
             10
         )
@@ -65,16 +70,26 @@ class ObjectLocator(Node):
         )
 
         ############################################################
+        # Object Position Publisher
+        ############################################################
+
+        # self.bbox_pub = self.create_publisher(
+        #     DetectedObjectArray,
+        #     '/object_bounding_boxes',
+        #     10
+        # )
+
+        ############################################################
         # Timer for octomap clearing
         ############################################################
 
         self.reset_timer = self.create_timer(
-            10.0,
+            12.0,
             self.reset_octomap
         )
 
         self.process_point_cloud_timer = self.create_timer(
-            0.1,
+            5.0,
             self.process_point_cloud
         )
 
@@ -106,37 +121,52 @@ class ObjectLocator(Node):
 
         points = []
 
-        for p in point_cloud2.read_points(
-                msg,
-                field_names=("x", "y", "z"),
-                skip_nans=True):
-
-            x, y, z = p
-
-            if np.isfinite(x) and np.isfinite(y) and np.isfinite(z):
-                points.append([x, y, z])
-
-        if len(points) == 0:
-            self.get_logger().warn(
-                "No valid points received"
-            )
-            return
+        points = point_cloud2.read_points(
+            msg, 
+            field_names=['x', 'y', 'z'], 
+            skip_nans=True
+        )
 
         points_np = np.array(points)
 
         self.get_logger().info(
             f"Received {len(points_np)} points"
         )
-        self.points = points_np
+        
+        points_np = np.array(
+            [[p[0], p[1], p[2]] for p in points],
+            dtype=np.float64
+        )
+
+        points_np = points_np[
+            np.isfinite(points_np).all(axis=1)
+        ]
+
+        pcd_HQ = o3d.geometry.PointCloud()
+
+        pcd_HQ.points = o3d.utility.Vector3dVector(
+            points_np
+        )
+
+        self.get_logger().info(
+            f"Point cloud shape: {len(pcd_HQ.points)} points"
+        )
+
+        pcd_downsampled = pcd_HQ.voxel_down_sample(voxel_size = 0.05)
+
+        self.get_logger().info(
+            f"Downsampled to {len(pcd_downsampled.points)} points"
+        )
 
     def process_point_cloud(self):
         ############################################################
         # 2. Create Open3D cloud
         ############################################################
 
-        pcd = o3d.geometry.PointCloud()
+        pcd_HQ = o3d.geometry.PointCloud()
+        object_points = np.empty((0, 3))
 
-        pcd.points = o3d.utility.Vector3dVector(
+        pcd_HQ.points = o3d.utility.Vector3dVector(
             self.points
         )
 
@@ -146,31 +176,76 @@ class ObjectLocator(Node):
         # Octomap is already voxelized, so keep this tiny
         ############################################################
 
-        voxel_size = 0.02
-
-        try:
-            pcd = pcd.voxel_down_sample(voxel_size)
-        except RuntimeError:
-            pass
-
         ############################################################
         # 4. OPTIONAL outlier removal
         ############################################################
         # Keep this weak because octomap is sparse
         ############################################################
 
-        if len(pcd.points) > 20:
+        # if len(pcd_downsampled.points) > 20:
 
-            pcd, ind = pcd.remove_statistical_outlier(
-                nb_neighbors=5,
-                std_ratio=2.5
+        #     pcd_downsampled, ind = pcd_downsampled.remove_statistical_outlier(
+        #         nb_neighbors=5,
+        #         std_ratio=2.5
+        #     )
+
+        ############################################################
+        # 4.5 Remove planes (Ground and Walls)
+        ############################################################
+
+        pcd_downsampled = o3d.geometry.PointCloud()
+
+        voxel_size = 0.05
+
+        try:
+            pcd_downsampled = pcd_HQ.voxel_down_sample(voxel_size)
+        except RuntimeError:
+            pass
+
+        while True:
+
+            self.get_logger().info(
+                f"Using downsampled pointcloud with {len(pcd_downsampled.points)} points")
+
+            if len(pcd_downsampled.points) < 250:
+                break
+
+            plane_model, inliers = pcd_downsampled.segment_plane(
+                distance_threshold=0.003,
+                ransac_n=3,
+                num_iterations=2000
+            )
+
+            if len(inliers) < 150:
+                break
+
+            pcd_downsampled = pcd_downsampled.select_by_index(
+                inliers,
+                invert=True
+            )
+
+            points = np.asarray(pcd_HQ.points)
+
+            dist = np.abs(
+                plane_model[0]*points[:,0] +
+                plane_model[1]*points[:,1] +
+                plane_model[2]*points[:,2] +
+                plane_model[3]
+            ) / np.sqrt(plane_model[0]*plane_model[0] + plane_model[1]*plane_model[1] + plane_model[2]*plane_model[2])
+
+            mask = dist > 0.04
+
+            object_points = points[mask]
+
+            object_pcd = o3d.geometry.PointCloud()
+
+            object_pcd.points = o3d.utility.Vector3dVector(
+                object_points
             )
 
         ############################################################
         # 5. DIRECTLY use remaining points
         ############################################################
-
-        object_points = np.asarray(pcd.points)
 
         if len(object_points) == 0:
 
@@ -209,6 +284,8 @@ class ObjectLocator(Node):
         marker_array.markers.append(delete_marker)
 
         marker_id = 0
+
+        self.bbox_list = []
 
         ############################################################
         # Process each cluster
@@ -297,6 +374,10 @@ class ObjectLocator(Node):
                 yaw
             ).as_quat()
 
+            
+
+            self.bbox_list.append(obb)
+
             ########################################################
             # Create RViz marker
             ########################################################
@@ -355,7 +436,7 @@ class ObjectLocator(Node):
             # Lifetime
             ########################################################
 
-            marker.lifetime.sec = 1
+            marker.lifetime.sec = 5
 
             marker_array.markers.append(
                 marker
@@ -369,6 +450,10 @@ class ObjectLocator(Node):
 
         self.marker_pub.publish(
             marker_array
+        )
+
+        self.bbox_pub.publish(
+            self.bbox_list
         )
 
         self.get_logger().info(
