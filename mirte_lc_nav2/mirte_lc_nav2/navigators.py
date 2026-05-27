@@ -3,12 +3,12 @@ import cv2
 
 import rclpy
 
-from mirte_lc_nav2.navigator_types import SystematicNavigator, ReactiveNavigator
-import mirte_lc_nav2.utils as ut
-from mirte_lc_nav2.utils import LogType
-# from navigator_types import SystematicNavigator, ReactiveNavigator
-# import utils as ut
-# from utils import LogType
+# from mirte_lc_nav2.navigator_types import SystematicNavigator, ReactiveNavigator
+# import mirte_lc_nav2.utils as ut
+# from mirte_lc_nav2.utils import LogType
+from navigator_types import SystematicNavigator, ReactiveNavigator
+import utils as ut
+from utils import LogType
 
 import trajgenpy as tjp
 from trajgenpy import Geometries
@@ -20,6 +20,8 @@ from shapely.geometry.polygon import orient
 from scipy.spatial import KDTree
 import networkx as nx
 from skimage.morphology import skeletonize
+from scipy.interpolate import interp1d
+
 
 class StraightLinePath(SystematicNavigator):
     name = "StraightLinePlanner"
@@ -191,26 +193,7 @@ class SkeletonPath(SystematicNavigator):
     name = "SkeletonPlanner"
     def __init__(self, node=None, resolution=0.1):
         super().__init__(node, resolution)
-
-        self.MAP_CELL_LIST_UNKNOWN   = -1
-        self.MAP_CELL_LIST_FREE      = 0
-        self.MAP_CELL_LIST_OCCUPIED  = 100
-
-        self.MAP_CELL_PGM_UNKNOWN    = 205
-        self.MAP_CELL_PGM_FREE       = 254
-        self.MAP_CELL_PGM_OCCUPIED   = 0
-
-        self.MAP_SMOOTHING_SIGMA = 4
-        self.MAP_CRISP_THRESHOLD = 250
-        self.MAP_CONTOUR_SKIP = 20
-        self.MAP_GRID_SIZE = 10
-        self.MAP_MERGE_DISTANCE = 10
-
-        self.origin = None
-        self.graph = None
-        self.start = None
         self.path = None
-        self.waypoints = None
         self.offset = None
 
     def read(self, plot=False) -> np.ndarray:
@@ -218,29 +201,32 @@ class SkeletonPath(SystematicNavigator):
             Generates a skeleton tree image
             of the same size as self.map.
         '''
-        contour_map = np.zeros_like(self.map)
-        self.origin = np.array([
-            self.map_height / 2,
-            self.map_width / 2
-        ])        
-        self.contour_img = cv2.drawContours(contour_map, [self.contours[0]], -1, (255), -1)
-        # Get the skeleton of the area
-        skeleton_map = skeletonize(contour_map)
-        self.skeleton_map = skeleton_map.astype(np.uint8) * 255
-    
-        # Convert every point in the skeleton into Cartesian coordinates
-        skeleton_points = np.array(np.where(skeleton_map)).T
-        self.skeleton_points = skeleton_points
-        self.waypoints = np.zeros_like(skeleton_points).astype(np.float64)
-        for i, point in enumerate(skeleton_points):
-            self.waypoints[i] = (point - self.origin[:2]) * self.map_resolution
-        self.waypoints = self.waypoints[:, ::-1]
+        self.waypoint_groups = []
+        for group in self.polymap:
+            contour_map = np.zeros_like(self.map)
+            self.origin = np.array([
+                self.map_height / 2,
+                self.map_width / 2
+            ])
+            for contour in group:
+                self.contour_img = cv2.drawContours(contour_map, [contour], -1, (255), -1)
+            # Get the skeleton of the area
+            skeleton_map = skeletonize(contour_map)
+            self.skeleton_map = skeleton_map.astype(np.uint8) * 255
+        
+            # Convert every point in the skeleton into Cartesian coordinates
+            skeleton_points = np.array(np.where(skeleton_map)).T
+            waypoints = np.zeros_like(skeleton_points).astype(np.float64)
+            for i, point in enumerate(skeleton_points):
+                self.waypoints[i] = (point - self.origin[:2]) * self.map_resolution
+            waypoints = self.waypoints[:, ::-1]
+            self.waypoint_groups.append(waypoints)
 
     def find_nearest_leaf_node_along_path(
         self,
         current_node: int,
         leaf_nodes: list
-    ) -> int:
+        ) -> int:
 
         nearest_leaf_node = min(
             leaf_nodes,
@@ -309,7 +295,7 @@ class SkeletonPath(SystematicNavigator):
         self.path = np.array([self.waypoints[node] for node in ordered_nodes])
         
         # Return path segments for compatibility with LabCleanNavigator
-        return [self.path]
+        return self.path
 
     def generate_path(self):
         self.read()
@@ -320,12 +306,76 @@ class SkeletonPath(SystematicNavigator):
 
 class SpanningTreePath(SystematicNavigator):
     name = "SpanningTreePlanner"
-    def __init__(self, node=None, resolution=0.1):
+    def __init__(self, node=None, resolution=0.1, scale=0.1):
         super().__init__(node, resolution)
-    
-    def generate_spanning_tree(self):
-        G = nx.grid_2d_graph(5, 5)
-        tree = nx.dfs_tree(G, source=(0, 0))
+        self.scale = scale
+
+    def sample_map(self, map, scale):
+        grid = cv2.resize(
+            map.astype(np.uint8),
+            (0, 0),
+            fx=scale,
+            fy=scale,
+            interpolation=cv2.INTER_NEAREST_EXACT
+        )
+        return grid
+
+    def subdivide(self, G):
+        H = nx.Graph()
+        for u, v in G.edges():
+            H.add_edge(u, v)
+            mid_point = ((u[0] + v[0]) / 2, (u[1] + v[1]) / 2)
+            H.add_node(mid_point)
+            H.add_edge(u, mid_point)
+            H.add_edge(v, mid_point)
+        return H
+
+    def spanning_tree(self, grid):
+        G = nx.grid_2d_graph(*grid.shape)
+        for (u, v) in G.edges():
+            if grid[u] == 0 or grid[v] == 0:
+                        G.remove_edge(u, v)
+        free_nodes = [n for n in G.nodes() if G.degree(n) > 0]
+
+        if not free_nodes:
+            raise ValueError("Empty graph")
+
+        start = free_nodes[0]
+        self.spanning_tree = nx.DiGraph()
+        visited = set()
+
+        for node in G.nodes():
+            if node not in visited and G.degree(node) > 0:
+                t = nx.dfs_tree(G, source=node)
+                self.spanning_tree = nx.compose(self.spanning_tree, t)
+                visited.update(t.nodes())
+        self.graph = self.subdivide(self.spanning_tree)
+
+    def generate_waypoints(self):
+        path_points = list(self.graph.nodes())
+        transformed_path_points = (np.array(path_points) + 0.5) / (self.scale)
+
+        self.perimiter_map = np.zeros_like(self.map)
+        self.size = int(1/(self.scale*4))
+
+        self.tree_points = []
+        for p in transformed_path_points:
+            x = int(round(p[1]))
+            y = int(round(p[0]))
+            self.tree_points.append((x, y))
+            cv2.rectangle(
+                self.perimiter_map,
+                (x - self.size, y - self.size),
+                (x + self.size, y + self.size),
+                255,
+                -1
+            )
+
+        self.waypoints, _ = cv2.findContours(
+            self.perimiter_map,
+            cv2.RETR_EXTERNAL,
+            cv2.CHAIN_APPROX_SIMPLE
+        )
         return
 
     def generate_path(self):

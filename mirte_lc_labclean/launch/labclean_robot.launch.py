@@ -2,8 +2,6 @@
 ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
 '''
 
-import math
-
 from sympy import true
 
 from launch import LaunchDescription
@@ -28,7 +26,7 @@ from launch.actions import DeclareLaunchArgument, LogInfo
 
 def generate_launch_description():
 
-    mirte_gazebo = get_package_share_directory('mirte_lc_gazebo')
+    mirte_bringup = get_package_share_directory('mirte_bringup')
     mirte_lc_labclean_pkg = get_package_share_directory('mirte_lc_labclean')
     
     ###########################
@@ -47,25 +45,25 @@ def generate_launch_description():
         }.items()
     )
 
-    #################
-    # Gazebo launch #
-    #################
-    gazebo_launch = IncludeLaunchDescription(
-        AnyLaunchDescriptionSource(
+    ###################
+    # Hardware launch #
+    ###################
+    mirte_robot = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
             os.path.join(
-                mirte_gazebo,
+                mirte_bringup,
                 'launch',
-                'gazebo_mirte_master_empty.launch.xml'
+                'minimal_master.launch.py',
             )
         ),
         launch_arguments={
-            'gui': 'True',
-            'world': 'src/mirte_lc/mirte_lc_gazebo/worlds/floor_with_cubes_2/floor_with_cubes_2.world',
-        }.items()
+            "_start_controller_manager": "true",
+            "_start_state_publishers": "true",
+        }.items(),
     )
 
     return LaunchDescription([
         SetParameter(name="use_sim_time", value='true'),
-        gazebo_launch,
-        TimerAction(period=10.0, actions=[mirte_lc_launch]),
+        mirte_robot,
+        TimerAction(period=20.0, actions=[mirte_lc_launch]),
     ])

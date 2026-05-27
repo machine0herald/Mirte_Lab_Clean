@@ -7,11 +7,11 @@ from visualization_msgs.msg import Marker, MarkerArray
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 
-# import utils as ut
-# from utils import  LogType
+import utils as ut
+from utils import  LogType
 
-import mirte_lc_nav2.utils as ut
-from mirte_lc_nav2.utils import  LogType
+# import mirte_lc_nav2.utils as ut
+# from mirte_lc_nav2.utils import  LogType
 
 import networkx as nx
 from scipy.spatial import KDTree
@@ -72,6 +72,10 @@ class SystematicNavigator():
         self.resolution = resolution
         self.map_resolution = map_resolution
         self.node = node
+        self.origin = None
+        self.graph = None
+        self.start = None
+        self.waypoints = None
 
         if self.node is not None:
             self.polymap_publisher = self.node.create_publisher(
@@ -175,7 +179,7 @@ class SystematicNavigator():
         if self.node is not None:
             self.publish_polygon(closed_contour)
 
-        self.polymap = self.find_polygon_groups(np.array(closed_contour))
+        self.polymap = self.find_polygon_groups(closed_contour)
         return None
 
     def is_inside(self, contour, outer_contour):
@@ -195,11 +199,12 @@ class SystematicNavigator():
                 True if the contour lies inside the outer contour,
                 otherwise False.
         """
-        for pt in contour[:, 0, :]:
-            # returns >0 inside, 0 on edge, <0 outside
-            if cv2.pointPolygonTest(outer_contour, (float(pt[0]), float(pt[1])), False) < 0:
+        ut.log(self.node, LogType.DEBUG, f"Testing if contour {contour} points is inside contour {outer_contour} points")
+        for pt in contour:
+            if cv2.pointPolygonTest(np.array(outer_contour, dtype=np.float32), (float(pt[0]), float(pt[1])), False) < 0:
                 return False
         return True
+        
     
     def find_polygon_groups(self, polymap: np.ndarray) -> list:
         """
@@ -218,7 +223,7 @@ class SystematicNavigator():
             list
                 Nested contour groups.
         """
-        sorted_polymap = sorted(polymap, key=lambda c: cv2.contourArea(c), reverse=True)
+        sorted_polymap = sorted(polymap, key=polygon_area, reverse=True)
         outer_contours = [sorted_polymap[0]]
         sorted_polymap.pop(0)
         grouped_polygons = []
@@ -226,12 +231,14 @@ class SystematicNavigator():
         for outer in outer_contours:
             group = [outer]
             for contour in sorted_polymap:
-                if self.is_inside(contour, outer) or self.is_inside(outer, contour):
+                if contour is outer:
+                    continue
+                if self.is_inside(contour, outer):
                     group.append(contour)
                     
                 else:
-                    outer.append(contour)
-            group = sorted(group, key=lambda c: cv2.contourArea(c), reverse=True)
+                    outer_contours.append(contour)
+            group = sorted(group, key=polygon_area, reverse=True)
             grouped_polygons.append(group)
         return grouped_polygons
 
@@ -468,3 +475,8 @@ class SystematicNavigator():
 class ReactiveNavigator():
     def __init__(self):
         self.navigator_type = 'reactive'
+
+def polygon_area(poly):
+    x = np.array([p[0] for p in poly])
+    y = np.array([p[1] for p in poly])
+    return 0.5 * abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
