@@ -2,6 +2,7 @@ shapely
 trajgenpy
 geojson
 scikit-image
+ipympl
 scipy
 matplotlib
 opencv-python

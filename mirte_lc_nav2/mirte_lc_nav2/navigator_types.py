@@ -256,12 +256,38 @@ class SystematicNavigator():
         for i, p in enumerate(waypoints):
             graph.add_node(i, pos=tuple(p))
 
-            indices = tree.query_ball_point(p, resolution * 0.8)
+            indices = tree.query_ball_point(p, resolution*0.8)
 
             for j in indices:
                 if i == j:
                     continue
                 graph.add_edge(i, j)
+    
+        # while nx.number_connected_components(graph) > 1:
+
+        #     components = list(nx.connected_components(graph))
+
+        #     # take two different components
+        #     c1 = components[0]
+        #     c2 = components[1]
+
+        #     best_pair = None
+        #     best_dist = float("inf")
+
+        #     # find closest pair between components
+        #     for i in c1:
+        #         for j in c2:
+        #             dist = np.linalg.norm(
+        #                 waypoints[i] - waypoints[j]
+        #             )
+        #             if dist < best_dist:
+        #                 best_dist = dist
+        #                 best_pair = (i, j)
+
+        #     # connect them
+        #     i, j = best_pair
+        #     graph.add_edge(i, j)
+
         return graph
 
     def find_leaf_nodes(self, graph) -> list:

@@ -19,12 +19,13 @@ from shapely.geometry.polygon import orient
 
 from scipy.spatial import KDTree
 import networkx as nx
-from skimage.morphology import skeletonize
+from skimage.morphology import skeletonize, medial_axis, thin, max_tree, binary_closing
 from scipy.interpolate import interp1d
 
 
 class StraightLinePath(SystematicNavigator):
     name = "StraightLinePlanner"
+
     def __init__(self, node=None, resolution=0.1, length=2.0):
         super().__init__(node, resolution)
         self.length = length
@@ -47,15 +48,16 @@ class StraightLinePath(SystematicNavigator):
 
 class BousPath(SystematicNavigator):
     name = "BousPlanner"
+
     def __init__(self, node=None, resolution=0.1):
         self.node = node
         super().__init__(node, resolution)
 
     def bcd(self, polygons):
-        '''
-            Takes a list of polygons, polygon at index 0 is the outer polygon, and the rest are holes.
-            Decomposes the polygon into a list of convex polygons.
-        '''
+        """
+        Takes a list of polygons, polygon at index 0 is the outer polygon, and the rest are holes.
+        Decomposes the polygon into a list of convex polygons.
+        """
 
         if self.node is not None:
             ut.log(self.node, LogType.INFO, f"Contours: {len(polygons)}")
@@ -99,7 +101,11 @@ class BousPath(SystematicNavigator):
             poly = shapely.Polygon(contour).simplify(0.1, preserve_topology=True)
 
             if not poly.is_valid:
-                ut.log(self.node, LogType.WARN, f"Invalid polygon: {explain_validity(poly)}")
+                ut.log(
+                    self.node,
+                    LogType.WARN,
+                    f"Invalid polygon: {explain_validity(poly)}",
+                )
                 poly = poly.buffer(0)
 
                 if not poly.is_valid:
@@ -121,20 +127,18 @@ class BousPath(SystematicNavigator):
             holes.append(poly)
         obstacles = shapely.MultiPolygon(holes)
 
-        ut.log(self.node, LogType.INFO, 'Performing Decomposition')
-        polygon_list = Geometries.decompose_polygon(outer, 
-                                                    obstacles=obstacles
-                                                    )
+        ut.log(self.node, LogType.INFO, "Performing Decomposition")
+        polygon_list = Geometries.decompose_polygon(outer, obstacles=obstacles)
         polygon_list
         self.raw_cells = [
-                            np.array(polygon.exterior.coords, dtype=np.int32)
-                            for polygon in polygon_list
-                        ]
+            np.array(polygon.exterior.coords, dtype=np.int32)
+            for polygon in polygon_list
+        ]
 
         ut.log(self.node, LogType.INFO, "map decomposed, publishing decomposition")
         if self.node is not None:
             self.publish_decomposition()
-        
+
         return polygon_list
 
     def bous_path(self, cells, robot_width=0.3):
@@ -151,23 +155,23 @@ class BousPath(SystematicNavigator):
             paths_mls = Geometries.GeoMultiTrajectory(sweeps).get_geometry()
             self.paths.append(self.multiline_to_coords(paths_mls))
             # result.extend(sweeps)
-        
+
         # mls = Geometries.GeoMultiTrajectory(result).get_geometry()
         # self.resultant_path = self.multiline_to_coords(mls)
         if self.node is not None:
             self.publish_path()
-        
+
         # path_graph = []
 
         # for path in self.paths:
         #     graph = self.set_waypoints(waypoints=path, resolution=self.resolution)
         #     leaf_nodes = self.find_leaf_nodes(graph)
         #     path_graph.append((graph, leaf_nodes))
-            
+
         # visited_paths = set()
         # overall_path = []
 
-        # current_position = np.array(self.start)                   
+        # current_position = np.array(self.start)
 
     def multiline_to_coords(self, multiline):
         coords = []
@@ -191,121 +195,124 @@ class BousPath(SystematicNavigator):
 
 class SkeletonPath(SystematicNavigator):
     name = "SkeletonPlanner"
+
     def __init__(self, node=None, resolution=0.1):
         super().__init__(node, resolution)
         self.path = None
-        self.offset = None
+        self.leaf_nodes = []
+        self.offset = 1
 
     def read(self, plot=False) -> np.ndarray:
-        '''
-            Generates a skeleton tree image
-            of the same size as self.map.
-        '''
+        """
+        Generates skeleton waypoints from polygon groups.
+        """
+
         self.waypoint_groups = []
+
+        # Create a contour map to store the filled contours for skeletonization
+        self.contour_map = np.zeros_like(self.map, dtype=np.uint8) # Used for visualization
+        contour_map = np.zeros_like(self.map, dtype=np.uint8)
+
         for group in self.polymap:
-            contour_map = np.zeros_like(self.map)
-            self.origin = np.array([
-                self.map_height / 2,
-                self.map_width / 2
-            ])
+            self.origin = np.array([self.map_height / 2, self.map_width / 2])
+
+            # Draw filled contours
             for contour in group:
-                self.contour_img = cv2.drawContours(contour_map, [contour], -1, (255), -1)
-            # Get the skeleton of the area
-            skeleton_map = skeletonize(contour_map)
+                contour = np.asarray(contour, dtype=np.float32)
+
+                # Convert world coordinates -> pixels
+                contour = self.world_to_pixel(contour)
+                contour = contour.reshape((-1, 1, 2)).astype(np.int32)
+                
+                self.contour_map = cv2.drawContours(self.contour_map, [contour], -1, 255, -1)
+                local_contour_map = cv2.drawContours(contour_map, [contour], -1, 255, -1)
+
+            # Skeletonize expects bool image
+            # skeleton_map = medial_axis(local_contour_map > 0,
+            #                             return_distance=False)
+            skeleton_map = skeletonize(local_contour_map > 0)
             self.skeleton_map = skeleton_map.astype(np.uint8) * 255
-        
-            # Convert every point in the skeleton into Cartesian coordinates
-            skeleton_points = np.array(np.where(skeleton_map)).T
-            waypoints = np.zeros_like(skeleton_points).astype(np.float64)
+
+            # Get skeleton pixels
+            skeleton_points = np.column_stack(np.where(skeleton_map))
+
+            # Convert pixel coordinates -> world coordinates
+            waypoints = np.zeros((len(skeleton_points), 2), dtype=np.float64)
             for i, point in enumerate(skeleton_points):
-                self.waypoints[i] = (point - self.origin[:2]) * self.map_resolution
-            waypoints = self.waypoints[:, ::-1]
+
+                py, px = point
+
+                x = (px - self.map_width / 2) * self.map_resolution
+                y = (py - self.map_height / 2) * self.map_resolution
+
+                waypoints[i] = [x, y]
+
             self.waypoint_groups.append(waypoints)
 
     def find_nearest_leaf_node_along_path(
-        self,
-        current_node: int,
-        leaf_nodes: list
-        ) -> int:
+        self, current_node: int, leaf_nodes: list, graph: nx.Graph
+    ) -> int:
 
         nearest_leaf_node = min(
             leaf_nodes,
             key=lambda x: len(
-                nx.shortest_path(
-                    self.graph,
-                    source=current_node,
-                    target=x
-                )
-            )
+                nx.shortest_path(graph, source=current_node, target=x)
+            ),
         )
 
         return nearest_leaf_node
-    
-    def get_path(self, source, target) -> list:
-        path = nx.shortest_path(self.graph, source=source, target=target)
-        return path               
 
-    def plan_path(self) -> np.ndarray:
-        assert self.start is not None, 'The starting position of the robot has not been set'
-        assert self.graph is not None, 'The graph has not been created'
+    def get_path(self, source, target, graph) -> list:
+        return nx.shortest_path(graph, source=source, target=target)
 
-        # Instantiate sets of nodes, and leaf nodes
-        visited_nodes = set()
+    def plan_path(self, start: np.ndarray,
+                  graph: nx.Graph,
+                  waypoints: np.ndarray) -> np.ndarray:
+        leaf_nodes = self.find_leaf_nodes(graph)
+        self.leaf_nodes.extend(leaf_nodes)
+
+        if len(leaf_nodes) == 0:
+            raise ValueError("No leaf nodes found")
+
         visited_leaf_nodes = set()
-        leaf_nodes = self.find_leaf_nodes(self.graph)
-        leaf_node_count = len(leaf_nodes)
-        ut.log(
-                self.node,
-                LogType.INFO,
-                f"found {leaf_node_count} leaf nodes",
-            )
+        current_leaf = self.find_nearest_leaf_node(graph, start, leaf_nodes)
+        ordered_nodes = [current_leaf]
 
-        # Find the nearest leaf node to the starting position
-        starting_leaf_node = self.find_nearest_leaf_node(self.graph, self.start, leaf_nodes)
-        ordered_nodes = [starting_leaf_node]
-        # Loop until all leaf nodes have been visited
-        while len(visited_leaf_nodes) < leaf_node_count:
+        while len(visited_leaf_nodes) < len(leaf_nodes):
+            visited_leaf_nodes.add(current_leaf)
+            remaining = [n for n in leaf_nodes if n not in visited_leaf_nodes]
 
-            # Update the visited leaf nodes
-            visited_leaf_nodes.add(starting_leaf_node)
-            if starting_leaf_node in leaf_nodes:
-                leaf_nodes.remove(starting_leaf_node)
-
-            # Stop if no more leaf nodes remain
-            if not leaf_nodes:
+            if not remaining:
                 break
 
-            # Get the nearest leaf node from the current node
-            next_leaf_node = self.find_nearest_leaf_node_along_path(
-                starting_leaf_node,
-                leaf_nodes
-            )
+            next_leaf = self.find_nearest_leaf_node_along_path(current_leaf, remaining, graph)
+            path = self.get_path(current_leaf, next_leaf, graph)
+            ordered_nodes.extend(path[1:])
+            current_leaf = next_leaf
+        path = np.array([waypoints[node] for node in ordered_nodes])
+        return path
 
-            # Get the path from the current node to the next leaf node
-            path = self.get_path(starting_leaf_node, next_leaf_node)
-
-            # Iterate over every node in the path
-            for node in path[::self.offset]:
-                ordered_nodes.append(node)
-
-            # Update the starting leaf node
-            starting_leaf_node = next_leaf_node
-
-        # Convert the visited nodes to array (n, 2) format
-        self.path = np.array([self.waypoints[node] for node in ordered_nodes])
-        
-        # Return path segments for compatibility with LabCleanNavigator
-        return self.path
-
-    def generate_path(self):
+    def generate_path(self, start=None):
         self.read()
-        self.graph = self.set_waypoints(self.waypoints, self.resolution)
-        self.paths = self.plan_path()
-        self.publish_path()
+
+        self.paths = []
+        for waypoints in self.waypoint_groups:
+
+            if len(waypoints) < 2:
+                continue
+
+            graph = self.set_waypoints(waypoints, self.resolution)
+            path = self.plan_path(start, graph, waypoints)
+            self.paths.append(path)
+            start = path[-1]
+
+        if self.node is not None:
+            self.publish_path()
 
 
 class SpanningTreePath(SystematicNavigator):
     name = "SpanningTreePlanner"
+
     def __init__(self, node=None, resolution=0.1, scale=0.1):
         super().__init__(node, resolution)
         self.scale = scale
@@ -316,7 +323,7 @@ class SpanningTreePath(SystematicNavigator):
             (0, 0),
             fx=scale,
             fy=scale,
-            interpolation=cv2.INTER_NEAREST_EXACT
+            interpolation=cv2.INTER_NEAREST_EXACT,
         )
         return grid
 
@@ -332,9 +339,9 @@ class SpanningTreePath(SystematicNavigator):
 
     def spanning_tree(self, grid):
         G = nx.grid_2d_graph(*grid.shape)
-        for (u, v) in G.edges():
+        for u, v in G.edges():
             if grid[u] == 0 or grid[v] == 0:
-                        G.remove_edge(u, v)
+                G.remove_edge(u, v)
         free_nodes = [n for n in G.nodes() if G.degree(n) > 0]
 
         if not free_nodes:
@@ -356,7 +363,7 @@ class SpanningTreePath(SystematicNavigator):
         transformed_path_points = (np.array(path_points) + 0.5) / (self.scale)
 
         self.perimiter_map = np.zeros_like(self.map)
-        self.size = int(1/(self.scale*4))
+        self.size = int(1 / (self.scale * 4))
 
         self.tree_points = []
         for p in transformed_path_points:
@@ -368,13 +375,11 @@ class SpanningTreePath(SystematicNavigator):
                 (x - self.size, y - self.size),
                 (x + self.size, y + self.size),
                 255,
-                -1
+                -1,
             )
 
         self.waypoints, _ = cv2.findContours(
-            self.perimiter_map,
-            cv2.RETR_EXTERNAL,
-            cv2.CHAIN_APPROX_SIMPLE
+            self.perimiter_map, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
         )
         return
 
