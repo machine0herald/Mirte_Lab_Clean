@@ -1,10 +1,13 @@
+from collections import deque
+
 import rclpy
 import sensor_msgs
 import std_msgs
 import std_srvs.srv
 import time
 
-from rclpy.node import Node
+from rclpy.node import Node, Parameter
+from rclpy.time import Time
 
 from std_msgs.msg import Header
 from sensor_msgs.msg import PointCloud2, PointField
@@ -23,7 +26,7 @@ from mirte_lc_msgs.msg import DetectedObject
 from mirte_lc_msgs.msg import DetectedObjectArray
 
 from tf2_ros import Buffer, TransformListener
-import tf_transformations
+from scipy.spatial.transform import Rotation
 
 class ObjectLocator2(Node):
 
@@ -32,6 +35,35 @@ class ObjectLocator2(Node):
         self.points = np.empty((0, 3))
         self.maxDim = 0.06
 
+        self.set_parameters([
+            Parameter(
+                'use_sim_time',
+                Parameter.Type.BOOL,
+                True
+            )
+        ])
+
+        self.msg_queue = deque(maxlen=10)
+
+        ############################################################
+        # TF2 Listener
+        ############################################################
+
+        self.tf_buffer = Buffer(
+            cache_time=rclpy.duration.Duration(seconds=30.0)
+        )
+
+        self.tf_listener = TransformListener(
+            self.tf_buffer,
+            self
+        )
+
+        self.startup_timer = self.create_timer(
+            5.0,
+            self.finish_startup
+        )
+
+    def finish_startup(self):
         ############################################################
         # Point cloud subscriber
         ############################################################
@@ -39,8 +71,13 @@ class ObjectLocator2(Node):
         self.subscription = self.create_subscription(
             PointCloud2,
             '/camera/points',
-            self.process_point_cloud,
+            self.pointcloud_callback,
             1
+        )
+
+        self.processing_timer = self.create_timer(
+            0.05,
+            self.process_queued_messages
         )
 
         ############################################################
@@ -77,21 +114,48 @@ class ObjectLocator2(Node):
             "Object Locator Started"
         )
 
-        ############################################################
-        # TF2 Listener
-        ############################################################
+        self.startup_timer.cancel()
 
-        self.tf_buffer = Buffer()
-        self.tf_listener = TransformListener(
-            self.tf_buffer,
-            self
-        )
+    def pointcloud_callback(self, msg):
+        self.msg_queue.append(msg)
+
+    def process_queued_messages(self):
+
+        if len(self.msg_queue) == 0:
+            return
+
+        msg = self.msg_queue[0]
+
+        stamp = Time.from_msg(msg.header.stamp)
+
+        try:
+
+            if not self.tf_buffer.can_transform(
+                'base_link',
+                msg.header.frame_id,
+                stamp,
+                timeout=rclpy.duration.Duration(seconds=0.0)
+            ):
+                return
+
+            if not self.tf_buffer.can_transform(
+                'map',
+                'base_link',
+                stamp,
+                timeout=rclpy.duration.Duration(seconds=0.0)
+            ):
+                return
+
+            # TF available → safe to process
+            self.msg_queue.popleft()
+
+            self.process_point_cloud(msg)
+
+        except Exception as e:
+            self.get_logger().warn(str(e))
 
 
     def process_point_cloud(self, msg):
-
-        timestamp = self.get_clock().now().to_msg()
-            
 
         object_points = np.empty((0, 3))
 
@@ -141,7 +205,7 @@ class ObjectLocator2(Node):
                 break
 
             plane_model, inliers = pcd_LQ.segment_plane(
-                distance_threshold=0.004,
+                distance_threshold=0.003,
                 ransac_n=3,
                 num_iterations=2000
             )
@@ -182,10 +246,10 @@ class ObjectLocator2(Node):
             return
 
         transform = self.tf_buffer.lookup_transform(
-            target_frame='map',
+            target_frame='base_link',
             source_frame=msg.header.frame_id,
             time=msg.header.stamp,
-            timeout=rclpy.duration.Duration(seconds=0.5)
+            timeout=rclpy.duration.Duration(seconds=5.0)
         )
 
         t = np.array([
@@ -196,20 +260,43 @@ class ObjectLocator2(Node):
 
         q = transform.transform.rotation
 
-        R = tf_transformations.quaternion_matrix(
+        R = Rotation.from_quat(
             [q.x, q.y, q.z, q.w]
-        )[:3,:3]
+        ).as_matrix()
 
-        points = np.asarray(object_pcd.points)
+        points_camera_np = np.asarray(object_pcd.points)
 
-        message = self.point_cloud(points, 'camera_depth_optical_frame')
+        points_base_link_np = (R @ points_camera_np.T).T + t
+
+        transform = self.tf_buffer.lookup_transform(
+            target_frame='map',
+            source_frame='base_link',
+            time=Time.from_msg(msg.header.stamp),
+            timeout=rclpy.duration.Duration(seconds=5.0)
+        )
+
+        t = np.array([
+            transform.transform.translation.x,
+            transform.transform.translation.y,
+            transform.transform.translation.z
+        ])
+
+        q = transform.transform.rotation
+
+        R = Rotation.from_quat(
+            [q.x, q.y, q.z, q.w]
+        ).as_matrix()
+
+        points_map = (R @ points_base_link_np.T).T + t
+
+        message = self.point_cloud(points_map, 'map')
 
         self.preprocessed_pub.publish(message)
 
         clustering = DBSCAN(
-            eps=0.25,
+            eps=0.025,
             min_samples=3
-        ).fit(object_points)
+        ).fit(points_map)
 
         labels = clustering.labels_
 
@@ -243,7 +330,7 @@ class ObjectLocator2(Node):
             if label == -1:
                 continue
 
-            cluster_points = object_points[
+            cluster_points = points_map[
                 labels == label
             ]
 
@@ -319,7 +406,7 @@ class ObjectLocator2(Node):
 
             marker.header.frame_id = 'map'
 
-            marker.header.stamp = timestamp
+            marker.header.stamp = msg.header.stamp
             marker.ns = "bounding_boxes"
 
             marker.id = marker_id
@@ -365,9 +452,13 @@ class ObjectLocator2(Node):
             # 9. Publish boxes
             ############################################################
 
-            self.marker_pub.publish(
-                marker_array
-            )
+        self.marker_pub.publish(
+            marker_array
+        )
+        
+        self.object_pub.publish(
+            detected_object_array
+        )
 
 
     def point_cloud(self, points, parent_frame):
