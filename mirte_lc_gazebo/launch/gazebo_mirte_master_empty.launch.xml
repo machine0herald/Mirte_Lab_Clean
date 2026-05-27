@@ -8,12 +8,13 @@
   <arg name="depth_camera_enable" default="True"/>
 
   <arg name="gui" default="True"/>
-
+  <arg name="pause" default="False"/>
   <arg name="world" default="worlds/empty.world"/>
 
   <!-- Launch gazebo -->
   <include file="$(find-pkg-share mirte_lc_gazebo)/launch/gazebo_mirte_world_generated.launch.xml">
     <arg name="gui" value="$(var gui)"/>
+    <arg name="pause" value="$(var pause)"/>
     <arg name="generated_world" value="$(var world)"/>
     <arg name="verbose" value="true"/>
   </include>

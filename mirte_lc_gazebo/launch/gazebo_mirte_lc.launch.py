@@ -2,6 +2,8 @@
 ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
 '''
 
+import math
+
 from sympy import true
 
 from launch import LaunchDescription
