@@ -2,6 +2,7 @@ from collections import deque
 
 import rclpy
 import sensor_msgs
+from sensor_msgs import msg
 import std_msgs
 import std_srvs.srv
 import time
@@ -12,6 +13,7 @@ from rclpy.time import Time
 from std_msgs.msg import Header
 from sensor_msgs.msg import PointCloud2, PointField
 from sensor_msgs_py import point_cloud2
+from nav_msgs.msg import OccupancyGrid
 
 from visualization_msgs.msg import Marker
 from visualization_msgs.msg import MarkerArray
@@ -33,7 +35,7 @@ class ObjectLocator2(Node):
     def __init__(self):
         super().__init__('object_locator')
         self.points = np.empty((0, 3))
-        self.maxDim = 0.06
+        self.maxDim = 0.3
 
         self.set_parameters([
             Parameter(
@@ -43,7 +45,7 @@ class ObjectLocator2(Node):
             )
         ])
 
-        self.msg_queue = deque(maxlen=10)
+        self.msg_queue = deque(maxlen=1)
 
         ############################################################
         # TF2 Listener
@@ -73,6 +75,13 @@ class ObjectLocator2(Node):
             '/camera/points',
             self.pointcloud_callback,
             1
+        )
+
+        self.costmap_sub = self.create_subscription(
+            OccupancyGrid,
+            "/global_costmap/costmap",
+            self.costmap_callback,
+            10,
         )
 
         self.processing_timer = self.create_timer(
@@ -116,8 +125,53 @@ class ObjectLocator2(Node):
 
         self.startup_timer.cancel()
 
+    def world_to_pixel(self, x, y):
+
+        map_h, map_w = self.map.shape[:2]
+
+        px = int(x / self.map_resolution + 0.5 * map_w)
+        py = int(y / self.map_resolution + 0.5 * map_h)
+
+        return px, py
+
     def pointcloud_callback(self, msg):
         self.msg_queue.append(msg)
+
+    def costmap_callback(self, msg):
+        width = msg.info.width
+        height = msg.info.height
+
+        self.map = np.array(
+            msg.data,
+            dtype=np.int16
+        ).reshape((height, width))
+
+        self.map_resolution = msg.info.resolution
+
+    def is_occupied(self, x, y, threshold=50):
+
+        if not hasattr(self, 'map'):
+            return False
+
+        try:
+
+            px, py = self.world_to_pixel(x, y)
+
+            map_h, map_w = self.map.shape[:2]
+
+            if (px < 0 or px >= map_w or
+                py < 0 or py >= map_h):
+                return False
+
+            return self.map[py, px] >= threshold
+
+        except Exception as e:
+
+            self.get_logger().warn(
+                f"Costmap occupancy check failed: {e}"
+            )
+
+            return False
 
     def process_queued_messages(self):
 
@@ -229,7 +283,7 @@ class ObjectLocator2(Node):
                 plane_model[2]**2
             )
 
-            plane_mask = dist < 0.01
+            plane_mask = dist < 0.004
 
             remaining_mask &= ~plane_mask
 
@@ -294,8 +348,8 @@ class ObjectLocator2(Node):
         self.preprocessed_pub.publish(message)
 
         clustering = DBSCAN(
-            eps=0.025,
-            min_samples=3
+            eps=0.2,
+            min_samples=2
         ).fit(points_map)
 
         labels = clustering.labels_
@@ -334,8 +388,8 @@ class ObjectLocator2(Node):
                 labels == label
             ]
 
-            if len(cluster_points) < 3:
-                continue
+            # if len(cluster_points) < 3:
+            #     continue
 
             cluster_pcd = o3d.geometry.PointCloud()
 
@@ -358,6 +412,20 @@ class ObjectLocator2(Node):
 
             center = obb.center
             extent = obb.extent
+
+            ########################################################
+            # Reject detections inside occupied costmap cells
+            ########################################################
+
+            if self.is_occupied(center[0], center[1]):
+
+                self.get_logger().info(
+                    f"Rejected object at "
+                    f"({center[0]:.2f}, {center[1]:.2f}) "
+                    f"because costmap cell is occupied"
+                )
+
+                continue
 
             if (extent[0] > self.maxDim or
                 extent[1] > self.maxDim or
@@ -454,6 +522,9 @@ class ObjectLocator2(Node):
 
         self.marker_pub.publish(
             marker_array
+        )
+        self.get_logger().info(
+            f"Published {len(marker_array.markers)-1} bounding boxes"
         )
         
         self.object_pub.publish(
