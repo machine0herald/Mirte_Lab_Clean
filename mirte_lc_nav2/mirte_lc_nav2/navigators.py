@@ -147,13 +147,14 @@ class BousPath(SystematicNavigator):
         offset = Geometries.get_sweep_offset(overlap=0.0, height=0.6, field_of_view=90)
 
         ut.log(self.node, LogType.INFO, "generating full trajectory")
+        paths = []
         for cell in cells:
             cell = orient(cell, sign=1.0)
             sweeps = Geometries.generate_sweep_pattern(
                 cell, offset, clockwise=False, connect_sweeps=True
             )
             paths_mls = Geometries.GeoMultiTrajectory(sweeps).get_geometry()
-            self.paths.append(self.multiline_to_coords(paths_mls))
+            paths.append(self.multiline_to_coords(paths_mls))
             # result.extend(sweeps)
 
         # mls = Geometries.GeoMultiTrajectory(result).get_geometry()
@@ -172,6 +173,7 @@ class BousPath(SystematicNavigator):
         # overall_path = []
 
         # current_position = np.array(self.start)
+        return paths
 
     def multiline_to_coords(self, multiline):
         coords = []
