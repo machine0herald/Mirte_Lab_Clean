@@ -206,19 +206,20 @@ class SkeletonPath(SystematicNavigator):
         """
         Generates skeleton waypoints from polygon groups.
         """
+        #TODO: WAYPOINT GROUP 1 HAS A COPY OF WAYPOINT GROUP 0 IN IT
 
         self.waypoint_groups = []
 
         # Create a contour map to store the filled contours for skeletonization
         self.contour_map = np.zeros_like(self.map, dtype=np.uint8) # Used for visualization
-        contour_map = np.zeros_like(self.map, dtype=np.uint8)
+        self.origin = np.array([self.map_height / 2, self.map_width / 2])
 
         for group in self.polymap:
-            self.origin = np.array([self.map_height / 2, self.map_width / 2])
+            contour_map = np.zeros_like(self.map, dtype=np.uint8)
 
             # Draw filled contours
-            for contour in group:
-                contour = np.asarray(contour, dtype=np.float32)
+            for cont in group:
+                contour = np.asarray(cont, dtype=np.float32)
 
                 # Convert world coordinates -> pixels
                 contour = self.world_to_pixel(contour)
@@ -228,9 +229,9 @@ class SkeletonPath(SystematicNavigator):
                 local_contour_map = cv2.drawContours(contour_map, [contour], -1, 255, -1)
 
             # Skeletonize expects bool image
-            # skeleton_map = medial_axis(local_contour_map > 0,
-            #                             return_distance=False)
-            skeleton_map = skeletonize(local_contour_map > 0)
+            skeleton_map = medial_axis(local_contour_map > 0,
+                                        return_distance=False)
+            # skeleton_map = skeletonize(local_contour_map > 0)
             self.skeleton_map = skeleton_map.astype(np.uint8) * 255
 
             # Get skeleton pixels
