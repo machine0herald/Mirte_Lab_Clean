@@ -4,67 +4,71 @@ import os
 
 from geometry_msgs.msg import PolygonStamped, Point32
 from visualization_msgs.msg import Marker, MarkerArray
-from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 
-import utils as ut
-from utils import  LogType
+# Use these imports when running in Jupyter
+# import utils as ut
+# from utils import  LogType
 
-# import mirte_lc_nav2.utils as ut
-# from mirte_lc_nav2.utils import  LogType
+import mirte_lc_nav2.utils as ut
+from mirte_lc_nav2.utils import LogType
 
 import networkx as nx
 from scipy.spatial import KDTree
 
-class SystematicNavigator():
+
+class SystematicNavigator:
     """
-        Base class for systematic coverage path planners.
+    Base class for systematic coverage path planners.
 
-        This class provides shared functionality for:
-        - Occupancy map preprocessing
-        - Contour extraction
-        - Coordinate conversion
-        - ROS visualization publishing
-        - Debug visualization
+    This class provides shared functionality for:
+    - Occupancy map preprocessing
+    - Contour extraction
+    - Coordinate conversion
+    - ROS visualization publishing
+    - Debug visualization
 
-        Child classes should implement their own `generate_path()`
-        method to produce coverage trajectories.
+    Child classes should implement their own `generate_path()`
+    method to produce coverage trajectories.
 
-        Attributes
+    Attributes
+    ----------
+    navigator_type : str
+        Identifier for the planner category.
+    paths : list | None
+        Generated coverage paths.
+    map : np.ndarray | None
+        Occupancy grid map.
+    polymap : list | None
+        Polygon representation of the map contours.
+    threshold : float
+        Occupancy threshold used to classify obstacles.
+    resolution : float
+        Planner waypoint resolution in meters.
+    map_resolution : float
+        Resolution of the occupancy map in meters/pixel.
+    node : rclpy.node.Node | None
+        ROS2 node used for logging and publishers.
+    """
+
+    def __init__(
+        self, node=None, resolution=0.1, map_resolution=0.05, lethal_threshold=20.0
+    ):
+        """
+        Initialize the systematic navigator.
+
+        Parameters
         ----------
-        navigator_type : str
-            Identifier for the planner category.
-        paths : list | None
-            Generated coverage paths.
-        map : np.ndarray | None
-            Occupancy grid map.
-        polymap : list | None
-            Polygon representation of the map contours.
-        threshold : float
-            Occupancy threshold used to classify obstacles.
-        resolution : float
-            Planner waypoint resolution in meters.
-        map_resolution : float
-            Resolution of the occupancy map in meters/pixel.
-        node : rclpy.node.Node | None
-            ROS2 node used for logging and publishers.
-    """
-    def __init__(self, node=None, resolution=0.1, map_resolution=0.05, lethal_threshold=20.0):
+        node : rclpy.node.Node | None, optional
+            ROS2 node instance.
+        resolution : float, optional
+            Desired waypoint spacing in meters.
+        map_resolution : float, optional
+            Occupancy map resolution in meters/pixel.
+        lethal_threshold : float, optional
+            Threshold above which cells are considered occupied.
         """
-            Initialize the systematic navigator.
-
-            Parameters
-            ----------
-            node : rclpy.node.Node | None, optional
-                ROS2 node instance.
-            resolution : float, optional
-                Desired waypoint spacing in meters.
-            map_resolution : float, optional
-                Occupancy map resolution in meters/pixel.
-            lethal_threshold : float, optional
-                Threshold above which cells are considered occupied.
-        """
-        self.navigator_type = 'systematic'
+        self.navigator_type = "systematic"
         self.paths = None
         self.map = None
         self.polymap = None
@@ -79,56 +83,57 @@ class SystematicNavigator():
 
         if self.node is not None:
             self.polymap_publisher = self.node.create_publisher(
-                PolygonStamped, '/systematic_navigator/map_contours', 10
-                )
+                PolygonStamped, "/systematic_navigator/map_contours", 10
+            )
 
             self.decomp_publisher = self.node.create_publisher(
-                MarkerArray, '/systematic_navigator/decomposed_map', 10
-                )
+                MarkerArray, "/systematic_navigator/decomposed_map", 10
+            )
 
             self.path_publisher = self.node.create_publisher(
-                MarkerArray, '/systematic_navigator/planned_path', 10
-                )
+                MarkerArray, "/systematic_navigator/planned_path", 10
+            )
 
-    def plan(self, new_map, start:np.ndarray = np.zeros(2), show=False) -> None:
+    def plan(self, new_map, start: np.ndarray = np.zeros(2), show=False) -> None:
         """
-            Generate a coverage plan for a given occupancy map.
+        Generate a coverage plan for a given occupancy map.
 
-            Parameters
-            ----------
-            new_map : np.ndarray
-                Occupancy grid map.
-            start : np.ndarray, optional
-                Starting robot position in world coordinates.
-            show : bool, optional
-                Unused visualization flag.
+        Parameters
+        ----------
+        new_map : np.ndarray
+            Occupancy grid map.
+        start : np.ndarray, optional
+            Starting robot position in world coordinates.
+        show : bool, optional
+            Unused visualization flag.
 
-            Returns
-            -------
-            None
+        Returns
+        -------
+        None
         """
         self.start = start
+        ut.log(self.node, LogType.INFO, "updating map")
         self.update_map(new_map)
-        self.generate_path()
+        self.generate_path(start)
 
     def update_map(self, new_map):
         """
-            Convert an occupancy map into polygon contours.
+        Convert an occupancy map into polygon contours.
 
-            This function:
-            - Thresholds the occupancy map
-            - Extracts contours
-            - Converts contours to world coordinates
-            - Stores the polygon map representation
+        This function:
+        - Thresholds the occupancy map
+        - Extracts contours
+        - Converts contours to world coordinates
+        - Stores the polygon map representation
 
-            Parameters
-            ----------
-            new_map : np.ndarray
-                Occupancy grid map.
+        Parameters
+        ----------
+        new_map : np.ndarray
+            Occupancy grid map.
 
-            Returns
-            -------
-            None
+        Returns
+        -------
+        None
         """
         self.map = new_map
 
@@ -142,8 +147,12 @@ class SystematicNavigator():
         if margin_px % 2 == 0:
             margin_px += 1
 
-        contours, _ = cv2.findContours(self.binary_costmap, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        contours = [cv2.approxPolyDP(c, 0.005 * cv2.arcLength(c, True), True) for c in contours]
+        contours, _ = cv2.findContours(
+            self.binary_costmap, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+        )
+        contours = [
+            cv2.approxPolyDP(c, 0.005 * cv2.arcLength(c, True), True) for c in contours
+        ]
         contours = sorted(contours, key=cv2.contourArea, reverse=True)
         outer_contour = contours[0]
 
@@ -152,12 +161,16 @@ class SystematicNavigator():
 
         for contour in contours[1:]:  # skip outer
             if len(contour) < 4:
-                ut.log(self.node, LogType.WARN, f"Skipping contour with {len(contour)} points")
+                ut.log(
+                    self.node,
+                    LogType.WARN,
+                    f"Skipping contour with {len(contour)} points",
+                )
                 continue
             filtered_contours.append(contour)
 
         self.contours = filtered_contours
-        
+
         closed_contour = []
         for contour in filtered_contours:
             pts = contour[:, 0, :]
@@ -166,14 +179,16 @@ class SystematicNavigator():
             self.map_width = self.map.shape[1]
 
             points = [
-                ((px - 0.5 * self.map_width) * self.map_resolution,
-                 (py - 0.5 * self.map_height) * self.map_resolution)
+                (
+                    (px - 0.5 * self.map_width) * self.map_resolution,
+                    (py - 0.5 * self.map_height) * self.map_resolution,
+                )
                 for px, py in pts
             ]
 
             if points[0] != points[-1]:
                 points.append(points[0])
-            
+
             closed_contour.append(points)
 
         if self.node is not None:
@@ -184,68 +199,81 @@ class SystematicNavigator():
 
     def is_inside(self, contour, outer_contour):
         """
-            Check whether a contour lies completely inside another contour.
+        Check whether a contour lies completely inside another contour.
 
-            Parameters
-            ----------
-            contour : np.ndarray
-                Contour to test.
-            outer_contour : np.ndarray
-                Reference contour.
+        Parameters
+        ----------
+        contour : np.ndarray
+            Contour to test.
+        outer_contour : np.ndarray
+            Reference contour.
 
-            Returns
-            -------
-            bool
-                True if the contour lies inside the outer contour,
-                otherwise False.
+        Returns
+        -------
+        bool
+            True if the contour lies inside the outer contour,
+            otherwise False.
         """
-        ut.log(self.node, LogType.DEBUG, f"Testing if contour {contour} points is inside contour {outer_contour} points")
+        ut.log(
+            self.node,
+            LogType.DEBUG,
+            f"Testing if contour {contour} points is inside contour {outer_contour} points",
+        )
         for pt in contour:
-            if cv2.pointPolygonTest(np.array(outer_contour, dtype=np.float32), (float(pt[0]), float(pt[1])), False) < 0:
+            if (
+                cv2.pointPolygonTest(
+                    np.array(outer_contour, dtype=np.float32),
+                    (float(pt[0]), float(pt[1])),
+                    False,
+                )
+                < 0
+            ):
                 return False
         return True
-        
-    
+
     def find_polygon_groups(self, polymap: np.ndarray) -> list:
         """
-            Group contours into polygons with holes.
-
-            The largest contour is assumed to be the outer boundary,
-            while contained contours are treated as holes.
-
-            Parameters
-            ----------
-            polymap : list
-                List of contours.
-
-            Returns
-            -------
-            list
-                Nested contour groups.
+        Group contours into polygons with holes.
         """
+
         sorted_polymap = sorted(polymap, key=polygon_area, reverse=True)
-        outer_contours = [sorted_polymap[0]]
-        sorted_polymap.pop(0)
+
+        if len(sorted_polymap) == 0:
+            return []
+
         grouped_polygons = []
-        
-        for outer in outer_contours:
+
+        remaining = sorted_polymap.copy()
+
+        ut.log(self.node, LogType.INFO, "sorted polygons, moving on to group detection")
+
+        while remaining:
+
+            outer = remaining.pop(0)
+
             group = [outer]
-            for contour in sorted_polymap:
-                if contour is outer:
-                    continue
+
+            still_remaining = []
+
+            for contour in remaining:
+
                 if self.is_inside(contour, outer):
                     group.append(contour)
-                    
                 else:
-                    outer_contours.append(contour)
-            group = sorted(group, key=polygon_area, reverse=True)
-            grouped_polygons.append(group)
+                    still_remaining.append(contour)
+
+            grouped_polygons.append(sorted(group, key=polygon_area, reverse=True))
+
+            remaining = still_remaining
+
+        ut.log(self.node, LogType.INFO, "successfully grouped polygons")
+
         return grouped_polygons
 
     def set_waypoints(self, waypoints, resolution, distance=0.0) -> nx.Graph:
         """
-            Takes skeleton tree image and generates
-            a network graph from the tree.
+        Takes skeleton tree image and generates
+        a network graph from the tree.
         """
         # # Set the waypoints and create a tree for the waypoints
 
@@ -256,89 +284,87 @@ class SystematicNavigator():
         for i, p in enumerate(waypoints):
             graph.add_node(i, pos=tuple(p))
 
-            indices = tree.query_ball_point(p, resolution*0.8)
+            indices = tree.query_ball_point(p, resolution * 0.8)
 
             for j in indices:
                 if i == j:
                     continue
                 graph.add_edge(i, j)
-    
-        # while nx.number_connected_components(graph) > 1:
 
-        #     components = list(nx.connected_components(graph))
+        # Connect any disconnected components in this group
+        while nx.number_connected_components(graph) > 1:
 
-        #     # take two different components
-        #     c1 = components[0]
-        #     c2 = components[1]
+            components = list(nx.connected_components(graph))
 
-        #     best_pair = None
-        #     best_dist = float("inf")
+            # take two different components
+            c1 = components[0]
+            c2 = components[1]
 
-        #     # find closest pair between components
-        #     for i in c1:
-        #         for j in c2:
-        #             dist = np.linalg.norm(
-        #                 waypoints[i] - waypoints[j]
-        #             )
-        #             if dist < best_dist:
-        #                 best_dist = dist
-        #                 best_pair = (i, j)
+            best_pair = None
+            best_dist = float("inf")
 
-        #     # connect them
-        #     i, j = best_pair
-        #     graph.add_edge(i, j)
+            # find closest pair between components
+            for i in c1:
+                for j in c2:
+                    dist = np.linalg.norm(waypoints[i] - waypoints[j])
+                    if dist < best_dist:
+                        best_dist = dist
+                        best_pair = (i, j)
+
+            # connect them
+            i, j = best_pair
+            graph.add_edge(i, j)
 
         return graph
 
     def find_leaf_nodes(self, graph) -> list:
         leaf_nodes = [node for node in graph.nodes if graph.degree(node) == 1]
         return leaf_nodes
-    
-    def find_nearest_leaf_node(self, graph, current_position: np.ndarray, leaf_nodes: list) -> int:
+
+    def find_nearest_leaf_node(
+        self, graph, current_position: np.ndarray, leaf_nodes: list
+    ) -> int:
         nearest_leaf_node = min(
-            leaf_nodes, key=lambda x: np.linalg.norm(
-                current_position - np.array(graph.nodes[x]['pos'])
-                )
-            )
+            leaf_nodes,
+            key=lambda x: np.linalg.norm(
+                current_position - np.array(graph.nodes[x]["pos"])
+            ),
+        )
         return nearest_leaf_node
 
     def world_to_pixel(self, polygon):
-        """
-            Convert polygon coordinates from world space to pixel space.
 
-            Parameters
-            ----------
-            polygon : list
-                Polygon coordinates in meters.
-
-            Returns
-            -------
-            np.ndarray
-                Polygon coordinates in pixel space.
-        """
         map_h, map_w = self.map.shape[:2]
 
         coords = []
+
         for coord in polygon:
+
             px = int(coord[0] / self.map_resolution + 0.5 * map_w)
+
             py = int(coord[1] / self.map_resolution + 0.5 * map_h)
+
+            # Clamp to valid map bounds
+            px = np.clip(px, 0, map_w - 1)
+            py = np.clip(py, 0, map_h - 1)
+
             coords.append([px, py])
 
         return np.array(coords, dtype=np.int32)
 
     def world_to_pixel_path(self, path):
         """
-            Convert path coordinates from world space to pixel space.
+        Convert path coordinates from world space to pixel space.
 
-            Parameters
-            ----------
-            path : np.ndarray
-                Path coordinates in meters.
+        Parameters
+        ----------
+        path : np.ndarray
+            Path coordinates in meters.
 
-            Returns
-            -------
-            np.ndarray
-                Path coordinates in pixel space.
+        Returns
+        -------
+        np.ndarray
+            Path coordinates in pixel space.
         """
         map_h, map_w = self.map.shape[:2]
 
@@ -351,16 +377,16 @@ class SystematicNavigator():
 
     def publish_polygon(self, contours):
         """
-            Publish polygon contours as a ROS PolygonStamped message.
+        Publish polygon contours as a ROS PolygonStamped message.
 
-            Parameters
-            ----------
-            contours : list
-                List of contour coordinate lists.
+        Parameters
+        ----------
+        contours : list
+            List of contour coordinate lists.
 
-            Returns
-            -------
-            None
+        Returns
+        -------
+        None
         """
         msg = PolygonStamped()
         msg.header.frame_id = "map"
@@ -378,13 +404,13 @@ class SystematicNavigator():
 
     def publish_decomposition(self):
         """
-            Publish decomposed coverage cells as RViz markers.
+        Publish decomposed coverage cells as RViz markers.
 
-            Each decomposition cell is visualized as a colored line strip.
+        Each decomposition cell is visualized as a colored line strip.
 
-            Returns
-            -------
-            None
+        Returns
+        -------
+        None
         """
         marker_array = MarkerArray()
 
@@ -415,14 +441,14 @@ class SystematicNavigator():
             marker_array.markers.append(marker)
 
         self.decomp_publisher.publish(marker_array)
-    
+
     def publish_path(self):
         """
-            Publish planned coverage paths as RViz markers.
+        Publish planned coverage paths as RViz markers.
 
-            Returns
-            -------
-            None
+        Returns
+        -------
+        None
         """
         marker_array = MarkerArray()
 
@@ -456,16 +482,16 @@ class SystematicNavigator():
 
     def debug_save(self, contours):
         """
-            Save a debug visualization of the occupancy map and contours.
+        Save a debug visualization of the occupancy map and contours.
 
-            Parameters
-            ----------
-            contours : list
-                Contours to overlay on the map image.
+        Parameters
+        ----------
+        contours : list
+            Contours to overlay on the map image.
 
-            Returns
-            -------
-            None
+        Returns
+        -------
+        None
         """
         img = cv2.normalize(self.map.astype(np.float32), None, 0, 255, cv2.NORM_MINMAX)
         img = cv2.cvtColor(img.astype(np.uint8), cv2.COLOR_GRAY2BGR)
@@ -477,16 +503,16 @@ class SystematicNavigator():
 
     def publish_info(self):
         """
-            Publish all available planner visualization data.
+        Publish all available planner visualization data.
 
-            Publishes:
-            - Polygon contours
-            - Decomposition cells
-            - Planned paths
+        Publishes:
+        - Polygon contours
+        - Decomposition cells
+        - Planned paths
 
-            Returns
-            -------
-            None
+        Returns
+        -------
+        None
         """
         if self.poly_map:
             self.polymap_publisher.publish()
@@ -498,9 +524,10 @@ class SystematicNavigator():
             self.paths_publisher.publish()
 
 
-class ReactiveNavigator():
+class ReactiveNavigator:
     def __init__(self):
-        self.navigator_type = 'reactive'
+        self.navigator_type = "reactive"
+
 
 def polygon_area(poly):
     x = np.array([p[0] for p in poly])

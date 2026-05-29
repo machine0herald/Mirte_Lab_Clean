@@ -1,6 +1,6 @@
-'''
+"""
 ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
-'''
+"""
 
 from sympy import true
 
@@ -13,7 +13,7 @@ from launch.actions import (
 from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import (
     AnyLaunchDescriptionSource,
-    PythonLaunchDescriptionSource
+    PythonLaunchDescriptionSource,
 )
 from launch_ros.actions import Node, SetParameter
 from ament_index_python.packages import get_package_share_directory
@@ -26,9 +26,9 @@ from launch.actions import DeclareLaunchArgument, LogInfo
 
 def generate_launch_description():
 
-    mirte_bringup = get_package_share_directory('mirte_bringup')
-    mirte_lc_labclean_pkg = get_package_share_directory('mirte_lc_labclean')
-    
+    mirte_bringup = get_package_share_directory("mirte_bringup")
+    mirte_lc_labclean_pkg = get_package_share_directory("mirte_lc_labclean")
+
     ###########################
     # Mirte Lab Clean Bringup #
     ###########################
@@ -36,13 +36,11 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(
                 mirte_lc_labclean_pkg,
-                'launch',
-                'labclean_bringup.launch.py',
+                "launch",
+                "labclean_bringup.launch.py",
             )
         ),
-        launch_arguments={
-            "use_sim_time": "true"    
-        }.items()
+        launch_arguments={"use_sim_time": "true"}.items(),
     )
 
     ###################
@@ -52,8 +50,8 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(
                 mirte_bringup,
-                'launch',
-                'minimal_master.launch.py',
+                "launch",
+                "minimal_master.launch.py",
             )
         ),
         launch_arguments={
@@ -62,8 +60,10 @@ def generate_launch_description():
         }.items(),
     )
 
-    return LaunchDescription([
-        SetParameter(name="use_sim_time", value='true'),
-        mirte_robot,
-        TimerAction(period=20.0, actions=[mirte_lc_launch]),
-    ])
+    return LaunchDescription(
+        [
+            SetParameter(name="use_sim_time", value="true"),
+            mirte_robot,
+            TimerAction(period=20.0, actions=[mirte_lc_launch]),
+        ]
+    )

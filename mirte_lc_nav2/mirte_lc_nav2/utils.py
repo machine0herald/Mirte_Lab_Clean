@@ -2,11 +2,13 @@ from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Path
 from enum import IntEnum
 
+
 class LogType(IntEnum):
     INFO = 1
     WARN = 2
     ERR = 3
     DEBUG = 4
+
 
 import math
 
@@ -14,107 +16,111 @@ from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 
 import numpy as np
+
 np.float = float
 
-# from tf_transformations import quaternion_from_euler
-# def to_ros_path(points, frame_id="map", spacing=0.1):
-#     """
-#     Convert a list of (x, y) tuples into a uniformly sampled nav_msgs/Path.
+from tf_transformations import quaternion_from_euler
 
-#     Features:
-#     - removes duplicate points
-#     - resamples path at consistent spacing
-#     - generates orientations from path tangent
-#     """
-#     # -----------------------------------------
-#     # Remove duplicates
-#     # -----------------------------------------
-#     filtered = []
 
-#     for p in points:
-#         if len(filtered) == 0:
-#             filtered.append(p)
-#             continue
+def to_ros_path(points, frame_id="map", spacing=0.1):
+    """
+    Convert a list of (x, y) tuples into a uniformly sampled nav_msgs/Path.
 
-#         dx = p[0] - filtered[-1][0]
-#         dy = p[1] - filtered[-1][1]
+    Features:
+    - removes duplicate points
+    - resamples path at consistent spacing
+    - generates orientations from path tangent
+    """
+    # -----------------------------------------
+    # Remove duplicates
+    # -----------------------------------------
+    filtered = []
 
-#         if math.hypot(dx, dy) > 1e-3:
-#             filtered.append(p)
+    for p in points:
+        if len(filtered) == 0:
+            filtered.append(p)
+            continue
 
-#     if len(filtered) < 2:
-#         return Path()
+        dx = p[0] - filtered[-1][0]
+        dy = p[1] - filtered[-1][1]
 
-#     # -----------------------------------------
-#     # Uniform resampling
-#     # -----------------------------------------
-#     sampled = [filtered[0]]
+        if math.hypot(dx, dy) > 1e-3:
+            filtered.append(p)
 
-#     for i in range(len(filtered) - 1):
+    if len(filtered) < 2:
+        return Path()
 
-#         x1, y1 = filtered[i]
-#         x2, y2 = filtered[i + 1]
+    # -----------------------------------------
+    # Uniform resampling
+    # -----------------------------------------
+    sampled = [filtered[0]]
 
-#         dx = x2 - x1
-#         dy = y2 - y1
+    for i in range(len(filtered) - 1):
 
-#         segment_length = math.hypot(dx, dy)
+        x1, y1 = filtered[i]
+        x2, y2 = filtered[i + 1]
 
-#         if segment_length < 1e-6:
-#             continue
+        dx = x2 - x1
+        dy = y2 - y1
 
-#         steps = max(1, int(segment_length / spacing))
+        segment_length = math.hypot(dx, dy)
 
-#         for j in range(1, steps + 1):
+        if segment_length < 1e-6:
+            continue
 
-#             t = j / steps
+        steps = max(1, int(segment_length / spacing))
 
-#             x = x1 + t * dx
-#             y = y1 + t * dy
+        for j in range(1, steps + 1):
 
-#             sampled.append((x, y))
+            t = j / steps
 
-#     # -----------------------------------------
-#     # Build ROS Path
-#     # -----------------------------------------
-#     path = Path()
-#     path.header.frame_id = frame_id
+            x = x1 + t * dx
+            y = y1 + t * dy
 
-#     for i in range(len(sampled)):
+            sampled.append((x, y))
 
-#         pose = PoseStamped()
-#         pose.header.frame_id = frame_id
+    # -----------------------------------------
+    # Build ROS Path
+    # -----------------------------------------
+    path = Path()
+    path.header.frame_id = frame_id
 
-#         x, y = sampled[i]
+    for i in range(len(sampled)):
 
-#         pose.pose.position.x = float(x)
-#         pose.pose.position.y = float(y)
-#         pose.pose.position.z = 0.0
+        pose = PoseStamped()
+        pose.header.frame_id = frame_id
 
-#         # -----------------------------------------
-#         # Orientation from tangent
-#         # -----------------------------------------
-#         if i < len(sampled) - 1:
+        x, y = sampled[i]
 
-#             nx, ny = sampled[i + 1]
+        pose.pose.position.x = float(x)
+        pose.pose.position.y = float(y)
+        pose.pose.position.z = 0.0
 
-#             yaw = math.atan2(nx - x, ny - y)
+        # -----------------------------------------
+        # Orientation from tangent
+        # -----------------------------------------
+        if i < len(sampled) - 1:
 
-#         else:
-#             px, py = sampled[i - 1]
+            nx, ny = sampled[i + 1]
 
-#             yaw = math.atan2(x - px, y - py)
+            yaw = math.atan2(nx - x, ny - y)
 
-#         q = quaternion_from_euler(0.0, 0.0, yaw)
+        else:
+            px, py = sampled[i - 1]
 
-#         pose.pose.orientation.x = q[0]
-#         pose.pose.orientation.y = q[1]
-#         pose.pose.orientation.z = q[2]
-#         pose.pose.orientation.w = q[3]
+            yaw = math.atan2(x - px, y - py)
 
-#         path.poses.append(pose)
+        q = quaternion_from_euler(0.0, 0.0, yaw)
 
-#     return path
+        pose.pose.orientation.x = q[0]
+        pose.pose.orientation.y = q[1]
+        pose.pose.orientation.z = q[2]
+        pose.pose.orientation.w = q[3]
+
+        path.poses.append(pose)
+
+    return path
+
 
 def log(node, msg_type: LogType, msg: str):
     if node is not None:

@@ -45,6 +45,7 @@ we exclude it manually/.
 1. Create the folder and add the repo
     ```sh
     cd ~/mirte_ros_ws/src && mkdir mirte_lc && cd mirte_lc
+    git init
     git remote add origin https://github.com/machine0herald/Mirte_Lab_Clean
     ```
 
