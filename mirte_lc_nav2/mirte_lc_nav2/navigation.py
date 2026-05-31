@@ -19,8 +19,7 @@ from mirte_lc_msgs.action import NavigateCoverage
 import mirte_lc_nav2.navigators as nv
 import mirte_lc_nav2.utils as ut
 
-import asyncio
-
+import time
 
 class LabCleanActionServer(Node):
 
@@ -30,6 +29,9 @@ class LabCleanActionServer(Node):
         self.stop_requested = False
         self.remaining_poses = -1
         self.map = None
+        self.nav_goal_handle = None
+        self.current_segment = None
+        self.goal_paths = []
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
@@ -125,7 +127,7 @@ class LabCleanActionServer(Node):
         # wait for map
         while self.map is None:
             self.get_logger().info("Waiting for costmap...")
-            await asyncio.sleep(1.0)
+            time.sleep(1.0)
 
         start = self.get_robot_position()
 
@@ -184,48 +186,52 @@ class LabCleanActionServer(Node):
                 nav_goal, feedback_callback=self.nav_feedback_callback
             )
 
-            nav_goal_handle = await send_goal_future
-            self.nav_goal_handle = nav_goal_handle
+            self.nav_goal_handle = await send_goal_future
 
-            while self.pause_requested:
+            if self.pause_requested:
+                self.get_logger().info("Pausing navigation...")
                 self.get_logger().info(f"Pause in segment {idx}")
-                await asyncio.sleep(0.1)
+                
+                while self.pause_requested:
+                    self.get_logger().info('Paused')
+                    time.sleep(0.1)
 
-            if self.stop_requested:
-                await nav_goal_handle.cancel_goal_async()
-                goal_handle.abort()
+            else:
+                if self.stop_requested:
+                    await self.nav_goal_handle.cancel_all_goals_async()
+                    goal_handle.abort()
 
-                result.success = False
-                result.message = "Cleaning stopped"
+                    result.success = False
+                    result.message = "Cleaning stopped"
 
-                return result
+                    return result
 
-            if not nav_goal_handle.accepted:
-                result.success = False
-                result.message = "Nav2 rejected goal"
+                if not self.nav_goal_handle.accepted:
+                    result.success = False
+                    result.message = "Nav2 rejected goal"
 
-                goal_handle.abort()
-                return result
+                    goal_handle.abort()
+                    return result
 
-            result_future = nav_goal_handle.get_result_async()
+                result_future = self.nav_goal_handle.get_result_async()
 
-            # Wait for completion
-            nav_result = await result_future
+                # Wait for completion
+                nav_result = await result_future
 
-            # Publish feedback
-            feedback = NavigateCoverage.Feedback()
+                # Publish feedback
+                feedback = NavigateCoverage.Feedback()
 
-            feedback.current_segment = idx + 1
-            feedback.total_segments = total_segments
+                feedback.current_segment = idx + 1
+                feedback.total_segments = total_segments
 
-            feedback.completion_percentage = (
-                float(idx + 1) / float(total_segments)
-            ) * 100.0
+                feedback.completion_percentage = (
+                    float(idx + 1) / float(total_segments)
+                ) * 100.0
 
-            goal_handle.publish_feedback(feedback)
+                goal_handle.publish_feedback(feedback)
 
-            if verbose:
-                self.get_logger().info(f"Completed segment {idx+1}")
+                if verbose:
+                    self.get_logger().info(f"Completed segment {idx+1}")
 
         # Finished
         goal_handle.succeed()
@@ -259,7 +265,13 @@ class LabCleanActionServer(Node):
 
             case request.PAUSE:
                 self.pause_requested = True
-                asyncio.create_task(self.pause())
+
+                if self.nav_goal_handle is not None:
+                    self.get_logger().info('Cancelling goal in pause')
+                    self.nav_goal_handle.cancel_goal_async()
+                    
+                self.save_path()
+
                 response.succeeded = True
 
             case request.RESUME:
@@ -277,24 +289,20 @@ class LabCleanActionServer(Node):
 
         return response
 
-    async def pause(self):
+    def save_path(self):
         """
-        Safely pauses execution by cancelling current Nav2 goal
-        and waiting for confirmation before modifying state.
+            saves remaining coverage path
         """
-        if self.nav_goal_handle is None:
+
+        if self.remaining_poses <= 0:
+            self.get_logger().warn("No remaining pose information available")
             return
-
-        self.get_logger().info("Pausing navigation...")
-
-        cancel_future = self.nav_goal_handle.cancel_goal_async()
-        cancel_response = await cancel_future
 
         path = self.current_segment.copy()
         number_remaining = self.remaining_poses
         remaining_path = path[-number_remaining:]
         self.get_logger().info(
-            f"for debugging purposes: nav2 path: {number_remaining} requested path: {len(path)} "
+            f"for debugging purposes: nav2 remaining path: {number_remaining} requested path: {len(path)} "
         )
         self.goal_paths.insert(0, remaining_path)
 
