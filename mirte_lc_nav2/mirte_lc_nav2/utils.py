@@ -17,11 +17,6 @@ from geometry_msgs.msg import PoseStamped
 
 import numpy as np
 
-np.float = float
-
-from tf_transformations import quaternion_from_euler
-
-
 def to_ros_path(points, frame_id="map", spacing=0.1):
     """
     Convert a list of (x, y) tuples into a uniformly sampled nav_msgs/Path.
@@ -82,9 +77,7 @@ def to_ros_path(points, frame_id="map", spacing=0.1):
     # -----------------------------------------
     # Build ROS Path
     # -----------------------------------------
-    path = Path()
-    path.header.frame_id = frame_id
-
+    path = []
     for i in range(len(sampled)):
 
         pose = PoseStamped()
@@ -99,25 +92,25 @@ def to_ros_path(points, frame_id="map", spacing=0.1):
         # -----------------------------------------
         # Orientation from tangent
         # -----------------------------------------
-        if i < len(sampled) - 1:
+        # if i < len(sampled) - 1:
 
-            nx, ny = sampled[i + 1]
+        #     nx, ny = sampled[i + 1]
 
-            yaw = math.atan2(nx - x, ny - y)
+        #     yaw = math.atan2(nx - x, ny - y)
 
-        else:
-            px, py = sampled[i - 1]
+        # else:
+        #     px, py = sampled[i - 1]
 
-            yaw = math.atan2(x - px, y - py)
+            # yaw = math.atan2(x - px, y - py)
 
-        q = quaternion_from_euler(0.0, 0.0, yaw)
+        # q = euler_to_quaternion(0.0, 0.0, yaw)
 
-        pose.pose.orientation.x = q[0]
-        pose.pose.orientation.y = q[1]
-        pose.pose.orientation.z = q[2]
-        pose.pose.orientation.w = q[3]
+        # pose.pose.orientation.x = q[0]
+        # pose.pose.orientation.y = q[1]
+        # pose.pose.orientation.z = q[2]
+        # pose.pose.orientation.w = q[3]
 
-        path.poses.append(pose)
+        path.append(pose)
 
     return path
 

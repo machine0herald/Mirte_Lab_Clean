@@ -16,8 +16,12 @@ from mirte_lc_nav2.utils import LogType
 import networkx as nx
 from scipy.spatial import KDTree
 
+from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
+from nav2_simple_commander.costmap_2d import PyCostmap2D
+import rclpy
 
-class SystematicNavigator:
+
+class SystematicNavigator(BasicNavigator):
     """
     Base class for systematic coverage path planners.
 
@@ -52,7 +56,7 @@ class SystematicNavigator:
     """
 
     def __init__(
-        self, node=None, resolution=0.1, map_resolution=0.05, lethal_threshold=20.0
+        self, node=None, resolution=0.1, lethal_threshold=20.0
     ):
         """
         Initialize the systematic navigator.
@@ -68,15 +72,14 @@ class SystematicNavigator:
         lethal_threshold : float, optional
             Threshold above which cells are considered occupied.
         """
+        super().__init__(node_name="coverage_navigator")
         self.navigator_type = "systematic"
         self.paths = None
         self.map = None
         self.polymap = None
         self.threshold = lethal_threshold
-        self.resolution = resolution
-        self.map_resolution = map_resolution
+        self.path_resolution = resolution
         self.node = node
-        self.origin = None
         self.graph = None
         self.start = None
         self.waypoints = None
@@ -94,7 +97,7 @@ class SystematicNavigator:
                 MarkerArray, "/systematic_navigator/planned_path", 10
             )
 
-    def plan(self, new_map, start: np.ndarray = np.zeros(2), show=False) -> None:
+    def plan(self, map_msg, start: np.ndarray = np.zeros(2), show=False) -> None:
         """
         Generate a coverage plan for a given occupancy map.
 
@@ -113,10 +116,10 @@ class SystematicNavigator:
         """
         self.start = start
         ut.log(self.node, LogType.INFO, "updating map")
-        self.update_map(new_map)
+        self.update_map(map_msg)
         self.generate_path(start)
 
-    def update_map(self, new_map):
+    def update_map(self, map_msg):
         """
         Convert an occupancy map into polygon contours.
 
@@ -135,24 +138,30 @@ class SystematicNavigator:
         -------
         None
         """
-        self.map = new_map
-
+        # Set up Costmap Object
+        self.costmap = PyCostmap2D(map_msg)
+        self.map = self.costmap.costmap
+        self.map = np.array(self.map, dtype=np.int16).reshape((self.costmap.size_x, self.costmap.size_y))
+        
         self.binary_costmap = np.zeros_like(self.map, dtype=np.uint8)
         self.binary_costmap[self.map < self.threshold] = 255
         self.binary_costmap[self.map == -1] = 0
 
         margin_m = 0.3
-        margin_px = max(1, int(margin_m / self.map_resolution))
-
+        margin_px = max(1, int(margin_m / self.costmap.resolution))
+        
         if margin_px % 2 == 0:
             margin_px += 1
 
+        # Find Contours
         contours, _ = cv2.findContours(
             self.binary_costmap, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
         contours = [
             cv2.approxPolyDP(c, 0.005 * cv2.arcLength(c, True), True) for c in contours
         ]
+        
+        # Sort Contours from largest to smallest
         contours = sorted(contours, key=cv2.contourArea, reverse=True)
         outer_contour = contours[0]
 
@@ -172,19 +181,11 @@ class SystematicNavigator:
         self.contours = filtered_contours
 
         closed_contour = []
+
         for contour in filtered_contours:
             pts = contour[:, 0, :]
 
-            self.map_height = self.map.shape[0]
-            self.map_width = self.map.shape[1]
-
-            points = [
-                (
-                    (px - 0.5 * self.map_width) * self.map_resolution,
-                    (py - 0.5 * self.map_height) * self.map_resolution,
-                )
-                for px, py in pts
-            ]
+            points = self.pixel_to_world_poly(pts)
 
             if points[0] != points[-1]:
                 points.append(points[0])
@@ -196,6 +197,18 @@ class SystematicNavigator:
 
         self.polymap = self.find_polygon_groups(closed_contour)
         return None
+
+    def world_to_pixel_poly(self, polygon):
+        return [
+            list(self.costmap.worldToMap(vertex[0], vertex[1]))
+            for vertex in polygon
+        ]
+    
+    def pixel_to_world_poly(self, polygon):
+        return [
+            list(self.costmap.mapToWorld(int(vertex[0]), int(vertex[1])))
+            for vertex in polygon
+        ]
 
     def is_inside(self, contour, outer_contour):
         """
@@ -250,32 +263,27 @@ class SystematicNavigator:
         while remaining:
 
             outer = remaining.pop(0)
-
             group = [outer]
-
             still_remaining = []
 
             for contour in remaining:
-
                 if self.is_inside(contour, outer):
                     group.append(contour)
                 else:
                     still_remaining.append(contour)
 
             grouped_polygons.append(sorted(group, key=polygon_area, reverse=True))
-
             remaining = still_remaining
 
         ut.log(self.node, LogType.INFO, "successfully grouped polygons")
 
         return grouped_polygons
 
-    def set_waypoints(self, waypoints, resolution, distance=0.0) -> nx.Graph:
+    def set_waypoints(self, waypoints) -> nx.Graph:
         """
-        Takes skeleton tree image and generates
-        a network graph from the tree.
+        generates a network graph from waypoints
         """
-        # # Set the waypoints and create a tree for the waypoints
+        # Set the waypoints and create a tree for the waypoints
 
         tree = KDTree(waypoints)
 
@@ -284,7 +292,7 @@ class SystematicNavigator:
         for i, p in enumerate(waypoints):
             graph.add_node(i, pos=tuple(p))
 
-            indices = tree.query_ball_point(p, resolution * 0.8)
+            indices = tree.query_ball_point(p, self.path_resolution * 0.8)
 
             for j in indices:
                 if i == j:
@@ -321,59 +329,16 @@ class SystematicNavigator:
         leaf_nodes = [node for node in graph.nodes if graph.degree(node) == 1]
         return leaf_nodes
 
-    def find_nearest_leaf_node(
-        self, graph, current_position: np.ndarray, leaf_nodes: list
+    def find_nearest_node(
+        self, graph, current_position: np.ndarray, nodes: list
     ) -> int:
         nearest_leaf_node = min(
-            leaf_nodes,
+            nodes,
             key=lambda x: np.linalg.norm(
                 current_position - np.array(graph.nodes[x]["pos"])
             ),
         )
         return nearest_leaf_node
-
-    def world_to_pixel(self, polygon):
-
-        map_h, map_w = self.map.shape[:2]
-
-        coords = []
-
-        for coord in polygon:
-
-            px = int(coord[0] / self.map_resolution + 0.5 * map_w)
-
-            py = int(coord[1] / self.map_resolution + 0.5 * map_h)
-
-            # Clamp to valid map bounds
-            px = np.clip(px, 0, map_w - 1)
-            py = np.clip(py, 0, map_h - 1)
-
-            coords.append([px, py])
-
-        return np.array(coords, dtype=np.int32)
-
-    def world_to_pixel_path(self, path):
-        """
-        Convert path coordinates from world space to pixel space.
-
-        Parameters
-        ----------
-        path : np.ndarray
-            Path coordinates in meters.
-
-        Returns
-        -------
-        np.ndarray
-            Path coordinates in pixel space.
-        """
-        map_h, map_w = self.map.shape[:2]
-
-        pts = np.array(path)
-
-        pts[:, 0] = pts[:, 0] / self.map_resolution + 0.5 * map_w
-        pts[:, 1] = pts[:, 1] / self.map_resolution + 0.5 * map_h
-
-        return pts.astype(np.int32)
 
     def publish_polygon(self, contours):
         """
@@ -522,11 +487,6 @@ class SystematicNavigator:
 
         if self.paths:
             self.paths_publisher.publish()
-
-
-class ReactiveNavigator:
-    def __init__(self):
-        self.navigator_type = "reactive"
 
 
 def polygon_area(poly):

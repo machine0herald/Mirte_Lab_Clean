@@ -10,7 +10,9 @@ from rclpy.action import (
 )
 
 from nav_msgs.msg import OccupancyGrid
-from nav2_msgs.action import NavigateThroughPoses
+
+from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
+import rclpy
 from tf2_ros import Buffer, TransformListener
 
 from std_msgs.msg import Bool
@@ -40,19 +42,6 @@ class LabCleanActionServer(Node):
             ServeCoverageStatus, "/labclean_navigator/set_state", self.status_callback
         )
 
-        self.costmap_sub = self.create_subscription(
-            OccupancyGrid,
-            "/global_costmap/costmap",
-            self.costmap_callback,
-            10,
-        )
-
-        self.nav_client = ActionClient(
-            self,
-            NavigateThroughPoses,
-            "/navigate_through_poses",
-        )
-
         self.server = ActionServer(
             self,
             NavigateCoverage,
@@ -61,24 +50,13 @@ class LabCleanActionServer(Node):
             goal_callback=self.goal_callback,
             cancel_callback=self.cancel_callback,
         )
-
-    ###############################
-    # Costmap Subscriber Callback #
-    ###############################
-
-    def costmap_callback(self, msg):
-        width = msg.info.width
-        height = msg.info.height
-
-        self.map = np.array(msg.data, dtype=np.int16).reshape((height, width))
-
-    def goal_callback(self, goal_request):
-        self.get_logger().info("Received cleaning goal")
-        return GoalResponse.ACCEPT
-
-    def cancel_callback(self, goal_handle):
-        self.get_logger().info("Received cancel request")
-        return CancelResponse.ACCEPT
+        
+        self.costmap_sub = self.create_subscription(
+            OccupancyGrid,
+            "/global_costmap/costmap",
+            self.costmap_callback,
+            10,
+        )
 
     ###########
     # Helpers #
@@ -110,12 +88,31 @@ class LabCleanActionServer(Node):
         self.get_logger().warn(f"Unknown planner '{planner_name}', using BousPlanner")
 
         return planners["BousPlanner"]
+    
+    ####################
+    # Costmap Callback #
+    ####################
 
-    #######################
-    # Coverage Navigation #
-    #######################
+    def costmap_callback(self, msg):
+        self.map_msg = msg
 
-    async def execute_callback(self, goal_handle):
+    ####################################
+    # Server Goal and Cancel Callbacks #
+    ####################################
+
+    def goal_callback(self, goal_request):
+        self.get_logger().info("Received cleaning goal")
+        return GoalResponse.ACCEPT
+
+    def cancel_callback(self, goal_handle):
+        self.get_logger().info("Received cancel request")
+        return CancelResponse.ACCEPT
+
+    ###########################
+    # Server Execution Callback #
+    ###########################
+
+    def execute_callback(self, goal_handle):
         self.segment_idx = 0
         self.current_goal_handle = goal_handle
         planner_type = goal_handle.request.planner_type
@@ -123,11 +120,6 @@ class LabCleanActionServer(Node):
         self.verbose = verbose
 
         result = NavigateCoverage.Result()
-
-        # wait for map
-        while self.map is None:
-            self.get_logger().info("Waiting for costmap...")
-            time.sleep(1.0)
 
         start = self.get_robot_position()
 
@@ -138,100 +130,90 @@ class LabCleanActionServer(Node):
             return result
 
         planner_cls = self.lookup_planner(planner_type)
-
-        planner = planner_cls(self)
+        self.planner = planner_cls(self)
 
         self.get_logger().info(f"Planning with {planner_type}")
 
-        planner.plan(self.map, start)
-        self.goal_paths = planner.paths.copy()
-        if planner.paths is None or len(planner.paths) == 0:
+        self.planner.plan(self.map_msg, start)
+        self.goal_paths = self.planner.paths.copy()
+
+        if self.planner.paths is None or len(self.planner.paths) == 0:
             result.success = False
             result.message = "Planner produced no paths"
             goal_handle.abort()
             return result
 
-        total_segments = len(planner.paths)
+        self.goal_paths = self.planner.paths
+        total_segments = len(self.goal_paths)
 
-        self.get_logger().info("waiting on navigatethroughposes server")
-        self.nav_client.wait_for_server()
-
-        self.goal_paths = planner.paths
-
+        self.get_logger().info('''
+                        ##########################
+                        # Starting Coverage Task #
+                        ##########################
+                        ''')
         # Execute paths sequentially
-        # for idx, segment in enumerate(self.goal_paths):
         while len(self.goal_paths) > 0:
+
             segment = self.goal_paths.pop(0)
             self.segment_idx += 1
             idx = self.segment_idx
-
             self.current_segment = segment
 
-            if goal_handle.is_cancel_requested:
-                goal_handle.canceled()
-
-                result.success = False
-                result.message = "Cleaning canceled"
-
-                return result
 
             path = ut.to_ros_path(segment)
-
-            nav_goal = NavigateThroughPoses.Goal()
-            nav_goal.poses = path.poses
+            self.planner.goThroughPoses(path)
 
             self.get_logger().info(f"Executing segment {idx+1}/{total_segments}")
+            
+            self.get_logger().info('''
+                ################################
+                # Sending Navigation Goal Task #
+                ################################
+                                ''')
 
-            send_goal_future = self.nav_client.send_goal_async(
-                nav_goal, feedback_callback=self.nav_feedback_callback
-            )
-
-            self.nav_goal_handle = await send_goal_future
-
-            if self.pause_requested:
-                self.get_logger().info("Pausing navigation...")
-                self.get_logger().info(f"Pause in segment {idx}")
+            while True:
+                self.nav_feedback = self.planner.getFeedback()
                 
-                while self.pause_requested:
-                    self.get_logger().info('Paused')
-                    time.sleep(0.1)
+                if goal_handle.is_cancel_requested:
+                    goal_handle.canceled()
+                    result.success = False
+                    result.message = "Cleaning canceled"
+                    return result
 
-            else:
                 if self.stop_requested:
-                    await self.nav_goal_handle.cancel_all_goals_async()
                     goal_handle.abort()
-
                     result.success = False
                     result.message = "Cleaning stopped"
 
                     return result
 
-                if not self.nav_goal_handle.accepted:
-                    result.success = False
-                    result.message = "Nav2 rejected goal"
+                if self.pause_requested:
+                    self.get_logger().info("Pausing navigation...")
+                    self.get_logger().info(f"Pause in segment {idx}")
+                    
+                    while self.pause_requested:
+                        self.get_logger().info('Paused')
+                        time.sleep(0.1)
+                    break
 
-                    goal_handle.abort()
-                    return result
+                if self.planner.isTaskComplete():
+                    self.get_logger().info('------ TASK COMPLETE --------')
+                    break
+            
+            # Publish feedback
+            feedback = NavigateCoverage.Feedback()
 
-                result_future = self.nav_goal_handle.get_result_async()
+            feedback.current_segment = idx + 1
+            feedback.total_segments = total_segments
 
-                # Wait for completion
-                nav_result = await result_future
+            feedback.completion_percentage = (
+                float(idx + 1) / float(total_segments)
+            ) * 100.0
 
-                # Publish feedback
-                feedback = NavigateCoverage.Feedback()
+            goal_handle.publish_feedback(feedback)
 
-                feedback.current_segment = idx + 1
-                feedback.total_segments = total_segments
-
-                feedback.completion_percentage = (
-                    float(idx + 1) / float(total_segments)
-                ) * 100.0
-
-                goal_handle.publish_feedback(feedback)
-
-                if verbose:
-                    self.get_logger().info(f"Completed segment {idx+1}")
+            if verbose:
+                self.get_logger().info(f"Completed segment {idx+1}")
 
         # Finished
         goal_handle.succeed()
@@ -240,18 +222,6 @@ class LabCleanActionServer(Node):
         result.message = "Cleaning completed"
 
         return result
-
-    def nav_feedback_callback(self, feedback_msg):
-
-        feedback = feedback_msg.feedback
-
-        self.distance_remaining = feedback.distance_remaining
-        self.remaining_poses = feedback.number_of_poses_remaining
-
-        # if self.verbose:
-        #     self.get_logger().info(
-        #         f"Distance Remaining: {self.distance_remaining} | Poses Remaining: {self.remaining_poses}"
-        #     )
 
     #########################
     # Status Manager Server #
@@ -265,17 +235,23 @@ class LabCleanActionServer(Node):
 
             case request.PAUSE:
                 self.pause_requested = True
-
-                if self.nav_goal_handle is not None:
-                    self.get_logger().info('Cancelling goal in pause')
-                    self.nav_goal_handle.cancel_goal_async()
-                    
+                self.get_logger().info('''
+                                       ###########################
+                                       # Pausing Navigation Task #
+                                       ###########################
+                                       ''')
                 self.save_path()
+                self.planner.cancelTask()
 
                 response.succeeded = True
 
             case request.RESUME:
                 self.pause_requested = False
+                self.get_logger().info('''
+                        ############################
+                        # Resuming Navigation Task #
+                        ############################
+                        ''')
                 response.succeeded = True
 
             case request.STOP:

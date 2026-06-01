@@ -8,7 +8,7 @@ from mirte_lc_nav2.utils import LogType
 import mirte_lc_nav2.utils as ut
 
 # Use these imports when running in Jupyter
-# from navigator_types import SystematicNavigator, ReactiveNavigator
+# from navigator_types import SystematicNavigator
 # import utils as ut
 # from utils import LogType
 
@@ -82,12 +82,12 @@ class StraightLinePath(SystematicNavigator):
             return None
 
         x0, y0, yaw = self.start_pose
-        n_points = int(self.length / self.resolution)
+        n_points = int(self.length / self.path_resolution)
 
         path = []
 
         for i in range(n_points):
-            d = i * self.resolution
+            d = i * self.path_resolution
             path.append([x0 + d, y0 + d, yaw])
 
         self.paths = np.array([path])
@@ -185,6 +185,7 @@ class BousPath(SystematicNavigator):
                 preserve_topology=True,
             )
 
+            # Check validity and fix
             if not poly.is_valid:
                 ut.log(
                     self.node,
@@ -238,7 +239,7 @@ class BousPath(SystematicNavigator):
 
         return polygon_list
 
-    def bous_path(self, cells, robot_width=0.3):
+    def bous_path(self, cells, robot_width=0.6):
         """
         Generate sweep coverage trajectories for decomposed cells.
 
@@ -258,7 +259,7 @@ class BousPath(SystematicNavigator):
 
         offset = Geometries.get_sweep_offset(
             overlap=0.0,
-            height=0.6,
+            height=robot_width,
             field_of_view=90,
         )
 
@@ -328,10 +329,9 @@ class BousPath(SystematicNavigator):
 
         for group in self.polymap:
             cells = self.bcd(group)
-
             self.cells.extend(cells)
-
-            self.bous_path(cells)
+            paths = self.bous_path(cells)
+            self.paths.extend(paths)
 
 
 class SkeletonPath(SystematicNavigator):
@@ -396,8 +396,6 @@ class SkeletonPath(SystematicNavigator):
             dtype=np.uint8,
         )
 
-        self.origin = np.array([self.map_height / 2, self.map_width / 2])
-
         for group in self.polymap:
             contour_map = np.zeros_like(
                 self.map,
@@ -405,9 +403,7 @@ class SkeletonPath(SystematicNavigator):
             )
 
             for cont in group:
-                contour = np.asarray(cont, dtype=np.float32)
-
-                contour = self.world_to_pixel(contour)
+                contour = np.asarray(self.world_to_pixel_poly(cont), dtype=np.float32)
 
                 contour = contour.reshape((-1, 1, 2)).astype(np.int32)
 
@@ -433,22 +429,14 @@ class SkeletonPath(SystematicNavigator):
             )
 
             self.skeleton_map = skeleton_map.astype(np.uint8) * 255
+            rows, cols = np.where(skeleton_map)
+            skeleton_points = np.column_stack((cols, rows))
+            skeleton_points = self.pixel_to_world_poly(skeleton_points)
 
-            skeleton_points = np.column_stack(np.where(skeleton_map))
-
-            waypoints = np.zeros(
-                (len(skeleton_points), 2),
+            waypoints = np.asarray(
+                skeleton_points,
                 dtype=np.float64,
             )
-
-            for i, point in enumerate(skeleton_points):
-                py, px = point
-
-                x = (px - self.map_width / 2) * self.map_resolution
-
-                y = (py - self.map_height / 2) * self.map_resolution
-
-                waypoints[i] = [x, y]
 
             self.waypoint_groups.append(waypoints)
 
@@ -546,7 +534,7 @@ class SkeletonPath(SystematicNavigator):
 
         visited_leaf_nodes = set()
 
-        current_leaf = self.find_nearest_leaf_node(
+        current_leaf = self.find_nearest_node(
             graph,
             start,
             leaf_nodes,
@@ -580,7 +568,7 @@ class SkeletonPath(SystematicNavigator):
 
         path = np.array([waypoints[node] for node in ordered_nodes])
 
-        ut.log(self.node, LogType.INFO, "planning path")
+        ut.log(self.node, LogType.INFO, "planned path successfully")
 
         return path
 
@@ -597,10 +585,8 @@ class SkeletonPath(SystematicNavigator):
         -------
         None
         """
-        ut.log(self.node, LogType.INFO, "generating path")
-
+        ut.log(self.node, LogType.INFO, f"generating {self.name} path")
         self.read()
-
         self.paths = []
 
         for waypoints in self.waypoint_groups:
@@ -609,8 +595,7 @@ class SkeletonPath(SystematicNavigator):
                 continue
 
             graph = self.set_waypoints(
-                waypoints,
-                self.resolution,
+                waypoints
             )
 
             path = self.plan_path(
@@ -661,7 +646,7 @@ class SpanningTreePath(SystematicNavigator):
 
         self.scale = scale
 
-    def sample_map(self, map, scale):
+    def sample_map(self):
         """
         Downsample an occupancy map.
 
@@ -678,10 +663,10 @@ class SpanningTreePath(SystematicNavigator):
             Downsampled occupancy grid.
         """
         grid = cv2.resize(
-            map.astype(np.uint8),
+            self.binary_costmap.astype(np.uint8),
             (0, 0),
-            fx=scale,
-            fy=scale,
+            fx=self.scale,
+            fy=self.scale,
             interpolation=cv2.INTER_NEAREST_EXACT,
         )
 
@@ -742,7 +727,7 @@ class SpanningTreePath(SystematicNavigator):
         if not free_nodes:
             raise ValueError("Empty graph")
 
-        self.spanning_tree = nx.DiGraph()
+        self.spanning_tree_graph = nx.DiGraph()
 
         visited = set()
 
@@ -750,14 +735,14 @@ class SpanningTreePath(SystematicNavigator):
             if node not in visited and G.degree(node) > 0:
                 t = nx.dfs_tree(G, source=node)
 
-                self.spanning_tree = nx.compose(
-                    self.spanning_tree,
+                self.spanning_tree_graph = nx.compose(
+                    self.spanning_tree_graph,
                     t,
                 )
 
                 visited.update(t.nodes())
 
-        self.graph = self.subdivide(self.spanning_tree)
+        self.graph = self.subdivide(self.spanning_tree_graph)
 
     def generate_waypoint_contours(self):
         """
@@ -769,7 +754,7 @@ class SpanningTreePath(SystematicNavigator):
         """
         path_points = list(self.graph.nodes())
 
-        transformed_path_points = (np.array(path_points) + 0.5) / (self.scale)
+        transformed_path_points = (np.array(path_points) + 0.5) / self.scale
 
         self.perimiter_map = np.zeros_like(self.map)
 
@@ -791,41 +776,85 @@ class SpanningTreePath(SystematicNavigator):
                 -1,
             )
 
+        perimeter_u8 = self.perimiter_map.astype(np.uint8)
+        
         self.spanning_contours, _ = cv2.findContours(
-            self.perimiter_map,
+            perimeter_u8,
             cv2.RETR_EXTERNAL,
             cv2.CHAIN_APPROX_SIMPLE,
         )
 
         return
+    
+    def read(self):
+        self.waypoint_groups = []
+        
+        grid = self.sample_map()
+        self.spanning_tree(grid)
+        self.generate_waypoint_contours()
+        
+        for contour in self.spanning_contours:
+            waypoints = self.get_waypoints(contour)
+            self.waypoint_groups.append(waypoints)
+        
 
-    def get_waypoints(self):
+    def get_waypoints(self, contour):
         """
-        Extract waypoint coordinates from spanning contours.
-
-        Returns
-        -------
-        np.ndarray
-            Waypoint coordinates.
+        Convert contour pixels into world-coordinate waypoints.
         """
-        waypoints = ...
-        return waypoints
 
-    def plan_path(start=None):
+        contour = contour.squeeze()
+
+        if len(contour.shape) != 2:
+            return np.empty((0, 2))
+
+        waypoints = self.pixel_to_world_poly(contour)
+
+        return np.asarray(waypoints, dtype=np.float64)
+
+    def plan_path(
+        self,
+        start: np.ndarray,
+        graph: nx.Graph,
+        waypoints: np.ndarray,
+    ) -> np.ndarray:
         """
-        Generate a traversal path over the spanning tree.
-
-        Parameters
-        ----------
-        start : np.ndarray | None, optional
-            Starting robot position.
-
-        Returns
-        -------
-        np.ndarray
-            Planned path.
+        Resample contour into evenly spaced path points.
         """
-        path = ...
+
+        # # Check the start and remove the edge right after
+        # closest_node = self.find_nearest_node(graph, start, list(graph.nodes()))
+        # neighbors = list(graph.neighbors(closest_node))
+
+        # if neighbors:
+        #     graph.remove_edge(
+        #         closest_node,
+        #         neighbors[0]
+        #     )
+
+        # graph_path = nx.shortest_path(
+        #     graph,
+        #     closest_node,
+        #     neighbors[0])
+
+        # path = np.array([waypoints[node] for node in graph_path])
+
+        idx = np.argmin(
+            np.linalg.norm(
+                waypoints - start,
+                axis=1
+            )
+        )
+
+        path = np.concatenate(
+            [
+                waypoints[idx:],
+                waypoints[:idx]
+            ]
+        )
+
+        ut.log(self.node, LogType.INFO, "planned path successfully")
+
         return path
 
     def generate_path(self, start=None):
@@ -841,21 +870,31 @@ class SpanningTreePath(SystematicNavigator):
         -------
         None
         """
-        grid = self.sample_map(
-            self.binary_costmap,
-            self.scale,
-        )
+        ut.log(self.node, LogType.INFO, f"generating {self.name} path")
+        self.read()
+        self.paths = []
 
-        self.spanning_tree(grid)
+        for waypoints in self.waypoint_groups:
+            
+            if len(waypoints) < 2:
+                continue
+            
+            graph = self.set_waypoints(
+                waypoints
+            )
 
-        for contour in self.spanning_contours:
-            waypoints = self.get_waypoints()
-
-            path = self.plan_path(waypoints)
-
+            path = self.plan_path(
+                start,
+                graph,
+                waypoints,
+            )
+            
             self.paths.append(path)
+            
+            start = path[-1]
 
-        return
+        if self.node is not None:
+            self.publish_path()
 
 
 PLANNERS = {
