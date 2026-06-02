@@ -1,0 +1,15 @@
+numpy==1.26.4
+pandas==2.3.3
+shapely
+trajgenpy
+geojson
+scikit-image
+scipy
+matplotlib
+opencv-python
+networkx
+numpy
+ipywidgets
+ultralytics
+torch
+ipympl
