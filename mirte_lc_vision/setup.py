@@ -1,3 +1,5 @@
+from glob import glob
+
 from setuptools import find_packages, setup
 
 package_name = 'mirte_lc_vision'
@@ -10,6 +12,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name + '/models',
+            glob('mirte_lc_vision/models/*')),
     ],
     install_requires=['setuptools', 
                         'open3d',
@@ -28,6 +32,7 @@ setup(
         'console_scripts': [
             'vision_test = mirte_lc_vision.test_vision:main',
             'object_locator = mirte_lc_vision.object_locator2:main',
+            'classifier_2d = mirte_lc_vision.classifier_2d:main',
         ],
     },
 )

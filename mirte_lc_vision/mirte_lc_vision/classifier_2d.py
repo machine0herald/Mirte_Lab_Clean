@@ -2,6 +2,8 @@
 Only works on real robot as the simulation has no gripper camera yet.
 '''
 
+import os
+from ament_index_python.packages import get_package_share_directory
 
 import json
 from unittest import result
@@ -23,7 +25,12 @@ from ultralytics import YOLO
 
 
 class Yolo26Cam:
-    def __init__(self, targets:list, model_path="best.pt", conf=0.4, imgsz=640):
+    def __init__(self, targets:list, model_path= os.path.join(
+            package_dir,
+            "models",
+            "ColourdetectionYOLO26n.pt",
+            "best"
+        ) , conf=0.4, imgsz=640):
         self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
         self.model = YOLO(model_path)
         self.conf = conf
@@ -72,15 +79,15 @@ class Yolo26Cam:
 
 class Yolo26RosNode(Node):
     def __init__(self):
+
         super().__init__("yolo26_object_detector")
+        package_dir = get_package_share_directory("mirte_lc_vision")
 
         self.bridge = CvBridge()
 
         self.detector = Yolo26Cam(
             targets=["green", "red", "purple"],
-            model_path="ColourdetectionYOLO26n.pt",
             conf=0.3,
-            imgsz=640
         )
 
         self.image_subscriber = self.create_subscription(
