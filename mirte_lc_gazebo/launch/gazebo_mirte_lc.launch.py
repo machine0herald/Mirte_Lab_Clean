@@ -47,6 +47,17 @@ def generate_launch_description():
         }.items()
     )
 
+    ##################
+    # RViz Dashboard #
+    ##################
+    mirte_lc_dash = Node(
+        package='mirte_lc_labclean',
+        executable='labclean_dashboard',
+        name='labclean_dashboard',
+        output='screen',
+        parameters=[{"use_sim_time": True}]
+    )
+
     #################
     # Gazebo launch #
     #################
@@ -68,4 +79,5 @@ def generate_launch_description():
         SetParameter(name="use_sim_time", value='true'),
         gazebo_launch,
         TimerAction(period=10.0, actions=[mirte_lc_launch]),
+        TimerAction(period=15.0, actions=[mirte_lc_dash]),
     ])

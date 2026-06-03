@@ -154,7 +154,8 @@ class LabCleanActionServer(Node):
         # Execute paths sequentially
         while len(self.goal_paths) > 0:
 
-            segment = self.goal_paths.pop(0)
+            segment = self.goal_paths[0]
+            self.goal_paths.pop(0)
             self.segment_idx += 1
             idx = self.segment_idx
             self.current_segment = segment
@@ -174,6 +175,12 @@ class LabCleanActionServer(Node):
             while True:
                 self.nav_feedback = self.planner.getFeedback()
                 
+                # Extract remaining poses from feedback if available
+                if self.nav_feedback and hasattr(self.nav_feedback, 'number_of_recoveries'):
+                    # Update remaining poses from nav2 feedback
+                    if hasattr(self.nav_feedback, 'navigation_path'):
+                        self.remaining_poses = len(self.nav_feedback.navigation_path.poses)
+                
                 if goal_handle.is_cancel_requested:
                     goal_handle.canceled()
                     result.success = False
@@ -184,17 +191,26 @@ class LabCleanActionServer(Node):
                     goal_handle.abort()
                     result.success = False
                     result.message = "Cleaning stopped"
-
                     return result
 
+                # Handle pause - stay in pause loop without breaking
                 if self.pause_requested:
                     self.get_logger().info("Pausing navigation...")
                     self.get_logger().info(f"Pause in segment {idx}")
+                    self.planner.cancelTask()
+                    self.save_path()
                     
+                    # Wait for resume signal - allow the node to process callbacks
                     while self.pause_requested:
-                        self.get_logger().info('Paused')
-                        time.sleep(0.1)
-                    break
+                        # self.get_logger().info('Paused')
+                        # Process incoming callbacks (service calls, etc.) while paused
+                        rclpy.spin_once(self, timeout_sec=0.5)
+                    
+                    # Resume: restart navigation on current segment
+                    self.get_logger().info(f"Resuming segment {idx}")
+                    path = ut.to_ros_path(self.current_segment)
+                    self.planner.goThroughPoses(path)
+                    continue  # Continue checking feedback for resumed navigation
 
                 if self.planner.isTaskComplete():
                     self.get_logger().info('------ TASK COMPLETE --------')
@@ -231,35 +247,33 @@ class LabCleanActionServer(Node):
 
         requested_status = request.command
 
-        match requested_status:
+        if requested_status == request.PAUSE:
+            self.pause_requested = True
+            self.get_logger().info('''
+                                    ###########################
+                                    # Pausing Navigation Task #
+                                    ###########################
+                                    ''')
+            # Don't cancel task here - let execute_callback handle it
+            # This preserves the ability to continue from where we paused
 
-            case request.PAUSE:
-                self.pause_requested = True
-                self.get_logger().info('''
-                                       ###########################
-                                       # Pausing Navigation Task #
-                                       ###########################
-                                       ''')
-                self.save_path()
-                self.planner.cancelTask()
+            response.succeeded = True
 
-                response.succeeded = True
+        elif requested_status == request.RESUME:
+            self.pause_requested = False
+            self.get_logger().info('''
+                    ############################
+                    # Resuming Navigation Task #
+                    ############################
+                    ''')
+            response.succeeded = True
 
-            case request.RESUME:
-                self.pause_requested = False
-                self.get_logger().info('''
-                        ############################
-                        # Resuming Navigation Task #
-                        ############################
-                        ''')
-                response.succeeded = True
+        elif requested_status == request.STOP:
+            self.stop_requested = True
+            response.succeeded = True
 
-            case request.STOP:
-                self.stop_requested = True
-                response.succeeded = True
-
-            case _:
-                response.succeeded = False
+        else:
+            response.succeeded = False
 
         response.remaining_poses = self.remaining_poses
 
@@ -271,15 +285,54 @@ class LabCleanActionServer(Node):
         """
 
         if self.remaining_poses <= 0:
-            self.get_logger().warn("No remaining pose information available")
+            self.get_logger().warn(
+                f"No remaining pose information available (remaining_poses={self.remaining_poses}). "
+                "Will resume from current segment start."
+            )
             return
 
+        if self.current_segment is None:
+            self.get_logger().warn("No current segment to save")
+            return
         path = self.current_segment.copy()
-        number_remaining = self.remaining_poses
-        remaining_path = path[-number_remaining:]
+
+        # Try to compute remaining path from current robot pose for accuracy
+        remaining_path = []
+        robot_pos = self.get_robot_position()
+
+        if robot_pos is not None:
+            try:
+                arr = np.array(path)
+                dists = np.linalg.norm(arr - robot_pos, axis=1)
+                idx = int(np.argmin(dists))
+
+                # Resume from the next pose after the closest one
+                if idx < len(path) - 1:
+                    remaining_path = path[idx + 1 :]
+                else:
+                    remaining_path = []
+
+            except Exception as e:
+                self.get_logger().warn(
+                    f"Could not compute remaining path from robot pose: {e}."
+                )
+
+        # Fallback: use remaining_poses if we couldn't compute from robot pose
+        if (remaining_path is None or len(remaining_path) == 0) and self.remaining_poses > 0:
+            number_remaining = min(self.remaining_poses, len(path))
+            remaining_path = path[-number_remaining:]
+
+        if not remaining_path:
+            self.get_logger().warn(
+                f"No remaining pose information available after computation (remaining_poses={self.remaining_poses}). Will resume from current segment start."
+            )
+            return
+
         self.get_logger().info(
-            f"for debugging purposes: nav2 remaining path: {number_remaining} requested path: {len(path)} "
+            f"Saving remaining path: {len(remaining_path)} poses remaining out of {len(path)} total"
         )
+
+        # Insert the partial segment back into the queue to resume from there
         self.goal_paths.insert(0, remaining_path)
 
 

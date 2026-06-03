@@ -423,6 +423,18 @@ class SkeletonPath(SystematicNavigator):
                     -1,
                 )
 
+            # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+            # smoothed_contour_map = cv2.morphologyEx(
+            #     local_contour_map,
+            #     cv2.MORPH_CLOSE,
+            #     kernel,
+            # )
+            
+            # # Crop the map to prevent skeleton from going outside bounds
+            # crop_size = 20
+            # h, w = local_contour_map.shape
+            # cropped_map = local_contour_map[crop_size:h-crop_size, crop_size:w-crop_size]
+            
             skeleton_map = medial_axis(
                 local_contour_map > 0,
                 return_distance=False,
@@ -430,6 +442,7 @@ class SkeletonPath(SystematicNavigator):
 
             self.skeleton_map = skeleton_map.astype(np.uint8) * 255
             rows, cols = np.where(skeleton_map)
+            # Add back the crop offset to get original map coordinates
             skeleton_points = np.column_stack((cols, rows))
             skeleton_points = self.pixel_to_world_poly(skeleton_points)
 
@@ -629,7 +642,7 @@ class SpanningTreePath(SystematicNavigator):
 
     name = "SpanningTreePlanner"
 
-    def __init__(self, node=None, resolution=0.1, scale=0.1):
+    def __init__(self, node=None, resolution=0.1, scale=0.03):
         """
         Initialize the spanning-tree planner.
 

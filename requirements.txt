@@ -9,3 +9,5 @@ opencv-python
 networkx
 numpy
 ipywidgets
+ultralytics
+torch
