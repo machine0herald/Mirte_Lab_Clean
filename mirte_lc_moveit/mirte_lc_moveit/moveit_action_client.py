@@ -24,7 +24,8 @@ class MoveToPositionActionClient(Node):
         arm_pose=None,
         arm_named_target="",
         gripper_named_target="",
-        gripper_joint_target=None
+        gripper_joint_target=None,
+        wrist_joint_target=None
     ):
 
         goal_msg = MoveToPosition.Goal()
@@ -50,6 +51,12 @@ class MoveToPositionActionClient(Node):
         # -------------------------------------------------
         if gripper_joint_target is not None:
             goal_msg.mirte_gripper_joint_target = gripper_joint_target
+
+        # -------------------------------------------------
+        # Wrist joint target
+        # -------------------------------------------------
+        if wrist_joint_target is not None:
+            goal_msg.mirte_wrist_joint_target = wrist_joint_target
 
         self._action_client.wait_for_server()
 
@@ -125,6 +132,9 @@ def print_help():
     print("GRIPPER")
     print("  gripper_name TARGET")
     print("  gripper_joint VALUE")
+    print("")
+    print("WRIST")
+    print("  wrist_joint VALUE")
     print("")
     print("GENERAL")
     print("  help")
@@ -228,6 +238,23 @@ def main(args=None):
 
                 future = action_client.send_goal(
                     gripper_joint_target=joint_value
+                )
+
+            # =================================================
+            # WRIST JOINT TARGET
+            # Example:
+            # wrist_joint 1.57
+            # =================================================
+            elif command == "wrist_joint":
+
+                if len(parts) != 2:
+                    print("Usage: wrist_joint VALUE")
+                    continue
+
+                joint_value = float(parts[1])
+
+                future = action_client.send_goal(
+                    wrist_joint_target=joint_value
                 )
 
             else:

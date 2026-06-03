@@ -30,6 +30,8 @@ from mirte_lc_msgs.msg import DetectedObjectArray
 from tf2_ros import Buffer, TransformListener
 from scipy.spatial.transform import Rotation
 
+from nav2_simple_commander.costmap_2d import PyCostmap2D
+
 class ObjectLocator2(Node):
 
     def __init__(self):
@@ -125,45 +127,23 @@ class ObjectLocator2(Node):
 
         self.startup_timer.cancel()
 
-    def world_to_pixel(self, x, y):
-
-        map_h, map_w = self.map.shape[:2]
-
-        px = int(x / self.map_resolution + 0.5 * map_w)
-        py = int(y / self.map_resolution + 0.5 * map_h)
-
-        return px, py
-
     def pointcloud_callback(self, msg):
         self.msg_queue.append(msg)
 
     def costmap_callback(self, msg):
-        width = msg.info.width
-        height = msg.info.height
+        self.map = PyCostmap2D(msg)
 
-        self.map = np.array(
-            msg.data,
-            dtype=np.int16
-        ).reshape((height, width))
-
-        self.map_resolution = msg.info.resolution
-
-    def is_occupied(self, x, y, threshold=50):
+    def is_occupied(self, x, y, threshold=5):
 
         if not hasattr(self, 'map'):
             return False
 
         try:
 
-            px, py = self.world_to_pixel(x, y)
+            mx, my = self.map.worldToMap(x, y)
+            cost_at_box = self.map.getCostXY(mx, my)
 
-            map_h, map_w = self.map.shape[:2]
-
-            if (px < 0 or px >= map_w or
-                py < 0 or py >= map_h):
-                return False
-
-            return self.map[py, px] >= threshold
+            return cost_at_box >= threshold
 
         except Exception as e:
 

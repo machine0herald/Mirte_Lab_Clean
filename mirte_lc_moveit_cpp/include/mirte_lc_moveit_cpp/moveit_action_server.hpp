@@ -460,6 +460,8 @@ private:
       }
       mirte_arm_move_group_->execute(plan);
 
+
+
       /*
       * Final pose
       */
@@ -485,9 +487,10 @@ private:
         mirte_arm_joint_model_group_,
         mirte_arm_joint_values);
 
-      mirte_arm_joint_values[3] = -1.57;
+      mirte_arm_joint_values[3] = -3.14 - mirte_arm_joint_values[1] - mirte_arm_joint_values[2];
       mirte_arm_move_group_->setJointValueTarget(mirte_arm_joint_values);
       mirte_arm_move_group_->move();
+
 
       /*
       * Finish action
@@ -504,7 +507,26 @@ private:
       return;
     }
 
-    if (!goal->mirte_gripper_named_target.empty()){
+    if (goal->mirte_wrist_joint_target != 0.0){
+      RCLCPP_INFO(
+        get_logger(),
+        "Wrist joint target specified: %f",
+        goal->mirte_wrist_joint_target);
+
+      std::vector<double> joint_values;
+
+      mirte_arm_move_group_->getCurrentState()->copyJointGroupPositions(
+          mirte_arm_joint_model_group_,
+          joint_values);
+
+      joint_values[3] = goal->mirte_wrist_joint_target;
+
+      mirte_arm_move_group_->setJointValueTarget(joint_values);
+
+      mirte_arm_move_group_->move();
+    }
+
+    if (goal->mirte_gripper_named_target != "none"){
       RCLCPP_INFO(
         get_logger(),
         "Named target specified: %s",
@@ -526,7 +548,7 @@ private:
       return;
     }
 
-    if (goal->mirte_gripper_joint_target != 999){
+    if (goal->mirte_gripper_joint_target != 0.0){
       RCLCPP_INFO(
         get_logger(),
         "Joint target specified: %f",
