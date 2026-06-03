@@ -118,6 +118,44 @@ class SystematicNavigator(BasicNavigator):
         ut.log(self.node, LogType.INFO, "updating map")
         self.update_map(map_msg)
         self.generate_path(start)
+        self.sanitize_paths()
+
+    def sanitize_paths(self):
+        """Clamp generated paths to the valid occupancy grid bounds."""
+        if self.paths is None:
+            return
+
+        if not hasattr(self, "costmap") or self.costmap is None:
+            return
+
+        ox = self.costmap.origin_x
+        oy = self.costmap.origin_y
+        res = self.costmap.resolution
+        min_x = ox + 0.5 * res
+        min_y = oy + 0.5 * res
+        max_x = ox + (self.costmap.size_x - 0.5) * res
+        max_y = oy + (self.costmap.size_y - 0.5) * res
+
+        def clamp_point(p):
+            x = min(max_x, max(min_x, float(p[0])))
+            y = min(max_y, max(min_y, float(p[1])))
+            if len(p) > 2:
+                return [x, y, float(p[2])]
+            return [x, y]
+
+        sanitized = []
+        for segment in self.paths:
+            if segment is None:
+                continue
+            sanitized_segment = [clamp_point(p) for p in segment]
+            # Remove duplicates introduced by clamping
+            filtered = []
+            for p in sanitized_segment:
+                if not filtered or p[0] != filtered[-1][0] or p[1] != filtered[-1][1]:
+                    filtered.append(p)
+            sanitized.append(np.asarray(filtered, dtype=np.float64))
+
+        self.paths = sanitized
 
     def update_map(self, map_msg):
         """
@@ -200,13 +238,21 @@ class SystematicNavigator(BasicNavigator):
 
     def world_to_pixel_poly(self, polygon):
         return [
-            list(self.costmap.worldToMap(vertex[0], vertex[1]))
+            [
+                max(0, min(self.costmap.size_x - 1, self.costmap.worldToMap(vertex[0], vertex[1])[0])),
+                max(0, min(self.costmap.size_y - 1, self.costmap.worldToMap(vertex[0], vertex[1])[1])),
+            ]
             for vertex in polygon
         ]
     
     def pixel_to_world_poly(self, polygon):
         return [
-            list(self.costmap.mapToWorld(int(vertex[0]), int(vertex[1])))
+            list(
+                self.costmap.mapToWorld(
+                    int(np.clip(vertex[0], 0, self.costmap.size_x - 1)),
+                    int(np.clip(vertex[1], 0, self.costmap.size_y - 1)),
+                )
+            )
             for vertex in polygon
         ]
 
@@ -417,32 +463,32 @@ class SystematicNavigator(BasicNavigator):
         """
         marker_array = MarkerArray()
 
-        for path in self.paths:
-            marker = Marker()
-            marker.header.frame_id = "map"
-            marker.header.stamp = self.node.get_clock().now().to_msg()
+        for waypoints in self.waypoint_groups:
+            id = 0
+            for p in waypoints:
+                marker = Marker()
+                marker.header.frame_id = "map"
+                marker.header.stamp = self.node.get_clock().now().to_msg()
 
-            marker.ns = "path"
-            marker.id = 0
-            marker.type = Marker.LINE_STRIP
-            marker.action = Marker.ADD
+                marker.ns = "path"
+                marker.id = id
+                id += 1
+                marker.type = Marker.CUBE
+                marker.action = Marker.ADD
 
-            marker.scale.x = 0.1
+                marker.scale.x = 0.02
+                marker.scale.y = 0.02
+                marker.scale.z = 0.02
 
-            marker.color.r = 0.0
-            marker.color.g = 0.0
-            marker.color.b = 1.0
-            marker.color.a = 1.0
+                marker.color.r = 0.0
+                marker.color.g = 0.0
+                marker.color.b = 1.0
+                marker.color.a = 1.0
 
-            for p in path:
-                pt = PoseStamped().pose.position
-                pt.x = p[0]
-                pt.y = p[1]
-                pt.z = 0.0
-                marker.points.append(pt)
-
-            marker_array.markers.append(marker)
-
+                marker.pose.position.x = p[0]
+                marker.pose.position.y = p[1]
+                marker.pose.position.z = 0.0
+                marker_array.markers.append(marker)
         self.path_publisher.publish(marker_array)
 
     def debug_save(self, contours):

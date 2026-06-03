@@ -163,7 +163,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
         return blackboard.cloud_objects_detected and len(blackboard.cloud_objects_detected) > 0
 
 
-    #   2.2.2: Sort Sequence   #
+    #   2.2.2: handle Sequence   #
     approach_and_handle = py_trees.composites.Sequence(
         name="Approach and Handle",
         memory=True,
@@ -176,7 +176,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
     )
     pause_coverage = behaviours.SetCoverageStatus(name="Pause Coverage", requested_status='pause')
     resume_coverage = behaviours.SetCoverageStatus(name="Resume Coverage", requested_status='resume')
-    sort = py_trees.composites.Sequence(name="Sort", memory=True)
+    handle = py_trees.composites.Sequence(name="handle", memory=True)
     flash_green = behaviours.FlashLedStrip(name="Flash Green", colour=[0, 255, 0])
     pick_up = py_trees.composites.Sequence(name="Pick Up", memory=True)
 
@@ -190,14 +190,17 @@ def create_root() -> py_trees.behaviour.Behaviour:
         blackboard: py_trees.blackboard.Blackboard,
     ) -> bool:
         return blackboard.planar_objects_detected and len(blackboard.planar_objects_detected) > 0
-    pick = behaviours.PickObject(name="Pick Object", blackboard_key="planar_objects_detected[0].position")
+    
+    sort = py_trees.composites.Sequence(name="Sort", memory=True)
 
     detection_check_planar = py_trees.decorators.EternalGuard(
         name="planar_Detected?",
         condition=check_planar_detected_on_blackboard,
         blackboard_keys={"planar_objects_detected"},
-        child=pick,
+        child=sort,
     )
+    
+    pick_place_electronic
 
     # position_planar = ... 
 
@@ -285,8 +288,8 @@ def create_root() -> py_trees.behaviour.Behaviour:
     dock.add_children([flash_red, dock_action])
 
     # 2.2: Detection and handling
-    approach_and_handle.add_children([pause_coverage, sort, resume_coverage])
-    sort.add_children([flash_green, pick_up])
+    approach_and_handle.add_children([pause_coverage, handle, resume_coverage])
+    handle.add_children([flash_green, pick_up])
     pick_up.add_children([approach, deploy_arm, pick_or_skip])
     pick_or_skip.add_children([detection_check_planar, idle_pick])
 
