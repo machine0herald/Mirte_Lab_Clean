@@ -59,12 +59,8 @@ class LabcleanManager(Node):
 
     def nav_feedback_callback(self, feedback_msg):
         feedback = feedback_msg.feedback
-        idx = feedback.current_segment
-        total_segments = feedback.total_segments
-
-        if total_segments > 0:
-            progress = float(idx + 1) / float(total_segments) * 100.0
-            self.get_logger().info(f"Labclean navigation progress: {progress:.2f}%")
+        progress = feedback.completion_percentage
+        self.get_logger().info(f"Labclean navigation progress: {progress:.2f}%")
 
     def goal_response_callback(self, future):
         goal_handle = future.result()

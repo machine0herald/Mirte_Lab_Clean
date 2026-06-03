@@ -4,38 +4,36 @@ ros2 launch mirte_lc_nav2 mirte_lc_nav2.launch.py
 
 from launch import LaunchDescription
 from launch.actions import (
-    IncludeLaunchDescription,
     DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    LogInfo,
     TimerAction,
 )
+
 from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import (
     AnyLaunchDescriptionSource,
     PythonLaunchDescriptionSource,
 )
+
 from launch_ros.actions import Node, SetParameter
+from nav2_common.launch import RewrittenYaml
 from ament_index_python.packages import get_package_share_directory
-import os
-from launch.substitutions import PathJoinSubstitution
-from launch_ros.substitutions import FindPackageShare
 
-from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, LogInfo
-from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
-from ament_index_python.packages import get_package_share_directory
 import os
-
 
 def generate_launch_description():
 
     mirte_navigation = get_package_share_directory("mirte_navigation")
     fbe_mapping = get_package_share_directory("mirte_lc_nav2")
+
+    #######################
+    # Launch Args/Configs #
+    #######################
+    use_sim_time_arg = DeclareLaunchArgument("use_sim_time", default_value="false")
+    use_sim_time = LaunchConfiguration("use_sim_time")
     params_file = os.path.join(fbe_mapping, "config", "nav2_coverage_params.yaml")
 
-    use_sim_time_arg = DeclareLaunchArgument("use_sim_time", default_value="false")
-
-    use_sim_time = LaunchConfiguration("use_sim_time")
 
     #######################
     # Slam Toolbox Launch #
@@ -92,7 +90,10 @@ def generate_launch_description():
         executable="bt_navigator",
         name="bt_navigator",
         output="screen",
-        parameters=[params_file, {"use_sim_time": use_sim_time}],
+        parameters=[
+            params_file, 
+            {"use_sim_time": use_sim_time}
+        ],
     )
 
     #####################
@@ -125,7 +126,10 @@ def generate_launch_description():
         executable="behavior_server",
         name="behavior_server",
         output="screen",
-        parameters=[params_file],
+        parameters=[
+            params_file,
+            {"use_sim_time": use_sim_time},
+        ],
     )
 
     ################################

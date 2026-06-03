@@ -1,5 +1,5 @@
 """
-ros2 launch mirte_lc_labclean gazebo_mirte_lc.launch.py
+ros2 launch mirte_lc_labclean labclean_bringup.launch.py
 """
 
 from sympy import true
@@ -123,7 +123,7 @@ def generate_launch_description():
     return LaunchDescription(
         [
             use_sim_time_arg,
-            foxglove_bridge,
+            # foxglove_bridge,
             TimerAction(period=10.0, actions=[moveit_launch]),
             TimerAction(period=30.0, actions=[nav2]),
             TimerAction(

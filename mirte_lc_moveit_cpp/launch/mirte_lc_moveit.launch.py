@@ -22,7 +22,7 @@ def generate_launch_description():
     )
 
     # Launch configuration variable
-    use_sim_time = LaunchConfiguration("use_sim_time")
+    use_sim_time = LaunchConfiguration("use_sim_time", default="false")
 
     moveit_config = (
     MoveItConfigsBuilder("mirte", package_name="mirte_moveit_config")
