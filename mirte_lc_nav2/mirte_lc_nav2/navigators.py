@@ -642,7 +642,7 @@ class SpanningTreePath(SystematicNavigator):
 
     name = "SpanningTreePlanner"
 
-    def __init__(self, node=None, resolution=0.1, scale=0.03):
+    def __init__(self, node=None, resolution=0.1, scale=0.06):
         """
         Initialize the spanning-tree planner.
 

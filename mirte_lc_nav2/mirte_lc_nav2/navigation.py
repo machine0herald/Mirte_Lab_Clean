@@ -1,3 +1,11 @@
+"""
+
+ros2 service call /labclean_navigator/set_state \
+mirte_lc_msgs/srv/ServeCoverageStatus \
+"{command: 0}"
+
+"""
+
 import rclpy
 import numpy as np
 
@@ -143,7 +151,12 @@ class LabCleanActionServer(Node):
             goal_handle.abort()
             return result
 
-        self.goal_paths = self.planner.paths
+        self.goal_paths = sorted(
+            self.planner.paths,
+            key=len,
+            reverse=True
+        )
+
         total_segments = len(self.goal_paths)
 
         self.get_logger().info('''
@@ -164,23 +177,23 @@ class LabCleanActionServer(Node):
             path = ut.to_ros_path(segment)
             self.planner.goThroughPoses(path)
 
-            self.get_logger().info(f"Executing segment {idx+1}/{total_segments}")
+            self.get_logger().info(f"Executing segment {idx}/{total_segments}")
             
-            self.get_logger().info('''
-                ################################
-                # Sending Navigation Goal Task #
-                ################################
+            self.get_logger().info(f'''
+                ##################################
+                # Sending Navigation Goal Task {idx} #
+                ##################################
                                 ''')
 
             while True:
-                self.nav_feedback = self.planner.getFeedback()
-                
-                # Extract remaining poses from feedback if available
-                if self.nav_feedback and hasattr(self.nav_feedback, 'number_of_recoveries'):
-                    # Update remaining poses from nav2 feedback
-                    if hasattr(self.nav_feedback, 'navigation_path'):
-                        self.remaining_poses = len(self.nav_feedback.navigation_path.poses)
-                
+
+                nav_feedback = self.planner.getFeedback()
+                if nav_feedback is not None:
+                    self.nav_feedback = nav_feedback
+                    self.get_logger().info('Feedback Returned')
+                    self.remaining_poses = self.nav_feedback.number_of_poses_remaining
+                else:
+                    self.remaining_poses = -1
                 if goal_handle.is_cancel_requested:
                     goal_handle.canceled()
                     result.success = False
@@ -213,17 +226,21 @@ class LabCleanActionServer(Node):
                     continue  # Continue checking feedback for resumed navigation
 
                 if self.planner.isTaskComplete():
-                    self.get_logger().info('------ TASK COMPLETE --------')
+                    self.get_logger().info(f'''
+                ###################
+                # Task {idx} Complete #
+                ###################
+                                ''')
                     break
             
             # Publish feedback
             feedback = NavigateCoverage.Feedback()
 
-            feedback.current_segment = idx + 1
+            feedback.current_segment = idx
             feedback.total_segments = total_segments
 
             feedback.completion_percentage = (
-                float(idx + 1) / float(total_segments)
+                float(idx) / float(total_segments)
             ) * 100.0
 
             goal_handle.publish_feedback(feedback)
@@ -305,11 +322,13 @@ class LabCleanActionServer(Node):
                 arr = np.array(path)
                 dists = np.linalg.norm(arr - robot_pos, axis=1)
                 idx = int(np.argmin(dists))
+                self.get_logger().info(f'** Resuming path at index {idx} **')
 
                 # Resume from the next pose after the closest one
                 if idx < len(path) - 1:
                     remaining_path = path[idx + 1 :]
                 else:
+                    self.get_logger().warn('** Index out of path range **')
                     remaining_path = []
 
             except Exception as e:
@@ -319,14 +338,9 @@ class LabCleanActionServer(Node):
 
         # Fallback: use remaining_poses if we couldn't compute from robot pose
         if (remaining_path is None or len(remaining_path) == 0) and self.remaining_poses > 0:
+            self.get_logger().warn('** Using fallback save method **')
             number_remaining = min(self.remaining_poses, len(path))
             remaining_path = path[-number_remaining:]
-
-        if not remaining_path:
-            self.get_logger().warn(
-                f"No remaining pose information available after computation (remaining_poses={self.remaining_poses}). Will resume from current segment start."
-            )
-            return
 
         self.get_logger().info(
             f"Saving remaining path: {len(remaining_path)} poses remaining out of {len(path)} total"
