@@ -26,7 +26,8 @@ from ultralytics import YOLO
 
 class Yolo26Cam:
     def __init__(self, targets:list, model_path= os.path.join(
-            package_dir,
+            get_package_share_directory("mirte_lc_vision"),
+            "mirte_lc_vision",
             "models",
             "ColourdetectionYOLO26n.pt",
             "best"
