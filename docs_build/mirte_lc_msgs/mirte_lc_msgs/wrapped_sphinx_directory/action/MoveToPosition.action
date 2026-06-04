@@ -1,0 +1,12 @@
+# Goal
+geometry_msgs/Pose mirte_arm_target_pose
+string mirte_arm_named_target
+string mirte_gripper_named_target
+float64 mirte_gripper_joint_target
+float64 mirte_wrist_joint_target
+---
+# Result
+bool success
+---
+# Feedback
+string state

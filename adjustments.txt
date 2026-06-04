@@ -56,3 +56,6 @@ mirte-ros-packages/mirte_description/urdf/ultrasonic.urdf
 
 mirte-ros-packages/mirte_description/urdf/arm.urdf.xacro
   - rename mimic joints with "_mimic"
+      _Gripper_joint_r_mimic
+      gripper_link_joint_l_mimic
+      _gripper_link_joint_r_mimic

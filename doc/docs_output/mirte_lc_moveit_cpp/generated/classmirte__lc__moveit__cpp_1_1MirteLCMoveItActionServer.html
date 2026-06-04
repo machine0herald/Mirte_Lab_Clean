@@ -1,0 +1,204 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class MirteLCMoveItActionServer &mdash; mirte_lc_moveit_cpp: Humble 0.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7026087e"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Directory include" href="dir_include.html" />
+    <link rel="prev" title="Namespace rclcpp" href="namespace_rclcpp.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            mirte_lc_moveit_cpp: Humble
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../__links.html">Links</a><ul>
+<li class="toctree-l2"><a class="reference external" href="https://index.ros.org/p/mirte_lc_moveit_cpp">Rosindex</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#class-hierarchy">Class Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#file-hierarchy">File Hierarchy</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#full-c-api">Full C++ API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="namespace_mirte_lc_moveit_cpp.html">Namespace mirte_lc_moveit_cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="namespace_rclcpp.html">Namespace rclcpp</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#classes-and-structs">Classes and Structs</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Class MirteLCMoveItActionServer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#directories">Directories</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dir_include.html">Directory include</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dir_include_mirte_lc_moveit_cpp.html">Directory mirte_lc_moveit_cpp</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#files">Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="file_include_mirte_lc_moveit_cpp_moveit_action_server.hpp.html">File moveit_action_server.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../__standards.html">Standard Documents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../__PACKAGE.html">PACKAGE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../__ros_package_dependencies.html">ROS Package Dependencies</a><ul>
+<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/rclcpp/">rclcpp</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/rclcpp_action/">rclcpp_action</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/moveit_ros_planning_interface/">moveit_ros_planning_interface</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/geometry_msgs/">geometry_msgs</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/action_msgs/">action_msgs</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">mirte_lc_moveit_cpp: Humble</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API</a></li>
+      <li class="breadcrumb-item active">Class MirteLCMoveItActionServer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="class-mirtelcmoveitactionserver">
+<span id="exhale-class-classmirte-lc-moveit-cpp-1-1mirtelcmoveitactionserver"></span><h1>Class MirteLCMoveItActionServer<a class="headerlink" href="#class-mirtelcmoveitactionserver" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_include_mirte_lc_moveit_cpp_moveit_action_server.hpp.html#file-include-mirte-lc-moveit-cpp-moveit-action-server-hpp"><span class="std std-ref">File moveit_action_server.hpp</span></a></p></li>
+</ul>
+<section id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Link to this heading"></a></h2>
+<section id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">rclcpp::Node</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServerE">
+<span id="_CPPv3N19mirte_lc_moveit_cpp25MirteLCMoveItActionServerE"></span><span id="_CPPv2N19mirte_lc_moveit_cpp25MirteLCMoveItActionServerE"></span><span id="mirte_lc_moveit_cpp::MirteLCMoveItActionServer"></span><span class="target" id="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MirteLCMoveItActionServer</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Node</span></span><a class="headerlink" href="#_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServerE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer14MoveToPositionE">
+<span id="_CPPv3N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer14MoveToPositionE"></span><span id="_CPPv2N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer14MoveToPositionE"></span><span class="target" id="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1afc0a55eba578687b003078845f594f17"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MoveToPosition</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">mirte_lc_msgs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MoveToPosition</span></span><a class="headerlink" href="#_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer14MoveToPositionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer24GoalHandleMoveToPositionE">
+<span id="_CPPv3N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer24GoalHandleMoveToPositionE"></span><span id="_CPPv2N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer24GoalHandleMoveToPositionE"></span><span class="target" id="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1aca5e78384ee9531d0ccb2533caa5b20e"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GoalHandleMoveToPosition</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp_action</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ServerGoalHandle</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer14MoveToPositionE" title="mirte_lc_moveit_cpp::MirteLCMoveItActionServer::MoveToPosition"><span class="n"><span class="pre">MoveToPosition</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer24GoalHandleMoveToPositionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer25MirteLCMoveItActionServerERKN6rclcpp11NodeOptionsE">
+<span id="_CPPv3N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer25MirteLCMoveItActionServerERKN6rclcpp11NodeOptionsE"></span><span id="_CPPv2N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer25MirteLCMoveItActionServerERKN6rclcpp11NodeOptionsE"></span><span id="mirte_lc_moveit_cpp::MirteLCMoveItActionServer::MirteLCMoveItActionServer__rclcpp::NodeOptionsCR"></span><span class="target" id="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a135156009bc26a9128de64c306859aa3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MirteLCMoveItActionServer</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NodeOptions</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">options</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NodeOptions</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">.</span></span><span class="n"><span class="pre">automatically_declare_parameters_from_overrides</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">true</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer25MirteLCMoveItActionServerERKN6rclcpp11NodeOptionsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer17initialize_moveitEv">
+<span id="_CPPv3N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer17initialize_moveitEv"></span><span id="_CPPv2N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer17initialize_moveitEv"></span><span id="mirte_lc_moveit_cpp::MirteLCMoveItActionServer::initialize_moveit"></span><span class="target" id="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a70f2d4305649047f1791e99ba26823eb"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">initialize_moveit</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19mirte_lc_moveit_cpp25MirteLCMoveItActionServer17initialize_moveitEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="namespace_rclcpp.html" class="btn btn-neutral float-left" title="Namespace rclcpp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dir_include.html" class="btn btn-neutral float-right" title="Directory include" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The &lt;mirte_lc_moveit_cpp&gt; Contributors. License: TODO: License declaration.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
