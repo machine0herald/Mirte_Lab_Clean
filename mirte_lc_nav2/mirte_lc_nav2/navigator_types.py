@@ -178,7 +178,7 @@ class SystematicNavigator(BasicNavigator):
         """
         # Set up Costmap Object
         self.costmap = PyCostmap2D(map_msg)
-        self.map = self.costmap.costmap
+        self.map = map_msg.data
         self.map = np.array(self.map, dtype=np.int16).reshape((self.costmap.size_x, self.costmap.size_y))
         
         self.binary_costmap = np.zeros_like(self.map, dtype=np.uint8)

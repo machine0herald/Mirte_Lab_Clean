@@ -32,7 +32,7 @@ def generate_launch_description():
     #######################
     use_sim_time_arg = DeclareLaunchArgument("use_sim_time", default_value="false")
     use_sim_time = LaunchConfiguration("use_sim_time")
-    params_file = os.path.join(fbe_mapping, "config", "nav2_coverage_params.yaml")
+    params_file = os.path.join(fbe_mapping, "config", "nav2_coverage_params_sim.yaml")
 
 
     #######################
