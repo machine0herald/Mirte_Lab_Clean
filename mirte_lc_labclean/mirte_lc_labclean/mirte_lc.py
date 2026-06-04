@@ -47,7 +47,7 @@ class LabcleanManager(Node):
 
     def send_coverage_goal(self):
         goal_msg = NavigateCoverage.Goal()
-        goal_msg.planner_type = NavigateCoverage.Goal.SKELETON
+        goal_msg.planner_type = NavigateCoverage.Goal.SPANNINGTREE
         goal_msg.verbose = True
 
         self.navigation_client.wait_for_server()

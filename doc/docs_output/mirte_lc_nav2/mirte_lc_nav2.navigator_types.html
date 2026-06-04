@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mirte_lc_nav2.navigator_types module &mdash; mirte_lc_nav2: Humble 0.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=7026087e"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="mirte_lc_nav2.navigators module" href="mirte_lc_nav2.navigators.html" />
+    <link rel="prev" title="mirte_lc_nav2.navigation module" href="mirte_lc_nav2.navigation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            mirte_lc_nav2: Humble
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="__links.html">Links</a><ul>
+<li class="toctree-l2"><a class="reference external" href="https://index.ros.org/p/mirte_lc_nav2">Rosindex</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Python API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="mirte_lc_nav2.html">mirte_lc_nav2 package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="mirte_lc_nav2.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="mirte_lc_nav2.navigation.html">mirte_lc_nav2.navigation module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mirte_lc_nav2.navigator_types module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mirte_lc_nav2.navigators.html">mirte_lc_nav2.navigators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mirte_lc_nav2.utils.html">mirte_lc_nav2.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mirte_lc_nav2.html#module-mirte_lc_nav2">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="__standards.html">Standard Documents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="__PACKAGE.html">PACKAGE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="__ros_package_dependencies.html">ROS Package Dependencies</a><ul>
+<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/rclpy/">rclpy</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/nav2_msgs/">nav2_msgs</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/nav_msgs/">nav_msgs</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/geometry_msgs/">geometry_msgs</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/tf2_ros/">tf2_ros</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mirte_lc_nav2: Humble</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">mirte_lc_nav2</a></li>
+          <li class="breadcrumb-item"><a href="mirte_lc_nav2.html">mirte_lc_nav2 package</a></li>
+      <li class="breadcrumb-item active">mirte_lc_nav2.navigator_types module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/mirte_lc_nav2.navigator_types.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-mirte_lc_nav2.navigator_types">
+<span id="mirte-lc-nav2-navigator-types-module"></span><h1>mirte_lc_nav2.navigator_types module<a class="headerlink" href="#module-mirte_lc_nav2.navigator_types" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mirte_lc_nav2.navigator_types.</span></span><span class="sig-name descname"><span class="pre">SystematicNavigator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lethal_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BasicNavigator</span></code></p>
+<p>Base class for systematic coverage path planners.</p>
+<p>This class provides shared functionality for:
+- Occupancy map preprocessing
+- Contour extraction
+- Coordinate conversion
+- ROS visualization publishing
+- Debug visualization</p>
+<p>Child classes should implement their own <cite>generate_path()</cite>
+method to produce coverage trajectories.</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>navigator_type<span class="classifier">str</span></dt><dd><p>Identifier for the planner category.</p>
+</dd>
+<dt>paths<span class="classifier">list | None</span></dt><dd><p>Generated coverage paths.</p>
+</dd>
+<dt>map<span class="classifier">np.ndarray | None</span></dt><dd><p>Occupancy grid map.</p>
+</dd>
+<dt>polymap<span class="classifier">list | None</span></dt><dd><p>Polygon representation of the map contours.</p>
+</dd>
+<dt>threshold<span class="classifier">float</span></dt><dd><p>Occupancy threshold used to classify obstacles.</p>
+</dd>
+<dt>resolution<span class="classifier">float</span></dt><dd><p>Planner waypoint resolution in meters.</p>
+</dd>
+<dt>map_resolution<span class="classifier">float</span></dt><dd><p>Resolution of the occupancy map in meters/pixel.</p>
+</dd>
+<dt>node<span class="classifier">rclpy.node.Node | None</span></dt><dd><p>ROS2 node used for logging and publishers.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.debug_save">
+<span class="sig-name descname"><span class="pre">debug_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contours</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.debug_save" title="Link to this definition"></a></dt>
+<dd><p>Save a debug visualization of the occupancy map and contours.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>contours<span class="classifier">list</span></dt><dd><p>Contours to overlay on the map image.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.find_leaf_nodes">
+<span class="sig-name descname"><span class="pre">find_leaf_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.find_leaf_nodes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.find_nearest_node">
+<span class="sig-name descname"><span class="pre">find_nearest_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.find_nearest_node" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.find_polygon_groups">
+<span class="sig-name descname"><span class="pre">find_polygon_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polymap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.find_polygon_groups" title="Link to this definition"></a></dt>
+<dd><p>Group contours into polygons with holes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.is_inside">
+<span class="sig-name descname"><span class="pre">is_inside</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outer_contour</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.is_inside" title="Link to this definition"></a></dt>
+<dd><p>Check whether a contour lies completely inside another contour.</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>contour<span class="classifier">np.ndarray</span></dt><dd><p>Contour to test.</p>
+</dd>
+<dt>outer_contour<span class="classifier">np.ndarray</span></dt><dd><p>Reference contour.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>bool</dt><dd><p>True if the contour lies inside the outer contour,
+otherwise False.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.pixel_to_world_poly">
+<span class="sig-name descname"><span class="pre">pixel_to_world_poly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polygon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.pixel_to_world_poly" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.plan">
+<span class="sig-name descname"><span class="pre">plan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.plan" title="Link to this definition"></a></dt>
+<dd><p>Generate a coverage plan for a given occupancy map.</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>new_map<span class="classifier">np.ndarray</span></dt><dd><p>Occupancy grid map.</p>
+</dd>
+<dt>start<span class="classifier">np.ndarray, optional</span></dt><dd><p>Starting robot position in world coordinates.</p>
+</dd>
+<dt>show<span class="classifier">bool, optional</span></dt><dd><p>Unused visualization flag.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.publish_decomposition">
+<span class="sig-name descname"><span class="pre">publish_decomposition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.publish_decomposition" title="Link to this definition"></a></dt>
+<dd><p>Publish decomposed coverage cells as RViz markers.</p>
+<p>Each decomposition cell is visualized as a colored line strip.</p>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.publish_info">
+<span class="sig-name descname"><span class="pre">publish_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.publish_info" title="Link to this definition"></a></dt>
+<dd><p>Publish all available planner visualization data.</p>
+<p>Publishes:
+- Polygon contours
+- Decomposition cells
+- Planned paths</p>
+<section id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.publish_path">
+<span class="sig-name descname"><span class="pre">publish_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.publish_path" title="Link to this definition"></a></dt>
+<dd><p>Publish planned coverage paths as RViz markers.</p>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.publish_polygon">
+<span class="sig-name descname"><span class="pre">publish_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contours</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.publish_polygon" title="Link to this definition"></a></dt>
+<dd><p>Publish polygon contours as a ROS PolygonStamped message.</p>
+<section id="id8">
+<h3>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>contours<span class="classifier">list</span></dt><dd><p>List of contour coordinate lists.</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.sanitize_paths">
+<span class="sig-name descname"><span class="pre">sanitize_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.sanitize_paths" title="Link to this definition"></a></dt>
+<dd><p>Clamp generated paths to the valid occupancy grid bounds.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.set_waypoints">
+<span class="sig-name descname"><span class="pre">set_waypoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waypoints</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.set_waypoints" title="Link to this definition"></a></dt>
+<dd><p>generates a network graph from waypoints</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.update_map">
+<span class="sig-name descname"><span class="pre">update_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.update_map" title="Link to this definition"></a></dt>
+<dd><p>Convert an occupancy map into polygon contours.</p>
+<p>This function:
+- Thresholds the occupancy map
+- Extracts contours
+- Converts contours to world coordinates
+- Stores the polygon map representation</p>
+<section id="id10">
+<h3>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>new_map<span class="classifier">np.ndarray</span></dt><dd><p>Occupancy grid map.</p>
+</dd>
+</dl>
+</section>
+<section id="id11">
+<h3>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.SystematicNavigator.world_to_pixel_poly">
+<span class="sig-name descname"><span class="pre">world_to_pixel_poly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polygon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.SystematicNavigator.world_to_pixel_poly" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mirte_lc_nav2.navigator_types.polygon_area">
+<span class="sig-prename descclassname"><span class="pre">mirte_lc_nav2.navigator_types.</span></span><span class="sig-name descname"><span class="pre">polygon_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">poly</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mirte_lc_nav2.navigator_types.polygon_area" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mirte_lc_nav2.navigation.html" class="btn btn-neutral float-left" title="mirte_lc_nav2.navigation module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mirte_lc_nav2.navigators.html" class="btn btn-neutral float-right" title="mirte_lc_nav2.navigators module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The &lt;mirte_lc_nav2&gt; Contributors. License: Apache-2.0.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
