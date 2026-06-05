@@ -48,6 +48,7 @@ class ObjectLocator2(Node):
         ])
 
         self.msg_queue = deque(maxlen=1)
+        self.get_logger().info("Starting")
 
         ############################################################
         # TF2 Listener
@@ -74,7 +75,7 @@ class ObjectLocator2(Node):
 
         self.subscription = self.create_subscription(
             PointCloud2,
-            '/camera/points',
+            '/camera/depth/points',
             self.pointcloud_callback,
             1
         )

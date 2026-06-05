@@ -13,8 +13,6 @@ from rclpy.node import Node
 class LabCleanDashboard(Node):
     def __init__(self):
         super().__init__('labclean_dashboard')
-        self.visual_tools = RvizVisualTools(self, 'map', '/labclean_dashboard_visualization')
-        self.visual_tools.deleteAllMarkers()
         self.led_server = self.create_service(NeopixelColor, '/io/leds/leds/set_color', self.led_callback)
         self.led_marker_publisher = self.create_publisher(Marker, '/labclean_led_markers', 10)
 

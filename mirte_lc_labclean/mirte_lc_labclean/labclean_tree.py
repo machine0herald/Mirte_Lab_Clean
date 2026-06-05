@@ -4,7 +4,7 @@ See the lab cleanup tree diagram for the structure of the tree.
 Understanding the tree structure is more important than the code itself,
 so please refer to the diagram while reading through the code.
 
-$ py-trees-render -b py_trees_ros_tutorials.one_data_gathering.tutorial_create_root
+$ py-trees-render -b mirte_lc_labclean.labclean_tree.create_root
 $ py-trees-blackboard-watcher --list
 $ py-trees-blackboard-watcher /battery.percentage
 $ sudo apt install ros-humble-py-trees-ros-viewer
@@ -180,8 +180,6 @@ def create_root() -> py_trees.behaviour.Behaviour:
     flash_green = behaviours.FlashLedStrip(name="Flash Green", colour=[0, 255, 0])
     pick_up = py_trees.composites.Sequence(name="Pick Up", memory=True)
 
-    # object_position =...
-
     approach = behaviours.NavigateToPosition(name="Approach", blackboard_key="cloud_objects_detected[0].position")
     deploy_arm = behaviours.MoveArm(name="Deploy Arm", target_position=[0.36, 0.18, 0.0])
     pick_or_skip = py_trees.composites.Selector(name="Pick or Skip", memory=True)
@@ -199,10 +197,6 @@ def create_root() -> py_trees.behaviour.Behaviour:
         blackboard_keys={"planar_objects_detected"},
         child=sort,
     )
-    
-    pick_place_electronic
-
-    # position_planar = ... 
 
     # --------------------------- #
 
