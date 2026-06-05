@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.1" xml:lang="en-US">
+  <compound refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer" kind="class"><name>mirte_lc_moveit_cpp::MirteLCMoveItActionServer</name>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1afc0a55eba578687b003078845f594f17" kind="typedef"><name>MoveToPosition</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1aca5e78384ee9531d0ccb2533caa5b20e" kind="typedef"><name>GoalHandleMoveToPosition</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1abac50f1069e36639edcd2a2fd663ae8d" kind="variable"><name>robot_model_loader_</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a5d1b55ee3564fc4486ee8fd92ce2b0dc" kind="variable"><name>mirte_arm_kinematic_model_</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1aa99c6771c5240bb8d0a32804c43ce1b8" kind="variable"><name>mirte_arm_robot_state_</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a75120c9a5e656bac45ed5a60a8373f6f" kind="variable"><name>mirte_arm_joint_model_group_</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1ac9a614e7a0716b2224a03b059aa02826" kind="variable"><name>mirte_arm_move_group_</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a948b0ff06f462a7382c7e50743e37a89" kind="variable"><name>mirte_gripper_kinematic_model_</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a27281ca014ecb093ca9181951f97a355" kind="variable"><name>mirte_gripper_robot_state_</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a4a82a99cd050ef73e1ea58fad9281db3" kind="variable"><name>mirte_gripper_joint_model_group_</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a3b7c66d192a96075631dc172b798d6e9" kind="variable"><name>mirte_gripper_move_group_</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1ad022f0fdc98d80a01c5e5b9c4647c891" kind="variable"><name>action_server_</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a135156009bc26a9128de64c306859aa3" kind="function"><name>MirteLCMoveItActionServer</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a70f2d4305649047f1791e99ba26823eb" kind="function"><name>initialize_moveit</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a8c13a97b17eb3a5d4bfa489ef6b2fa53" kind="function"><name>handle_goal</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a63af3918e40b4297adb5799b01086cc8" kind="function"><name>handle_cancel</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1addb8133d079d8200740ec439d08ea4c5" kind="function"><name>handle_accepted</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1ab6420ac506a364e434e4ced66b2657bf" kind="function"><name>execute</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1acce6eb0d8d715798242005d7f5d17f95" kind="function"><name>print_move_group_info</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1aedd62d6993580bf0c67112d1d104fb6c" kind="function"><name>print_planner_info</name></member>
+    <member refid="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_1a783b88ac31077b6253ae0ca9ed9f9da7" kind="function"><name>print_joint_values</name></member>
+  </compound>
+  <compound refid="namespacemirte__lc__moveit__cpp" kind="namespace"><name>mirte_lc_moveit_cpp</name>
+  </compound>
+  <compound refid="namespacerclcpp" kind="namespace"><name>rclcpp</name>
+  </compound>
+  <compound refid="moveit__action__server_8hpp" kind="file"><name>moveit_action_server.hpp</name>
+  </compound>
+  <compound refid="dir_d44c64559bbebec7f509842c48db8b23" kind="dir"><name>include</name>
+  </compound>
+  <compound refid="dir_4303e94bcf7f5c147e804be7fc8b09e0" kind="dir"><name>include/mirte_lc_moveit_cpp</name>
+  </compound>
+</doxygenindex>

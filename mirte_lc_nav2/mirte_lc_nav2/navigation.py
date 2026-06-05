@@ -190,7 +190,7 @@ class LabCleanActionServer(Node):
                 nav_feedback = self.planner.getFeedback()
                 if nav_feedback is not None:
                     self.nav_feedback = nav_feedback
-                    self.get_logger().info('Feedback Returned')
+                    # self.get_logger().info('Feedback Returned')
                     self.remaining_poses = self.nav_feedback.number_of_poses_remaining
                 else:
                     self.remaining_poses = -1

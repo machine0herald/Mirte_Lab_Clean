@@ -1,0 +1,19 @@
+ --- Bring up Mirte master in empty gazebo world ---
+ros2 launch mirte_gazebo gazebo_mirte_master_empty.launch.xml world:="src/mirte-gazebo/worlds/robocupjunior_simple.world"
+ros2 launch mirte_gazebo gazebo_mirte_master_empty.launch.xml world:="src/mirte_lc/mirte_lc_gazebo/worlds/floor_with_cubes/floor_with_cubes.world"
+
+ --- Run teleop twist keyboard to control with wasd---
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=/mirte_base_controller/cmd_vel_unstamped
+
+
+ros2 launch rtabmap_launch rtabmap.launch.py \
+  rgb_topic:=/camera/color/image_raw \
+  depth_topic:=/camera/depth/image_raw \
+  camera_info_topic:=/camera/color/camera_info
+
+ros2 launch nav2_bringup navigation_launch.py
+
+
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml address:= 0.0.0.0  port:=8766
+
+ros2 run nav2_map_server map_saver_cli -t "/global_costmap/costmap" --free 0.1 --occ 0.3 --fmt pgm
