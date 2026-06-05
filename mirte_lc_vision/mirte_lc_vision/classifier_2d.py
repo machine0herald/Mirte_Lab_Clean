@@ -30,7 +30,6 @@ class Yolo26Cam:
             "mirte_lc_vision",
             "models",
             "ColourdetectionYOLO26n.pt",
-            "best"
         ) , conf=0.4, imgsz=640):
         self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
         self.model = YOLO(model_path)

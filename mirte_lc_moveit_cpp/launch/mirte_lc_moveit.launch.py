@@ -1,3 +1,6 @@
+# ros2 param set /ros2_arm_control_hw_interface servo_moved_dead_band 0.0001
+# ros2 param set /ros2_arm_control_hw_interface_servo_update_dead_band 0.001
+
 import os
 import yaml
 from launch import LaunchDescription
@@ -13,6 +16,30 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
+
+    update_parameters = []
+
+    update_parameters.append(ExecuteProcess(
+            cmd=[
+                'ros2', 'param', 'set',
+                '/ros2_arm_control_hw_interface',
+                'servo_moved_dead_band',
+                '0.0001'
+            ],
+            output='screen'
+        ),
+    )
+
+    update_parameters.append(ExecuteProcess(
+            cmd=[
+                'ros2', 'param', 'set',
+                '/ros2_arm_control_hw_interface',
+                'servo_update_dead_band',
+                '0.001'
+            ],
+            output='screen'
+        ),
+    )
 
     # Declare a launch argument for use_sim_time
     use_sim_time_arg = DeclareLaunchArgument(
@@ -82,6 +109,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription(
+        update_parameters +
         [
             use_sim_time_arg,
             SetParameter(name="use_sim_time", value=use_sim_time),

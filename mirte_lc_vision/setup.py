@@ -1,43 +1,27 @@
 from glob import glob
 from pathlib import Path
+import os
 from setuptools import find_packages, setup
 
 package_name = 'mirte_lc_vision'
-
-data_files = [
-    (
-        'share/ament_index/resource_index/packages',
-        ['resource/' + package_name]
-    ),
-    (
-        'share/' + package_name,
-        ['package.xml']
-    ),
-]
-
-model_root = Path("mirte_lc_vision/models/ColourdetectionYOLO26n.pt")
-
-for file in model_root.rglob("*"):
-    if file.is_file():
-        install_dir = (
-            "share/"
-            + package_name
-            + "/"
-            + str(file.parent)
-        )
-
-        data_files.append(
-            (
-                install_dir,
-                [str(file)]
-            )
-        )
 
 setup(
     name=package_name,
     version='0.0.0',
     packages=find_packages(exclude=['test']),
-    data_files=data_files,
+    data_files=[
+        (
+            'share/ament_index/resource_index/packages',
+            ['resource/' + package_name]
+        ),
+        (
+            'share/' + package_name,
+            ['package.xml']
+        ),
+        (
+            os.path.join('share', package_name, 'models'), glob('mirte_lc_vision/models/*.pt')
+        ),
+    ],
     install_requires=['setuptools', 
                         'open3d',
                         'opencv-python'],
