@@ -19,15 +19,15 @@ Each ROS 2 package has its own API documentation:
 
    * - Package
      - Description
-   * - `mirte_lc_gazebo <../../documentation/docs_output/mirte_lc_gazebo/index.html>`_
+   * - `mirte_lc_gazebo <../documentation/docs_output/mirte_lc_gazebo/index.html>`_
      - Gazebo simulation worlds and launch files
-   * - `mirte_lc_labclean <../../documentation/docs_output/mirte_lc_labclean/index.html>`_
+   * - `mirte_lc_labclean <../documentation/docs_output/mirte_lc_labclean/index.html>`_
      - Main behaviour tree and lab cleaning logic
-   * - `mirte_lc_moveit_cpp <../../documentation/docs_output/mirte_lc_moveit_cpp/index.html>`_
+   * - `mirte_lc_moveit_cpp <../documentation/docs_output/mirte_lc_moveit_cpp/index.html>`_
      - MoveIt C++ action server for arm control
-   * - `mirte_lc_msgs <../../documentation/docs_output/mirte_lc_msgs/index.html>`_
+   * - `mirte_lc_msgs <../documentation/docs_output/mirte_lc_msgs/index.html>`_
      - Custom ROS 2 message, service, and action definitions
-   * - `mirte_lc_nav2 <../../documentation/docs_output/mirte_lc_nav2/index.html>`_
+   * - `mirte_lc_nav2 <../documentation/docs_output/mirte_lc_nav2/index.html>`_
      - Nav2 coverage navigation and frontier-based exploration
-   * - `mirte_lc_vision <../../documentation/docs_output/mirte_lc_vision/index.html>`_
+   * - `mirte_lc_vision <../documentation/docs_output/mirte_lc_vision/index.html>`_
      - Object detection and 3D localisation via YOLO + point cloud
