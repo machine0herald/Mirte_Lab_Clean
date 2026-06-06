@@ -93,9 +93,9 @@ class LabCleanActionServer(Node):
         if planner_name in planners:
             return planners[planner_name]
 
-        self.get_logger().warn(f"Unknown planner '{planner_name}', using BousPlanner")
+        self.get_logger().warn(f"Unknown planner '{planner_name}', using SkeletonPlanner")
 
-        return planners["BousPlanner"]
+        return planners["SkeletonPlanner"]
     
     ####################
     # Costmap Callback #

@@ -1,14 +1,26 @@
 """
-Lab Cleanup Behaviour Tree
-See the lab cleanup tree diagram for the structure of the tree.
-Understanding the tree structure is more important than the code itself,
-so please refer to the diagram while reading through the code.
+About
+^^^^^
+
+This file implements the Lab Cleanup behaviour tree for the Mirte lab cleaning
+application. It coordinates topic input, battery monitoring, navigation, scanning,
+and object detection through a central behaviour tree so the platform can
+clean the lab safely and recover to idle or home when required.
+
+The tree is designed for ROS2 and py_trees, with subscriptions, event handling,
+and action-like task composition managed from the tree itself.
+
+Tree commands
+^^^^^^^^^^^^^
 
 $ py-trees-render -b mirte_lc_labclean.labclean_tree.create_root
 $ py-trees-blackboard-watcher --list
 $ py-trees-blackboard-watcher /battery.percentage
 $ sudo apt install ros-humble-py-trees-ros-viewer
-$ py-trees-tree-viewer
+$ py-trees-tree-viewer --no-sandbox
+
+The commands above help inspect runtime blackboard state and visualize the
+behaviour tree structure.
 """
 
 import operator
@@ -24,8 +36,12 @@ from explore_lite_msgs.msg import ExploreStatus
 from mirte_lc_msgs.msg import DetectedObject, DetectedObjectArray
 from . import behaviours
 
-LOW_PERCENTAGE_THRESHOLD = 0.2
+import launch
+import launch_ros
 
+########
+# Tree #
+########
 def create_root() -> py_trees.behaviour.Behaviour:
     """
     Lab Cleanup Behaviour Tree
@@ -48,30 +64,36 @@ def create_root() -> py_trees.behaviour.Behaviour:
     ##################################################################################
     # Root node with parallel policy to run topic subscribers and tasks concurrently #
     ##################################################################################
-    def start_pressed(blackboard):
-        try:
-            return blackboard.start_button
-        except KeyError:
-            return False
 
-    lab_cleanup = py_trees.composites.Parallel(
+    root = py_trees.composites.Parallel(
         name="Lab Cleanup Root",
         policy=py_trees.common.ParallelPolicy.SuccessOnAll(synchronise=False),
     )
-
-    root = py_trees.decorators.EternalGuard(
-        name="Start?",
-        condition=start_pressed,
-        blackboard_keys={"start_button"},
-        child=lab_cleanup,
-    )
-
-
-
+    
     ##################################
     # Branch 1: Topics to Blackboard #
     ##################################
-    topics2bb = py_trees.composites.Sequence(name="Topics2BB", memory=True)
+    
+    init_cloud = py_trees.behaviours.SetBlackboardVariable(
+        name="Init Cloud Objects",
+        variable_name="cloud_objects_detected",
+        variable_value=[],
+        overwrite=False,
+    )
+
+    init_planar = py_trees.behaviours.SetBlackboardVariable(
+        name="Init Planar Objects",
+        variable_name="planar_objects_detected",
+        variable_value=[],
+        overwrite=False,
+    )
+
+    init_explore = py_trees.behaviours.SetBlackboardVariable(
+        name="Init Explore Status",
+        variable_name="explore_status",
+        variable_value="",
+        overwrite=False,
+    )
 
     # 1.1: Exploration status to Blackboard #
     exploration2bb = py_trees_ros.subscribers.ToBlackboard(
@@ -103,12 +125,13 @@ def create_root() -> py_trees.behaviour.Behaviour:
         name="Battery2BB",
         topic_name="/io/power/power_watcher",
         qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
+        threshold=20.0
     )
 
     # 1.5: Detected bounding boxes topic to Blackboard #
     detectedcloud2bb = py_trees_ros.subscribers.ToBlackboard(
         name="Detectedcloud2BB",
-        topic_name="/object_bounding_boxes",
+        topic_name="/perception/depth/detected_objects",
         topic_type=DetectedObjectArray,
         qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
         blackboard_variables={
@@ -120,7 +143,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
     # 1.6: Detected object classes topic to Blackboard #
     detectedplanar2bb = py_trees_ros.subscribers.ToBlackboard(
         name="DetectedClasses2BB",
-        topic_name="/object_bounding_boxes/planar",
+        topic_name="/perception/planar/detected_objects",
         topic_type=DetectedObjectArray,
         qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
         blackboard_variables={
@@ -128,16 +151,24 @@ def create_root() -> py_trees.behaviour.Behaviour:
             "num_planar_objects_detected": "length",
         },
     )
+    
+    topics2bb = py_trees.composites.Sequence(
+        name="Topics2BB",
+        memory=True,
+    )
 
+    subscriber_parallel = py_trees.composites.Parallel(
+        name="Subscribers",
+        policy=py_trees.common.ParallelPolicy.SuccessOnAll(
+            synchronise=False
+        ),
+    )
     ###################
     # Branch 2: Tasks #
     ###################
     tasks = py_trees.composites.Selector(name="Tasks", memory=True)
-
-    def check_battery_low_on_blackboard(
-        blackboard: py_trees.blackboard.Blackboard,
-    ) -> bool:
-        return blackboard.battery_percentage is not None and blackboard.battery_percentage < LOW_PERCENTAGE_THRESHOLD
+    def check_battery_low_on_blackboard(blackboard: py_trees.blackboard.Blackboard) -> bool:
+            return blackboard.battery_low_warning
 
     # 2.1: Battery Emergency Task #
     dock = py_trees.composites.Parallel(
@@ -148,7 +179,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
     battery_emergency = py_trees.decorators.EternalGuard(
         name="Battery Low?",
         condition=check_battery_low_on_blackboard,
-        blackboard_keys={"battery_percentage"},
+        blackboard_keys={"battery_low_warning"},
         child=dock,
     )
     flash_red = behaviours.FlashLedStrip(name="Flash Red", colour=[255, 0, 0])
@@ -160,7 +191,11 @@ def create_root() -> py_trees.behaviour.Behaviour:
     def check_detected_on_blackboard(
         blackboard: py_trees.blackboard.Blackboard,
     ) -> bool:
-        return blackboard.cloud_objects_detected and len(blackboard.cloud_objects_detected) > 0
+        try:
+            detected = (len(blackboard.cloud_objects_detected) > 0)
+        except KeyError:
+            detected = False
+        return detected
 
 
     #   2.2.2: handle Sequence   #
@@ -181,13 +216,18 @@ def create_root() -> py_trees.behaviour.Behaviour:
     pick_up = py_trees.composites.Sequence(name="Pick Up", memory=True)
 
     approach = behaviours.NavigateToPosition(name="Approach", blackboard_key="cloud_objects_detected[0].position")
-    deploy_arm = behaviours.MoveArm(name="Deploy Arm", target_position=[0.36, 0.18, 0.0])
+    deploy_arm = behaviours.MoveArm(name="Deploy Arm", predefined_pose='standby')
     pick_or_skip = py_trees.composites.Selector(name="Pick or Skip", memory=True)
 
     def check_planar_detected_on_blackboard(
         blackboard: py_trees.blackboard.Blackboard,
     ) -> bool:
-        return blackboard.planar_objects_detected and len(blackboard.planar_objects_detected) > 0
+        try:
+            detected = (len(blackboard.planar_objects_detected) > 0)
+        except KeyError:
+            detected = False
+        return detected
+    
     
     sort = py_trees.composites.Sequence(name="Sort", memory=True)
 
@@ -197,6 +237,8 @@ def create_root() -> py_trees.behaviour.Behaviour:
         blackboard_keys={"planar_objects_detected"},
         child=sort,
     )
+    
+    place = behaviours.MoveArm(name="Place", predefined_pose="place_right")
 
     # --------------------------- #
 
@@ -206,9 +248,17 @@ def create_root() -> py_trees.behaviour.Behaviour:
     explore_or_cover = py_trees.composites.Selector(name="Explore or Cover", memory=True)
 
     cover = behaviours.CoverageTask(name="CoverageTask", planner="skeleton")
+    
+    def check_explored(blackboard: py_trees.blackboard.Blackboard,):
+        try:
+            explored = (blackboard.explore_status=="exploration_complete")
+        except KeyError:
+            explored = False
+        return explored
+
     explored_check = py_trees.decorators.EternalGuard(
         name="Explored?",
-        condition=lambda blackboard: blackboard.explore_status=="exploration_complete",
+        condition=check_explored,
         blackboard_keys={"explore_status"},
         child=cover,
     )
@@ -256,17 +306,24 @@ def create_root() -> py_trees.behaviour.Behaviour:
             )
             return py_trees.common.Status.SUCCESS
 
-    send_result = SendResult(name="Send Result")
+    # send_result = SendResult(name="Send Result")
 
     # Fallback task
     idle_tasks = py_trees.behaviours.Success(name="Idle")
     idle_pick = py_trees.behaviours.Success(name="Idle")
     idle_explore = py_trees.behaviours.Success(name="Idle")
 
-    lab_cleanup.add_children([topics2bb, tasks, explore_or_cover])
+    root.add_children([topics2bb, tasks, explore_or_cover])
 
     # 1. Topics to Blackboard branch
     topics2bb.add_children([
+        init_cloud,
+        init_planar,
+        init_explore,
+        subscriber_parallel,
+    ])
+
+    subscriber_parallel.add_children([
         exploration2bb,
         cancel2bb,
         start2bb,
@@ -289,6 +346,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
 
     # 3. Explore or Cover branch
     explore_or_cover.add_children([explored_check, idle_explore])
+    sort.add_child(place)
     return root
 
 
@@ -298,7 +356,8 @@ def main():
     """
     rclpy.init(args=None)
     root = create_root()
-    tree = py_trees_ros.trees.BehaviourTree(root=root, unicode_tree_debug=True)
+    tree = py_trees_ros.trees.BehaviourTree(root=root, 
+                                            unicode_tree_debug=False)
     try:
         tree.setup(timeout=15)
     except py_trees_ros.exceptions.TimedOutError as e:

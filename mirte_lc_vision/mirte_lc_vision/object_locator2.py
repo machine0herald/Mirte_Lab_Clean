@@ -108,7 +108,7 @@ class ObjectLocator2(Node):
 
         self.object_pub = self.create_publisher(
             DetectedObjectArray,
-            '/detected_objects',
+            '/perception/depth/detected_objects',
             10
         )
 

@@ -21,6 +21,7 @@ setup(
         (
             os.path.join('share', package_name, 'models'), glob('mirte_lc_vision/models/*.pt')
         ),
+        ('share/' + package_name + '/launch', glob('launch/*.py')),
     ],
     install_requires=['setuptools', 
                         'open3d',

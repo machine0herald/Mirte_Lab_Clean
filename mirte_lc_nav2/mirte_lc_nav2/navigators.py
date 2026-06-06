@@ -12,12 +12,13 @@ import mirte_lc_nav2.utils as ut
 # import utils as ut
 # from utils import LogType
 
-import trajgenpy as tjp
-from trajgenpy import Geometries
+# import trajgenpy as tjp
+# from trajgenpy import Geometries
 
 import shapely
 from shapely.validation import explain_validity
 from shapely.geometry.polygon import orient
+from shapely.geometry import Polygon
 
 from scipy.spatial import KDTree
 import networkx as nx
@@ -93,245 +94,254 @@ class StraightLinePath(SystematicNavigator):
         self.paths = np.array([path])
 
 
-class BousPath(SystematicNavigator):
-    """
-    Coverage path planner using boustrophedon cellular decomposition.
+# class BousPath(SystematicNavigator):
+#     """
+#     Coverage path planner using boustrophedon cellular decomposition.
 
-    The planner:
-    1. Decomposes free space into convex cells.
-    2. Generates sweep trajectories for each cell.
+#     The planner:
+#     1. Decomposes free space into convex cells.
+#     2. Generates sweep trajectories for each cell.
 
-    Attributes
-    ----------
-    name : str
-        Planner identifier.
-    """
+#     Attributes
+#     ----------
+#     name : str
+#         Planner identifier.
+#     """
 
-    name = "BousPlanner"
+#     name = "BousPlanner"
 
-    def __init__(self, node=None, resolution=0.1):
-        """
-        Initialize the Boustrophedon planner.
+#     def __init__(self, node=None, resolution=0.1):
+#         """
+#         Initialize the Boustrophedon planner.
 
-        Parameters
-        ----------
-        node : rclpy.node.Node | None, optional
-            ROS2 node used for logging and visualization.
-        resolution : float, optional
-            Planner waypoint spacing in meters.
-        """
-        self.node = node
-        super().__init__(node, resolution)
+#         Parameters
+#         ----------
+#         node : rclpy.node.Node | None, optional
+#             ROS2 node used for logging and visualization.
+#         resolution : float, optional
+#             Planner waypoint spacing in meters.
+#         """
+#         self.node = node
+#         super().__init__(node, resolution)
 
-    def bcd(self, polygons):
-        """
-        Perform boustrophedon cellular decomposition.
+#     def bcd(self, polygons):
+#         """
+#         Perform boustrophedon cellular decomposition.
 
-        Parameters
-        ----------
-        polygons : list
-            List of polygon contours where:
-            - polygons[0] is the outer boundary
-            - polygons[1:] are holes/obstacles
+#         Parameters
+#         ----------
+#         polygons : list
+#             List of polygon contours where:
+#             - polygons[0] is the outer boundary
+#             - polygons[1:] are holes/obstacles
 
-        Returns
-        -------
-        list | bool
-            List of decomposed convex cells if successful,
-            otherwise False.
-        """
-        if self.node is not None:
-            ut.log(self.node, LogType.INFO, f"Contours: {len(polygons)}")
+#         Returns
+#         -------
+#         list | bool
+#             List of decomposed convex cells if successful,
+#             otherwise False.
+#         """
+#         if self.node is not None:
+#             ut.log(self.node, LogType.INFO, f"Contours: {len(polygons)}")
 
-        for i, c in enumerate(polygons):
-            ut.log(self.node, LogType.INFO, f"{i}: {len(c)} points")
+#         for i, c in enumerate(polygons):
+#             ut.log(self.node, LogType.INFO, f"{i}: {len(c)} points")
 
-        outer_poly = shapely.Polygon(polygons[0])
+#         outer_poly = shapely.Polygon(polygons[0])
 
-        if not outer_poly.is_valid:
-            ut.log(
-                self.node,
-                LogType.WARN,
-                f"Invalid outer polygon: {explain_validity(outer_poly)}",
-            )
+#         if not outer_poly.is_valid:
+#             ut.log(
+#                 self.node,
+#                 LogType.WARN,
+#                 f"Invalid outer polygon: {explain_validity(outer_poly)}",
+#             )
 
-            outer_poly = outer_poly.buffer(0)
+#             outer_poly = outer_poly.buffer(0)
 
-            if not outer_poly.is_valid:
-                ut.log(self.node, LogType.WARN, "Could not fix outer polygon")
-                return False
+#             if not outer_poly.is_valid:
+#                 ut.log(self.node, LogType.WARN, "Could not fix outer polygon")
+#                 return False
 
-            if outer_poly.is_empty:
-                ut.log(self.node, LogType.ERR, "Outer polygon is empty after fix")
-                return False
+#             if outer_poly.is_empty:
+#                 ut.log(self.node, LogType.ERR, "Outer polygon is empty after fix")
+#                 return False
 
-            if outer_poly.geom_type == "MultiPolygon":
-                ut.log(
-                    self.node,
-                    LogType.WARN,
-                    "Outer polygon became MultiPolygon, taking largest piece",
-                )
+#             if outer_poly.geom_type == "MultiPolygon":
+#                 ut.log(
+#                     self.node,
+#                     LogType.WARN,
+#                     "Outer polygon became MultiPolygon, taking largest piece",
+#                 )
 
-                outer_poly = max(outer_poly.geoms, key=lambda p: p.area)
+#                 outer_poly = max(outer_poly.geoms, key=lambda p: p.area)
 
-        outer = outer_poly
-        holes_contours = polygons[1:]
+#         outer = outer_poly
+#         holes_contours = polygons[1:]
 
-        holes = []
+#         holes = []
 
-        for contour in holes_contours:
-            poly = shapely.Polygon(contour).simplify(
-                0.1,
-                preserve_topology=True,
-            )
+#         for contour in holes_contours:
+#             poly = shapely.Polygon(contour).simplify(
+#                 0.1,
+#                 preserve_topology=True,
+#             )
 
-            # Check validity and fix
-            if not poly.is_valid:
-                ut.log(
-                    self.node,
-                    LogType.WARN,
-                    f"Invalid polygon: {explain_validity(poly)}",
-                )
+#             # Check validity and fix
+#             if not poly.is_valid:
+#                 ut.log(
+#                     self.node,
+#                     LogType.WARN,
+#                     f"Invalid polygon: {explain_validity(poly)}",
+#                 )
 
-                poly = poly.buffer(0)
+#                 poly = poly.buffer(0)
 
-                if not poly.is_valid:
-                    ut.log(self.node, LogType.WARN, "Could not fix polygon")
-                    continue
+#                 if not poly.is_valid:
+#                     ut.log(self.node, LogType.WARN, "Could not fix polygon")
+#                     continue
 
-                if poly.is_empty:
-                    ut.log(self.node, LogType.ERR, "Polygon is empty after fix")
-                    return False
+#                 if poly.is_empty:
+#                     ut.log(self.node, LogType.ERR, "Polygon is empty after fix")
+#                     return False
 
-                if poly.geom_type == "MultiPolygon":
-                    ut.log(
-                        self.node,
-                        LogType.WARN,
-                        "Polygon became MultiPolygon, taking largest piece",
-                    )
+#                 if poly.geom_type == "MultiPolygon":
+#                     ut.log(
+#                         self.node,
+#                         LogType.WARN,
+#                         "Polygon became MultiPolygon, taking largest piece",
+#                     )
 
-                    poly = max(poly.geoms, key=lambda p: p.area)
+#                     poly = max(poly.geoms, key=lambda p: p.area)
 
-            holes.append(poly)
+#             holes.append(poly)
 
-        obstacles = shapely.MultiPolygon(holes)
+#         obstacles = shapely.MultiPolygon(holes)
 
-        ut.log(self.node, LogType.INFO, "Performing Decomposition")
+#         ut.log(self.node, LogType.INFO, "Performing Decomposition")
 
-        polygon_list = Geometries.decompose_polygon(
-            outer,
-            obstacles=obstacles,
-        )
+#         polygon_list = Geometries.decompose_polygon(
+#             outer,
+#             obstacles=obstacles,
+#         )
 
-        self.raw_cells = [
-            np.array(polygon.exterior.coords, dtype=np.int32)
-            for polygon in polygon_list
-        ]
+#         self.raw_cells = [
+#             np.array(polygon.exterior.coords, dtype=np.int32)
+#             for polygon in polygon_list
+#         ]
 
-        ut.log(
-            self.node,
-            LogType.INFO,
-            "map decomposed, publishing decomposition",
-        )
+#         ut.log(
+#             self.node,
+#             LogType.INFO,
+#             "map decomposed, publishing decomposition",
+#         )
 
-        if self.node is not None:
-            self.publish_decomposition()
+#         if self.node is not None:
+#             self.publish_decomposition()
 
-        return polygon_list
+#         return polygon_list
 
-    def bous_path(self, cells, robot_width=0.6):
-        """
-        Generate sweep coverage trajectories for decomposed cells.
+#     def bous_path(self, cells, robot_width=0.6):
+#         """
+#         Generate sweep coverage trajectories for decomposed cells.
 
-        Parameters
-        ----------
-        cells : list
-            List of decomposed polygons.
-        robot_width : float, optional
-            Width of the robot in meters.
+#         Parameters
+#         ----------
+#         cells : list
+#             List of decomposed polygons.
+#         robot_width : float, optional
+#             Width of the robot in meters.
 
-        Returns
-        -------
-        list
-            Generated sweep trajectories.
-        """
-        ut.log(self.node, LogType.INFO, f"Number of cells: {len(cells)}")
+#         Returns
+#         -------
+#         list
+#             Generated sweep trajectories.
+#         """
+#         ut.log(self.node, LogType.INFO, f"Number of cells: {len(cells)}")
 
-        offset = Geometries.get_sweep_offset(
-            overlap=0.0,
-            height=robot_width,
-            field_of_view=90,
-        )
+#         offset = Geometries.get_sweep_offset(
+#             overlap=0.0,
+#             height=robot_width,
+#             field_of_view=90,
+#         )
 
-        ut.log(self.node, LogType.INFO, "generating full trajectory")
+#         ut.log(self.node, LogType.INFO, "generating full trajectory")
 
-        paths = []
+#         paths = []
+#         for cell in cells:
+#             # cell = self.force_ccw(cell)
+#             # cell = orient(cell, 1)
+#             print(cell.geom_type)
+#             print(cell.exterior.is_ccw)
+#             print(cell.area)
+#             cell = self.flip_y(cell)
+#             sweeps = Geometries.generate_sweep_pattern(
+#                 cell,
+#                 offset,
+#                 clockwise=False,
+#                 connect_sweeps=True,
+#             )
 
-        for cell in cells:
-            cell = orient(cell, sign=1.0)
+#             paths_mls = Geometries.GeoMultiTrajectory(sweeps).get_geometry()
 
-            sweeps = Geometries.generate_sweep_pattern(
-                cell,
-                offset,
-                clockwise=False,
-                connect_sweeps=True,
-            )
+#             paths.append(self.multiline_to_coords(paths_mls))
 
-            paths_mls = Geometries.GeoMultiTrajectory(sweeps).get_geometry()
+#         if self.node is not None:
+#             self.publish_path()
 
-            paths.append(self.multiline_to_coords(paths_mls))
+#         return paths
 
-        if self.node is not None:
-            self.publish_path()
+#     def multiline_to_coords(self, multiline):
+#         """
+#         Convert a MultiLineString trajectory into coordinate lists.
 
-        return paths
+#         Parameters
+#         ----------
+#         multiline : shapely.MultiLineString | iterable
+#             Geometry containing multiple line segments.
 
-    def multiline_to_coords(self, multiline):
-        """
-        Convert a MultiLineString trajectory into coordinate lists.
+#         Returns
+#         -------
+#         list
+#             Flattened list of trajectory coordinates.
+#         """
+#         coords = []
 
-        Parameters
-        ----------
-        multiline : shapely.MultiLineString | iterable
-            Geometry containing multiple line segments.
+#         if isinstance(multiline, shapely.MultiLineString):
+#             for line in multiline.geoms:
+#                 coords.extend(list(line.coords))
+#         else:
+#             for line in multiline:
+#                 coords.extend(list(line.coords))
 
-        Returns
-        -------
-        list
-            Flattened list of trajectory coordinates.
-        """
-        coords = []
+#         return coords
 
-        if isinstance(multiline, shapely.MultiLineString):
-            for line in multiline.geoms:
-                coords.extend(list(line.coords))
-        else:
-            for line in multiline:
-                coords.extend(list(line.coords))
+#     def flip_y(self, poly):
+#         return Polygon(
+#             [(x, -y) for x, y in poly.exterior.coords],
+#             [[(x, -y) for x, y in ring.coords] for ring in poly.interiors]
+#         )
 
-        return coords
+#     def generate_path(self, start=None):
+#         """
+#         Generate complete coverage trajectories for the current map.
 
-    def generate_path(self, start=None):
-        """
-        Generate complete coverage trajectories for the current map.
+#         Parameters
+#         ----------
+#         start : np.ndarray | None, optional
+#             Starting robot position.
 
-        Parameters
-        ----------
-        start : np.ndarray | None, optional
-            Starting robot position.
+#         Returns
+#         -------
+#         None
+#         """
+#         self.paths = []
+#         self.cells = []
 
-        Returns
-        -------
-        None
-        """
-        self.paths = []
-        self.cells = []
-
-        for group in self.polymap:
-            cells = self.bcd(group)
-            self.cells.extend(cells)
-            paths = self.bous_path(cells)
-            self.paths.extend(paths)
+#         for group in self.polymap:
+#             cells = self.bcd(group)
+#             self.cells.extend(cells)
+#             paths = self.bous_path(cells)
+#             self.paths.extend(paths)
 
 
 class SkeletonPath(SystematicNavigator):
@@ -435,9 +445,9 @@ class SkeletonPath(SystematicNavigator):
             # h, w = local_contour_map.shape
             # cropped_map = local_contour_map[crop_size:h-crop_size, crop_size:w-crop_size]
             
-            skeleton_map = medial_axis(
-                local_contour_map > 0,
-                return_distance=False,
+            skeleton_map = skeletonize(
+                self.binary_costmap > 0,
+                # return_distance=False,
             )
 
             self.skeleton_map = skeleton_map.astype(np.uint8) * 255
@@ -911,7 +921,7 @@ class SpanningTreePath(SystematicNavigator):
 
 
 PLANNERS = {
-    BousPath.name: BousPath,
+    # BousPath.name: BousPath,
     SkeletonPath.name: SkeletonPath,
     SpanningTreePath.name: SpanningTreePath,
     StraightLinePath.name: StraightLinePath,

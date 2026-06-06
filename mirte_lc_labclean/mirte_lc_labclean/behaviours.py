@@ -55,7 +55,7 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
         Raises:
             :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
         """
-        self.logger.debug("{}.setup()".format(self.qualified_name))
+        self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
         except KeyError as e:
@@ -69,11 +69,11 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
         )
         self.feedback_message = "Neopixel service client created"
         
-        self.led_marker_publisher = self.create_publisher(Marker, '/labclean_led_markers', 10)
+        self.led_marker_publisher = self.node.create_publisher(Marker, '/labclean_led_markers', 10)
 
-    def initialize(self):
+    def initialise(self):
         """ """
-        self.logger.debug(
+        self.logger.info(
             "%s.initialise(), sending led request" % self.__class__.__name__
         )
         request = SetNeopixel.Request()
@@ -162,7 +162,7 @@ class SetCoverageStatus(py_trees.behaviour.Behaviour):
         Raises:
             :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
         """
-        self.logger.debug("{}.setup()".format(self.qualified_name))
+        self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
         except KeyError as e:
@@ -177,9 +177,9 @@ class SetCoverageStatus(py_trees.behaviour.Behaviour):
 
         self.feedback_message = "Coverage Status service client created"
 
-    def initialize(self):
+    def initialise(self):
         """ """
-        self.logger.debug(
+        self.logger.info(
             f"%s.initialise(), sending {self.requested_status} request"
             % self.__class__.__name__
         )
@@ -243,7 +243,7 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
         Raises:
             :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
         """
-        self.logger.debug("{}.setup()".format(self.qualified_name))
+        self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
         except KeyError as e:
@@ -254,7 +254,7 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
 
         self.Navigator = BasicNavigator()
 
-    def initialize(self):
+    def initialise(self):
         """
         Send the navigation goal to the robot.
         """            
@@ -308,7 +308,7 @@ class MoveArm(py_trees.behaviour.Behaviour):
         Args:
             **kwargs (:obj:`dict`): look for the 'node' object being passed down from the tree
         """
-        self.logger.debug("{}.setup()".format(self.qualified_name))
+        self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
         except KeyError as e:
@@ -388,7 +388,7 @@ class MoveArm(py_trees.behaviour.Behaviour):
 #         Raises:
 #             :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
 #         """
-#         self.logger.debug("{}.setup()".format(self.qualified_name))
+#         self.logger.info("{}.setup()".format(self.qualified_name))
 #         try:
 #             self.node = kwargs["node"]
 #         except KeyError as e:
@@ -396,7 +396,7 @@ class MoveArm(py_trees.behaviour.Behaviour):
 #                 self.qualified_name
 #             )
 #             raise KeyError(error_message) from e
-#         self.logger.debug("{}.setup()".format(self.qualified_name))
+#         self.logger.info("{}.setup()".format(self.qualified_name))
 
 #         self.pick_action_client = ActionClient(self.node, MoveToPosition, "/arm_controller/pick_object")
     
@@ -463,7 +463,6 @@ class CoverageTask(py_trees.behaviour.Behaviour):
         Raises:
             :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
         """
-        self.logger.debug("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
         except KeyError as e:
@@ -471,16 +470,21 @@ class CoverageTask(py_trees.behaviour.Behaviour):
                 self.qualified_name
             )
             raise KeyError(error_message) from e
-        self.logger.debug("{}.setup()".format(self.qualified_name))
-        self.coverage_action_client = ActionClient(self.node, NavigateCoverage, "/coverage_controller/move_to_position")
+        self.logger.info("{}.setup()".format(self.qualified_name))
+        self.coverage_action_client = ActionClient(self.node, NavigateCoverage, "/labclean_navigator/coverage")
 
     def initialise(self):
         """
         Send the coverage navigation goal to the robot.
         """
+        self.logger.info("{}.initialise()".format(self.qualified_name))
         goal_msg = NavigateCoverage.Goal()
-        goal_msg.planner_type = self.planner
+        goal_msg.planner_type = NavigateCoverage.Goal.SKELETON
+        goal_msg.verbose = True
+        
+        self.coverage_action_client.wait_for_server()
         self.coverage_future = self.coverage_action_client.send_goal_async(goal_msg)
+        self.feedback_message = "Sent request"
 
     def update(self):
         """

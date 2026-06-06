@@ -26,7 +26,9 @@ from ultralytics import YOLO
 
 class Yolo26Cam:
     def __init__(self, targets:list, model_path= os.path.join(
-            package_dir,
+            get_package_share_directory(
+                    "mirte_lc_vision",
+                ),
             "models",
             "ColourdetectionYOLO26n.pt",
         ) , conf=0.4, imgsz=640):
@@ -98,7 +100,7 @@ class Yolo26RosNode(Node):
 
         self.object_publisher = self.create_publisher(
             DetectedObjectArray,
-            "/object_bounding_boxes/planar",
+            "/perception/planar/detected_objects",
             10
         )
         
