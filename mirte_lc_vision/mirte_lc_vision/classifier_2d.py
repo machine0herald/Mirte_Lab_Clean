@@ -58,23 +58,23 @@ class Yolo26Cam:
             class_ids = classes.cpu().numpy().astype(int)
 
             for idx, class_id in enumerate(class_ids):
-                class_name = self.detector.model.names[int(class_id)]
+                class_name = self.model.names[int(class_id)]
 
-                if class_name in self.detector.target_classes:
+                if class_name in self.target_classes:
                     label = "target"
                 else:
                     label = "trash"
 
-                self.detector.objects.append({
+                self.objects.append({
                     "label": label,
                     "pose": [poses[idx][0], poses[idx][1]],
                     "size": [poses[idx][2], poses[idx][3]]
                 })
 
-        self.objects = self.detector.objects.copy()
+        self.objects = self.objects.copy()
 
         # clear
-        self.detector.objects.clear()
+        self.objects.clear()
         return
 
 
@@ -90,30 +90,33 @@ class Yolo26RosNode(Node):
             targets=["green", "red", "purple"],
             conf=0.3,
         )
+        gripper_cam_topic = "/gripper_camera/image_raw"
+        publish_topic =  "/perception/planar/detected_objects"
+        publish_topic2 = "/gripper_camera/image_annotated"
 
         self.image_subscriber = self.create_subscription(
             Image,
-            "/gripper_camera/image_raw",
+            gripper_cam_topic,
             self.image_callback,
             10
         )
 
         self.object_publisher = self.create_publisher(
             DetectedObjectArray,
-            "/perception/planar/detected_objects",
+            publish_topic,
             10
         )
         
         self.plotted_image_publisher = self.create_publisher(
             Image,
-            "/gripper_camera/image_annotated",
+            publish_topic2,
             10
         )
 
         self.get_logger().info(f"Running YOLO on: {self.detector.device}")
-        self.get_logger().info("Subscribed to: /gripper_camera/image_raw")
-        self.get_logger().info("Publishing to: /object_bounding_boxes/planar")
-        self.get_logger().info("Publishing annotated images to: /gripper_camera/image_annotated")
+        self.get_logger().info(f"Subscribed to:{gripper_cam_topic}")
+        self.get_logger().info(f"Publishing to: {publish_topic}")
+        self.get_logger().info(f"Publishing annotated images to: {publish_topic2}")
 
     def image_callback(self, msg):
         frame = self.bridge.imgmsg_to_cv2(

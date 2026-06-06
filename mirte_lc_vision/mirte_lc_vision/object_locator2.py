@@ -125,7 +125,15 @@ class ObjectLocator2(Node):
         self.get_logger().info(
             "Object Locator Started"
         )
-
+        
+        self.get_logger().info(
+            f"""
+            ###################################################
+            # Subscribed to: {self.subscription.topic_name} #
+            ###################################################
+            """
+        )
+        
         self.startup_timer.cancel()
 
     def pointcloud_callback(self, msg):

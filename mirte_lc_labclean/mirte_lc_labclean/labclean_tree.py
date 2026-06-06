@@ -19,10 +19,11 @@ $ py-trees-blackboard-watcher /battery.percentage
 $ sudo apt install ros-humble-py-trees-ros-viewer
 $ py-trees-tree-viewer --no-sandbox
 
+$ ros2 run mirte_lc_labclean labclean_tree 
+
 The commands above help inspect runtime blackboard state and visualize the
 behaviour tree structure.
 """
-
 import operator
 import sys
 
@@ -163,9 +164,36 @@ def create_root() -> py_trees.behaviour.Behaviour:
             synchronise=False
         ),
     )
-    ###################
-    # Branch 2: Tasks #
-    ###################
+    
+
+    ################################
+    # Branch 2: Discovery Coverage #
+    ################################
+    explore_or_cover = py_trees.composites.Selector(name="Explore or Cover", memory=True)
+    
+    cover_and_discover =  py_trees.composites.Parallel(
+        name="Cover and Discover",
+        policy=py_trees.common.ParallelPolicy.SuccessOnAll(
+            synchronise=False
+        ),
+    )
+
+    cover = behaviours.CoverageTask(name="CoverageTask", planner="skeleton")
+    
+    def check_explored(blackboard: py_trees.blackboard.Blackboard,):
+        try:
+            explored = (blackboard.explore_status=="exploration_complete")
+        except KeyError:
+            explored = False
+        return explored
+
+    explored_check = py_trees.decorators.EternalGuard(
+        name="Explored?",
+        condition=check_explored,
+        blackboard_keys={"explore_status"},
+        child=cover_and_discover,
+    )
+
     tasks = py_trees.composites.Selector(name="Tasks", memory=True)
     def check_battery_low_on_blackboard(blackboard: py_trees.blackboard.Blackboard) -> bool:
             return blackboard.battery_low_warning
@@ -182,7 +210,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
         blackboard_keys={"battery_low_warning"},
         child=dock,
     )
-    flash_red = behaviours.FlashLedStrip(name="Flash Red", colour=[255, 0, 0])
+    flash_red = behaviours.FlashLedStrip(name="Flash Red", colour=[1.0, 0.0, 0.0])
     dock_action = behaviours.NavigateToPosition(name="Dock Action", target_position=[0, 0])
 
     # --------------------------- #
@@ -212,10 +240,10 @@ def create_root() -> py_trees.behaviour.Behaviour:
     pause_coverage = behaviours.SetCoverageStatus(name="Pause Coverage", requested_status='pause')
     resume_coverage = behaviours.SetCoverageStatus(name="Resume Coverage", requested_status='resume')
     handle = py_trees.composites.Sequence(name="handle", memory=True)
-    flash_green = behaviours.FlashLedStrip(name="Flash Green", colour=[0, 255, 0])
+    flash_green = behaviours.FlashLedStrip(name="Flash Green", colour=[0.0, 1.0, 0.0])
     pick_up = py_trees.composites.Sequence(name="Pick Up", memory=True)
 
-    approach = behaviours.NavigateToPosition(name="Approach", blackboard_key="cloud_objects_detected[0].position")
+    approach = behaviours.NavigateToPosition(name="Approach", blackboard_key="cloud_objects_detected")
     deploy_arm = behaviours.MoveArm(name="Deploy Arm", predefined_pose='standby')
     pick_or_skip = py_trees.composites.Selector(name="Pick or Skip", memory=True)
 
@@ -242,28 +270,6 @@ def create_root() -> py_trees.behaviour.Behaviour:
 
     # --------------------------- #
 
-    ###########################
-    # Branch 3: Coverage task #
-    ###########################
-    explore_or_cover = py_trees.composites.Selector(name="Explore or Cover", memory=True)
-
-    cover = behaviours.CoverageTask(name="CoverageTask", planner="skeleton")
-    
-    def check_explored(blackboard: py_trees.blackboard.Blackboard,):
-        try:
-            explored = (blackboard.explore_status=="exploration_complete")
-        except KeyError:
-            explored = False
-        return explored
-
-    explored_check = py_trees.decorators.EternalGuard(
-        name="Explored?",
-        condition=check_explored,
-        blackboard_keys={"explore_status"},
-        child=cover,
-    )
-
-    # --------------------------- #
 
     # # Die Sequence #
     # die = py_trees.composites.Sequence(name="Die", memory=True)
@@ -313,7 +319,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
     idle_pick = py_trees.behaviours.Success(name="Idle")
     idle_explore = py_trees.behaviours.Success(name="Idle")
 
-    root.add_children([topics2bb, tasks, explore_or_cover])
+    root.add_children([topics2bb, explore_or_cover])
 
     # 1. Topics to Blackboard branch
     topics2bb.add_children([
@@ -332,8 +338,9 @@ def create_root() -> py_trees.behaviour.Behaviour:
         detectedplanar2bb,
     ])
 
+    cover_and_discover.add_children([tasks, cover])
     # 2. Tasks branch
-    tasks.add_children([battery_emergency, detection_check, idle_tasks])
+    tasks.add_children([detection_check, idle_tasks])
 
     # 2.1: Battery Emergency dock
     dock.add_children([flash_red, dock_action])
@@ -345,7 +352,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
     pick_or_skip.add_children([detection_check_planar, idle_pick])
 
     # 3. Explore or Cover branch
-    explore_or_cover.add_children([explored_check, idle_explore])
+    explore_or_cover.add_children([battery_emergency, explored_check, idle_explore])
     sort.add_child(place)
     return root
 
@@ -376,7 +383,7 @@ def main():
         rclpy.try_shutdown()
         sys.exit(1)
 
-    tree.tick_tock(period_ms=100.0)
+    tree.tick_tock(period_ms=500.0)
 
     try:
         rclpy.spin(tree.node)

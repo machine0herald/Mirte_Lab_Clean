@@ -13,8 +13,9 @@ import rclpy
 from rclpy.action import ActionClient
 import std_msgs.msg as std_msgs
 
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import PoseStamped
 from visualization_msgs.msg import Marker
+from action_msgs.msg import GoalStatus
 
 
 class FlashLedStrip(py_trees.behaviour.Behaviour):
@@ -40,7 +41,7 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
     def __init__(
         self,
         name: str,
-        colour: list = [0, 0, 255],
+        colour: list = [0, 0, 1.0],
     ):
         super(FlashLedStrip, self).__init__(name=name)
         self.colour = colour
@@ -80,9 +81,9 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
 
         # Adjust field names to match your srv definition
         request.color = NeopixelColor()
-        request.color.r = self.colour[0]
-        request.color.g = self.colour[1]
-        request.color.b = self.colour[2]
+        request.color.r = int(self.colour[0] * 255)
+        request.color.g = int(self.colour[1]* 255)
+        request.color.b = int(self.colour[2]* 255)
 
         self.future = self.neopixel_client.call_async(request)
         self.publish_led_marker(self.colour)
@@ -108,21 +109,8 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
         self.led_marker_publisher.publish(marker)
 
     def update(self):
-        if self.future is None:
-            return py_trees.common.Status.FAILURE
-
-        if self.future.done():
-
-            try:
-                response = self.future.result()
-                self.feedback_message = f"LED updated, status: {response.status}"
-                return py_trees.common.Status.SUCCESS
-
-            except Exception as e:
-                self.feedback_message = f"Service call failed: {e}"
-                return py_trees.common.Status.FAILURE
-
-        return py_trees.common.Status.RUNNING
+        self.feedback_message = f"LED updated"
+        return py_trees.common.Status.SUCCESS
 
 
 class SetCoverageStatus(py_trees.behaviour.Behaviour):
@@ -207,7 +195,7 @@ class SetCoverageStatus(py_trees.behaviour.Behaviour):
             try:
                 response = self.future.result()
                 self.feedback_message = f"status updated, status: {response.succeeded} \
-                    waypoints left: {len(response.remaining_poses)}"
+                    waypoints left: {response.remaining_poses}"
                 return py_trees.common.Status.SUCCESS
 
             except Exception as e:
@@ -252,6 +240,13 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
             )
             raise KeyError(error_message) from e
 
+        self.blackboard = self.attach_blackboard_client(name=self.name)
+        if self.blackboard_key is not None:
+            self.blackboard.register_key(
+                key=self.blackboard_key,
+                access=py_trees.common.Access.READ
+            )
+
         self.Navigator = BasicNavigator()
 
     def initialise(self):
@@ -259,13 +254,18 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
         Send the navigation goal to the robot.
         """            
         if self.blackboard_key is not None:
-            self.target_pose_msg = self.blackboard.get(self.blackboard_key)
-            self.Navigator.goToPose(self.target_pose_msg)
+            target_position = self.blackboard.get(self.blackboard_key)[0].pose
+            pose_msg = PoseStamped()
+            pose_msg.header.frame_id = "map"
+            pose_msg.pose.position.x = target_position.position.x
+            pose_msg.pose.position.y = target_position.position.y
+            self.Navigator.goToPose(pose_msg)
         elif self.target_position is not None:
-            pose_msg = Pose()
-            pose_msg.position.x = self.target_position[0]
-            pose_msg.position.y = self.target_position[1]
-            self.Navigator.goToPose(self.pose_msg)
+            pose_msg = PoseStamped()
+            pose_msg.header.frame_id = "map"
+            pose_msg.pose.position.x = float(self.target_position[0])
+            pose_msg.pose.position.y = float(self.target_position[1])
+            self.Navigator.goToPose(pose_msg)
 
     def update(self):
         """
@@ -317,7 +317,17 @@ class MoveArm(py_trees.behaviour.Behaviour):
             )
             raise KeyError(error_message) from e
 
+        self.blackboard = self.attach_blackboard_client(name=self.name)
+        if self.blackboard_key is not None:
+            self.blackboard.register_key(
+                key=self.blackboard_key,
+                access=py_trees.common.Access.READ
+            )
+
+        
         self.arm_action_client = ActionClient(self.node, MoveToPosition, "/arm_controller/move_to_position")
+        self.goal_handle = None
+        
     
     def initialise(self):
         """
@@ -344,23 +354,27 @@ class MoveArm(py_trees.behaviour.Behaviour):
         self.arm_future = self.arm_action_client.send_goal_async(goal_msg)
     
     def update(self):
-        """
-        Check the status of the arm movement action and return the appropriate status for the behaviour.
-
-        Returns:
-            :attr:`~py_trees.common.Status.SUCCESS` if the arm reaches the target position, :attr:`~py_trees.common.Status.FAILURE` if it fails, and :attr:`~py_trees.common.Status.RUNNING` while it's still moving.
-        """
         if self.arm_future is None:
             return py_trees.common.Status.FAILURE
 
-        if self.arm_future.done():
-            result = self.arm_future.result()
-            if result.status == rcl_msgs.GoalStatus.STATUS_SUCCEEDED:
-                return py_trees.common.Status.SUCCESS
-            else:
-                return py_trees.common.Status.FAILURE
+        # Stage 1: wait for server to accept the goal
+        if not self.arm_future.done():
+            return py_trees.common.Status.RUNNING
 
-        return py_trees.common.Status.RUNNING
+        if self.goal_handle is None:
+            self.goal_handle = self.arm_future.result()
+            if not self.goal_handle.accepted:
+                return py_trees.common.Status.FAILURE
+            self.result_future = self.goal_handle.get_result_async()
+
+        # Stage 2: wait for the action to complete
+        if not self.result_future.done():
+            return py_trees.common.Status.RUNNING
+
+        result = self.result_future.result()
+        if result.status == GoalStatus.STATUS_SUCCEEDED:
+            return py_trees.common.Status.SUCCESS
+        return py_trees.common.Status.FAILURE
 
 
 # class PickObject(py_trees.behaviour.Behaviour):
@@ -431,7 +445,7 @@ class MoveArm(py_trees.behaviour.Behaviour):
 
 #         if self.pick_future.done():
 #             result = self.pick_future.result()
-#             if result.status == rcl_msgs.GoalStatus.STATUS_SUCCEEDED:
+#             if result.status == GoalStatus.STATUS_SUCCEEDED:
 #                 return py_trees.common.Status.SUCCESS
 #             else:
 #                 return py_trees.common.Status.FAILURE
@@ -472,6 +486,7 @@ class CoverageTask(py_trees.behaviour.Behaviour):
             raise KeyError(error_message) from e
         self.logger.info("{}.setup()".format(self.qualified_name))
         self.coverage_action_client = ActionClient(self.node, NavigateCoverage, "/labclean_navigator/coverage")
+        self.goal_handle = None
 
     def initialise(self):
         """
@@ -496,11 +511,22 @@ class CoverageTask(py_trees.behaviour.Behaviour):
         if self.coverage_future is None:
             return py_trees.common.Status.FAILURE
 
-        if self.coverage_future.done():
-            result = self.coverage_future.result()
-            if result.status == rcl_msgs.GoalStatus.STATUS_SUCCEEDED:
-                return py_trees.common.Status.SUCCESS
-            else:
-                return py_trees.common.Status.FAILURE
+        # Stage 1: wait for server to accept the goal
+        if not self.coverage_future.done():
+            return py_trees.common.Status.RUNNING
 
-        return py_trees.common.Status.RUNNING
+        if self.goal_handle is None:
+            self.goal_handle = self.coverage_future.result()
+            if not self.goal_handle.accepted:
+                return py_trees.common.Status.FAILURE
+            # Stage 2: now request the actual result
+            self.result_future = self.goal_handle.get_result_async()
+
+        # Stage 2: wait for the action to complete
+        if not self.result_future.done():
+            return py_trees.common.Status.RUNNING
+
+        result = self.result_future.result()
+        if result.status == GoalStatus.STATUS_SUCCEEDED:
+            return py_trees.common.Status.SUCCESS
+        return py_trees.common.Status.FAILURE

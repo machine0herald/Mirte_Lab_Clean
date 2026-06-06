@@ -8,7 +8,7 @@ from launch.actions import (
     DeclareLaunchArgument,
     TimerAction,
 )
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.launch_description_sources import (
     AnyLaunchDescriptionSource,
     PythonLaunchDescriptionSource,
@@ -30,6 +30,11 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration(
         "use_sim_time",
     )
+    points_topic = PythonExpression([
+        '"/camera/points" if "',
+        use_sim_time,
+        '" == "true" else "/camera/depth/points"'
+    ])
 
     ##################
     # File Locations #
@@ -79,6 +84,9 @@ def generate_launch_description():
                 "launch",
                 "perception.launch.py")
         ),
+        launch_arguments={
+            "points_topic": points_topic,
+        }.items(),
     )
 
     ###################
