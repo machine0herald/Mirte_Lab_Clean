@@ -37,3 +37,4 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 html_static_path = ['_static']
+html_baseurl = 'https://matt-rbt.github.io/Mirte_Lab_Clean/'
