@@ -17,6 +17,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/DetectedObject.msg"
   "msg/DetectedObjectArray.msg"
   "srv/ServeCoverageStatus.srv"
+  "srv/GetDetectedObjects.srv"
   DEPENDENCIES geometry_msgs
 )
 

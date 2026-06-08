@@ -74,7 +74,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
     ##################################
     # Branch 1: Topics to Blackboard #
     ##################################
-    
+    # oneshot = py_trees.decorators.OneShot(name="init_oneshot", child=initiate_bb, policy=ON_SUCCESSFUL_COMPLETION)
     init_cloud = py_trees.behaviours.SetBlackboardVariable(
         name="Init Cloud Objects",
         variable_name="cloud_objects_detected",
@@ -138,18 +138,6 @@ def create_root() -> py_trees.behaviour.Behaviour:
         blackboard_variables={
             "cloud_objects_detected": "objects",
             "num_cloud_objects_detected": "length"
-        },
-    )
-
-    # 1.6: Detected object classes topic to Blackboard #
-    detectedplanar2bb = py_trees_ros.subscribers.ToBlackboard(
-        name="DetectedClasses2BB",
-        topic_name="/perception/planar/detected_objects",
-        topic_type=DetectedObjectArray,
-        qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
-        blackboard_variables={
-            "planar_objects_detected": "objects",
-            "num_planar_objects_detected": "length",
         },
     )
     
@@ -231,11 +219,13 @@ def create_root() -> py_trees.behaviour.Behaviour:
         name="Approach and Handle",
         memory=True,
     )
-    detection_check = py_trees.decorators.EternalGuard(
-        name="Detected?",
-        condition=check_detected_on_blackboard,
-        blackboard_keys={"cloud_objects_detected"},
-        child=approach_and_handle,
+    detection_check = py_trees.behaviours.CheckBlackboardVariableValue(
+        name="Objects?",
+        check=py_trees.common.ComparisonExpression(
+            variable="cloud_objects_detected",
+            value=[],
+            operator=operator.ne,   # ne = not equal, i.e. list is not empty
+        )
     )
     pause_coverage = behaviours.SetCoverageStatus(name="Pause Coverage", requested_status='pause')
     resume_coverage = behaviours.SetCoverageStatus(name="Resume Coverage", requested_status='resume')
@@ -259,13 +249,13 @@ def create_root() -> py_trees.behaviour.Behaviour:
     
     sort = py_trees.composites.Sequence(name="Sort", memory=True)
 
-    detection_check_planar = py_trees.decorators.EternalGuard(
-        name="planar_Detected?",
-        condition=check_planar_detected_on_blackboard,
-        blackboard_keys={"planar_objects_detected"},
-        child=sort,
-    )
+    get_planar = behaviours.GetPlanarObjects(name="Planar_Detected?")
     
+    retry_planar = py_trees.decorators.Retry(
+        name="Retry Planar",
+        child=get_planar,
+        num_failures=5  # try up to 5 times before actually failing
+    )
     place = behaviours.MoveArm(name="Place", predefined_pose="place_right")
 
     # --------------------------- #
@@ -335,25 +325,24 @@ def create_root() -> py_trees.behaviour.Behaviour:
         start2bb,
         battery2bb,
         detectedcloud2bb,
-        detectedplanar2bb,
     ])
 
     cover_and_discover.add_children([tasks, cover])
     # 2. Tasks branch
-    tasks.add_children([detection_check, idle_tasks])
+    tasks.add_children([approach_and_handle, idle_tasks])
 
     # 2.1: Battery Emergency dock
     dock.add_children([flash_red, dock_action])
 
     # 2.2: Detection and handling
-    approach_and_handle.add_children([pause_coverage, handle, resume_coverage])
+    approach_and_handle.add_children([detection_check, pause_coverage, handle, resume_coverage])
     handle.add_children([flash_green, pick_up])
     pick_up.add_children([approach, deploy_arm, pick_or_skip])
-    pick_or_skip.add_children([detection_check_planar, idle_pick])
-
+    pick_or_skip.add_children([sort, idle_pick])
+    
     # 3. Explore or Cover branch
     explore_or_cover.add_children([battery_emergency, explored_check, idle_explore])
-    sort.add_child(place)
+    sort.add_children([retry_planar, place])
     return root
 
 

@@ -3,8 +3,10 @@ from mirte_msgs.srv import SetNeopixel
 
 from mirte_lc_msgs.action import MoveToPosition, NavigateCoverage
 from mirte_lc_msgs.srv import ServeCoverageStatus
-from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
+from mirte_lc_msgs.msg import DetectedObject, DetectedObjectArray
 
+from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
+from nav2_msgs.action import NavigateToPose
 import py_trees
 import py_trees_ros
 import rcl_interfaces.msg as rcl_msgs
@@ -13,10 +15,13 @@ import rclpy
 from rclpy.action import ActionClient
 import std_msgs.msg as std_msgs
 
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import Pose, PoseStamped
 from visualization_msgs.msg import Marker
 from action_msgs.msg import GoalStatus
 
+from mirte_lc_msgs.srv import GetDetectedObjects
+from tf2_ros import Buffer, TransformListener
+import numpy as np
 
 class FlashLedStrip(py_trees.behaviour.Behaviour):
     """
@@ -91,15 +96,15 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
         
     def publish_led_marker(self, colour):
         marker = Marker()
-        marker.header.frame_id = "base_link"
+        marker.header.frame_id = "map"
         marker.type = Marker.CUBE
         marker.action = Marker.ADD
         marker.scale.x = 1.9
-        marker.scale.y = 0.03
-        marker.scale.z = 1.9
+        marker.scale.y = 1.9
+        marker.scale.z = 0.03
         marker.pose.position.x = 0.0
-        marker.pose.position.y = 0.8
-        marker.pose.position.z = 0.8
+        marker.pose.position.y = 0.0
+        marker.pose.position.z = 2.4
         
         marker.color.r = colour[0]
         marker.color.g = colour[1]
@@ -248,18 +253,49 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
             )
 
         self.Navigator = BasicNavigator()
+        self._distance_remaining = float('inf')
+        
+        self.node.create_subscription(
+            NavigateToPose.Impl.FeedbackMessage,
+            '/navigate_to_pose/_action/feedback',
+            self._feedback_callback,
+            10
+        )
+        self.tf_buffer = Buffer()
+        self.tf_listener = TransformListener(self.tf_buffer, self.node)
+
+    def _feedback_callback(self, msg):
+        self._distance_remaining = msg.feedback.distance_remaining
+
 
     def initialise(self):
-        """
-        Send the navigation goal to the robot.
-        """            
+        self._close_enough = False
+        transform = self.tf_buffer.lookup_transform(
+            "map",
+            "base_link",
+            rclpy.time.Time()
+        )
+        rx = transform.transform.translation.x
+        ry = transform.transform.translation.y
+        
         if self.blackboard_key is not None:
-            target_position = self.blackboard.get(self.blackboard_key)[0].pose
+            objects = self.blackboard.get(self.blackboard_key)
+            
+            if not objects:
+                self.feedback_message = "No objects on blackboard"
+                return
+            
+            closest = min(
+                objects,
+                key=lambda obj: (obj.pose.position.x - rx)**2 + (obj.pose.position.y - ry)**2
+            )
+            
             pose_msg = PoseStamped()
             pose_msg.header.frame_id = "map"
-            pose_msg.pose.position.x = target_position.position.x
-            pose_msg.pose.position.y = target_position.position.y
+            pose_msg.pose.position.x = closest.pose.position.x
+            pose_msg.pose.position.y = closest.pose.position.y
             self.Navigator.goToPose(pose_msg)
+
         elif self.target_position is not None:
             pose_msg = PoseStamped()
             pose_msg.header.frame_id = "map"
@@ -268,20 +304,22 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
             self.Navigator.goToPose(pose_msg)
 
     def update(self):
-        """
-        Check the status of the navigation action and return the appropriate status for the behaviour.
-
-        Returns:
-            :attr:`~py_trees.common.Status.SUCCESS` if the robot reaches the target position, :attr:`~py_trees.common.Status.FAILURE` if it fails, and :attr:`~py_trees.common.Status.RUNNING` while it's still moving.
-        """
-        navigation_result = self.Navigator.getResult()
-
-        if navigation_result == TaskResult.SUCCEEDED:
+        if self._close_enough:
             return py_trees.common.Status.SUCCESS
 
+        self.node.get_logger().info(str(self._distance_remaining))
+
+        if 0.0 < self._distance_remaining < 0.5:
+            self._close_enough = True
+            self.Navigator.cancelTask()
+            return py_trees.common.Status.SUCCESS
+
+        navigation_result = self.Navigator.getResult()
+        if navigation_result == TaskResult.SUCCEEDED:
+            return py_trees.common.Status.SUCCESS
         elif navigation_result in [TaskResult.FAILED, TaskResult.CANCELED]:
             return py_trees.common.Status.FAILURE
-        
+
         return py_trees.common.Status.RUNNING
 
 
@@ -333,6 +371,9 @@ class MoveArm(py_trees.behaviour.Behaviour):
         """
         Send the arm movement goal to the robot.
         """
+        self.goal_handle = None
+        self.result_future = None
+        
         goal_msg = MoveToPosition.Goal()
 
         if self.predefined_pose is not None:
@@ -354,27 +395,8 @@ class MoveArm(py_trees.behaviour.Behaviour):
         self.arm_future = self.arm_action_client.send_goal_async(goal_msg)
     
     def update(self):
-        if self.arm_future is None:
-            return py_trees.common.Status.FAILURE
-
-        # Stage 1: wait for server to accept the goal
-        if not self.arm_future.done():
-            return py_trees.common.Status.RUNNING
-
-        if self.goal_handle is None:
-            self.goal_handle = self.arm_future.result()
-            if not self.goal_handle.accepted:
-                return py_trees.common.Status.FAILURE
-            self.result_future = self.goal_handle.get_result_async()
-
-        # Stage 2: wait for the action to complete
-        if not self.result_future.done():
-            return py_trees.common.Status.RUNNING
-
-        result = self.result_future.result()
-        if result.status == GoalStatus.STATUS_SUCCEEDED:
-            return py_trees.common.Status.SUCCESS
-        return py_trees.common.Status.FAILURE
+        rclpy.spin_once(self.node, timeout_sec=5)
+        return py_trees.common.Status.SUCCESS
 
 
 # class PickObject(py_trees.behaviour.Behaviour):
@@ -451,7 +473,6 @@ class MoveArm(py_trees.behaviour.Behaviour):
 #                 return py_trees.common.Status.FAILURE
 
 #         return py_trees.common.Status.RUNNING
-
 
 class CoverageTask(py_trees.behaviour.Behaviour):
     """
@@ -530,3 +551,112 @@ class CoverageTask(py_trees.behaviour.Behaviour):
         if result.status == GoalStatus.STATUS_SUCCEEDED:
             return py_trees.common.Status.SUCCESS
         return py_trees.common.Status.FAILURE
+
+# class BoundingBoxes2BB(py_trees.behaviour.Behaviour):
+#     def __init__(self, name: str):
+#         super(BoundingBoxes2BB, self).__init__(name=name)
+    
+#     def setup(self, **kwargs):
+#         """
+#         Setup the publisher which will stream commands to the mock robot.
+
+#         Args:
+#             **kwargs (:obj:`dict`): look for the 'node' object being passed down from the tree
+
+#         Raises:
+#             :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
+#         """
+#         try:
+#             self.node = kwargs["node"]
+#         except KeyError as e:
+#             error_message = "didn't find 'node' in setup's kwargs [{}][{}]".format(
+#                 self.qualified_name
+#             )
+#             raise KeyError(error_message) from e
+#         self.bounding_box_sub = self.node.create_subscription(
+#             DetectedObjectArray, '/perception/depth/detected_objects', self.sub_callback, 10)
+#         self.bounding_boxes = []
+#         self.navigator = BasicNavigator
+        
+#     def sub_callback(self, msg):
+#         boxes = msg.objects
+#         for box in boxes:
+#             for existing_box in self.bounding_boxes:
+#                 if np.linalg.norm(np.array(box.pose) - np.array(existing_box.pose)) > 0.1:
+#                     exists = True
+#                 else:
+#                     exists = False
+#             if exists:
+#                 self.bounding_boxes.append(box)
+#                 self.bounding_boxes = sorted(self.bounding_boxes, key=)
+
+class GetPlanarObjects(py_trees.behaviour.Behaviour):
+    """
+    Calls the planar object detection service and writes the detected objects
+    to the blackboard. Returns SUCCESS if at least one object is detected,
+    FAILURE if the service returns no objects or is unavailable, and RUNNING
+    while waiting for the service response.
+
+    Args:
+        name: name of the behaviour
+        blackboard_key: key to write the detected objects to on the blackboard
+    """
+
+    def __init__(self, name: str, blackboard_key: str = "planar_objects_detected_array"):
+        super(GetPlanarObjects, self).__init__(name=name)
+        self.blackboard_key = blackboard_key
+
+    def setup(self, **kwargs):
+        self.logger.info("{}.setup()".format(self.qualified_name))
+        try:
+            self.node = kwargs["node"]
+        except KeyError as e:
+            raise KeyError(
+                "didn't find 'node' in setup's kwargs [{}]".format(self.qualified_name)
+            ) from e
+
+        self.blackboard = self.attach_blackboard_client(name=self.name)
+        self.blackboard.register_key(
+            key=self.blackboard_key,
+            access=py_trees.common.Access.WRITE
+        )
+        self.blackboard.register_key(
+            key="planar_objects_detected_bool",
+            access=py_trees.common.Access.WRITE
+        )
+
+        self.client = self.node.create_client(
+            GetDetectedObjects,
+            "/perception/planar/get_detected_objects"
+        )
+        self.client.wait_for_service()  # blocks here once at startup, fine in setup()
+        self.future = None
+
+    def initialise(self):
+        self.logger.info("{}.initialise()".format(self.qualified_name))
+        self.future = None
+
+        rclpy.spin_once(self.node, timeout_sec=5)
+        self.future = self.client.call_async(GetDetectedObjects.Request())
+        self.feedback_message = "Waiting for detection response"
+
+    def update(self):
+        
+        if self.future is None:
+            self.feedback_message = "Service unavailable"
+            return py_trees.common.Status.FAILURE
+
+        if not self.future.done():
+            return py_trees.common.Status.RUNNING
+
+        response = self.future.result()
+        objects = response.detected_objects.objects
+
+        if len(objects) == 0:
+            self.feedback_message = "No objects detected"
+            return py_trees.common.Status.FAILURE
+
+        self.blackboard.set(self.blackboard_key, objects)
+        self.blackboard.set("planar_objects_detected_bool", True)
+        self.feedback_message = f"Detected {len(objects)} objects"
+        return py_trees.common.Status.SUCCESS
