@@ -120,7 +120,7 @@ class Yolo26RosNode(Node):
             annotated = self.detector.results.plot()
             annotated_msg = self.bridge.cv2_to_imgmsg(annotated, encoding="bgr8")
             self.plotted_image_publisher.publish(annotated_msg)
-            self.objects_publisher.publish(detected_objects)
+            self.object_publisher.publish(detected_objects)
 
         self.get_logger().info(f"Detected {len(objects)} objects")
         return
