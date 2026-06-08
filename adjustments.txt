@@ -86,3 +86,13 @@ mirte-ros-packages/mirte_moveit_config/config/mirte_master.srdf
         <joint name="elbow_joint" value="-1.3"/>
         <joint name="wrist_joint" value="-1.1"/>
     </group_state>
+
+##############################################################
+# Setting up the MIRTE Master
+##############################################################
+
+Insert an SD card with an image into the MIRTE
+
+Turn on the MIRTE Master and wait for the hotspot to turn on
+Connect to the MIRTE's wifi
+On your pc, insert the command $ssh mirte@mirte_local and insert the password: mirte_mirte
