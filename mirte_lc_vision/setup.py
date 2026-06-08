@@ -21,6 +21,7 @@ setup(
         (
             os.path.join('share', package_name, 'models'), glob('mirte_lc_vision/models/*.pt')
         ),
+        ('share/' + package_name + '/launch', glob('launch/*.py')),
     ],
     install_requires=['setuptools', 
                         'open3d',
@@ -40,6 +41,7 @@ setup(
             'vision_test = mirte_lc_vision.test_vision:main',
             'object_locator = mirte_lc_vision.object_locator2:main',
             'classifier_2d = mirte_lc_vision.classifier_2d:main',
+            'classifier_2d_pub = mirte_lc_vision.classifier_2d_pub:main',
         ],
     },
 )

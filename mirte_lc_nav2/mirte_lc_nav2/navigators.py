@@ -1,8 +1,6 @@
 import numpy as np
 import cv2
 
-import rclpy
-
 from mirte_lc_nav2.navigator_types import SystematicNavigator
 from mirte_lc_nav2.utils import LogType
 import mirte_lc_nav2.utils as ut
@@ -12,23 +10,13 @@ import mirte_lc_nav2.utils as ut
 # import utils as ut
 # from utils import LogType
 
-import trajgenpy as tjp
-from trajgenpy import Geometries
-
-import shapely
-from shapely.validation import explain_validity
-from shapely.geometry.polygon import orient
-
-from scipy.spatial import KDTree
 import networkx as nx
 from skimage.morphology import (
     skeletonize,
     medial_axis,
     thin,
-    max_tree,
-    binary_closing,
 )
-from scipy.interpolate import interp1d
+from scipy.spatial import Voronoi
 
 
 class StraightLinePath(SystematicNavigator):
@@ -91,247 +79,6 @@ class StraightLinePath(SystematicNavigator):
             path.append([x0 + d, y0 + d, yaw])
 
         self.paths = np.array([path])
-
-
-class BousPath(SystematicNavigator):
-    """
-    Coverage path planner using boustrophedon cellular decomposition.
-
-    The planner:
-    1. Decomposes free space into convex cells.
-    2. Generates sweep trajectories for each cell.
-
-    Attributes
-    ----------
-    name : str
-        Planner identifier.
-    """
-
-    name = "BousPlanner"
-
-    def __init__(self, node=None, resolution=0.1):
-        """
-        Initialize the Boustrophedon planner.
-
-        Parameters
-        ----------
-        node : rclpy.node.Node | None, optional
-            ROS2 node used for logging and visualization.
-        resolution : float, optional
-            Planner waypoint spacing in meters.
-        """
-        self.node = node
-        super().__init__(node, resolution)
-
-    def bcd(self, polygons):
-        """
-        Perform boustrophedon cellular decomposition.
-
-        Parameters
-        ----------
-        polygons : list
-            List of polygon contours where:
-            - polygons[0] is the outer boundary
-            - polygons[1:] are holes/obstacles
-
-        Returns
-        -------
-        list | bool
-            List of decomposed convex cells if successful,
-            otherwise False.
-        """
-        if self.node is not None:
-            ut.log(self.node, LogType.INFO, f"Contours: {len(polygons)}")
-
-        for i, c in enumerate(polygons):
-            ut.log(self.node, LogType.INFO, f"{i}: {len(c)} points")
-
-        outer_poly = shapely.Polygon(polygons[0])
-
-        if not outer_poly.is_valid:
-            ut.log(
-                self.node,
-                LogType.WARN,
-                f"Invalid outer polygon: {explain_validity(outer_poly)}",
-            )
-
-            outer_poly = outer_poly.buffer(0)
-
-            if not outer_poly.is_valid:
-                ut.log(self.node, LogType.WARN, "Could not fix outer polygon")
-                return False
-
-            if outer_poly.is_empty:
-                ut.log(self.node, LogType.ERR, "Outer polygon is empty after fix")
-                return False
-
-            if outer_poly.geom_type == "MultiPolygon":
-                ut.log(
-                    self.node,
-                    LogType.WARN,
-                    "Outer polygon became MultiPolygon, taking largest piece",
-                )
-
-                outer_poly = max(outer_poly.geoms, key=lambda p: p.area)
-
-        outer = outer_poly
-        holes_contours = polygons[1:]
-
-        holes = []
-
-        for contour in holes_contours:
-            poly = shapely.Polygon(contour).simplify(
-                0.1,
-                preserve_topology=True,
-            )
-
-            # Check validity and fix
-            if not poly.is_valid:
-                ut.log(
-                    self.node,
-                    LogType.WARN,
-                    f"Invalid polygon: {explain_validity(poly)}",
-                )
-
-                poly = poly.buffer(0)
-
-                if not poly.is_valid:
-                    ut.log(self.node, LogType.WARN, "Could not fix polygon")
-                    continue
-
-                if poly.is_empty:
-                    ut.log(self.node, LogType.ERR, "Polygon is empty after fix")
-                    return False
-
-                if poly.geom_type == "MultiPolygon":
-                    ut.log(
-                        self.node,
-                        LogType.WARN,
-                        "Polygon became MultiPolygon, taking largest piece",
-                    )
-
-                    poly = max(poly.geoms, key=lambda p: p.area)
-
-            holes.append(poly)
-
-        obstacles = shapely.MultiPolygon(holes)
-
-        ut.log(self.node, LogType.INFO, "Performing Decomposition")
-
-        polygon_list = Geometries.decompose_polygon(
-            outer,
-            obstacles=obstacles,
-        )
-
-        self.raw_cells = [
-            np.array(polygon.exterior.coords, dtype=np.int32)
-            for polygon in polygon_list
-        ]
-
-        ut.log(
-            self.node,
-            LogType.INFO,
-            "map decomposed, publishing decomposition",
-        )
-
-        if self.node is not None:
-            self.publish_decomposition()
-
-        return polygon_list
-
-    def bous_path(self, cells, robot_width=0.6):
-        """
-        Generate sweep coverage trajectories for decomposed cells.
-
-        Parameters
-        ----------
-        cells : list
-            List of decomposed polygons.
-        robot_width : float, optional
-            Width of the robot in meters.
-
-        Returns
-        -------
-        list
-            Generated sweep trajectories.
-        """
-        ut.log(self.node, LogType.INFO, f"Number of cells: {len(cells)}")
-
-        offset = Geometries.get_sweep_offset(
-            overlap=0.0,
-            height=robot_width,
-            field_of_view=90,
-        )
-
-        ut.log(self.node, LogType.INFO, "generating full trajectory")
-
-        paths = []
-
-        for cell in cells:
-            cell = orient(cell, sign=1.0)
-
-            sweeps = Geometries.generate_sweep_pattern(
-                cell,
-                offset,
-                clockwise=False,
-                connect_sweeps=True,
-            )
-
-            paths_mls = Geometries.GeoMultiTrajectory(sweeps).get_geometry()
-
-            paths.append(self.multiline_to_coords(paths_mls))
-
-        if self.node is not None:
-            self.publish_path()
-
-        return paths
-
-    def multiline_to_coords(self, multiline):
-        """
-        Convert a MultiLineString trajectory into coordinate lists.
-
-        Parameters
-        ----------
-        multiline : shapely.MultiLineString | iterable
-            Geometry containing multiple line segments.
-
-        Returns
-        -------
-        list
-            Flattened list of trajectory coordinates.
-        """
-        coords = []
-
-        if isinstance(multiline, shapely.MultiLineString):
-            for line in multiline.geoms:
-                coords.extend(list(line.coords))
-        else:
-            for line in multiline:
-                coords.extend(list(line.coords))
-
-        return coords
-
-    def generate_path(self, start=None):
-        """
-        Generate complete coverage trajectories for the current map.
-
-        Parameters
-        ----------
-        start : np.ndarray | None, optional
-            Starting robot position.
-
-        Returns
-        -------
-        None
-        """
-        self.paths = []
-        self.cells = []
-
-        for group in self.polymap:
-            cells = self.bcd(group)
-            self.cells.extend(cells)
-            paths = self.bous_path(cells)
-            self.paths.extend(paths)
 
 
 class SkeletonPath(SystematicNavigator):
@@ -422,27 +169,14 @@ class SkeletonPath(SystematicNavigator):
                     255,
                     -1,
                 )
-
-            # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-            # smoothed_contour_map = cv2.morphologyEx(
-            #     local_contour_map,
-            #     cv2.MORPH_CLOSE,
-            #     kernel,
-            # )
-            
-            # # Crop the map to prevent skeleton from going outside bounds
-            # crop_size = 20
-            # h, w = local_contour_map.shape
-            # cropped_map = local_contour_map[crop_size:h-crop_size, crop_size:w-crop_size]
             
             skeleton_map = medial_axis(
                 local_contour_map > 0,
-                return_distance=False,
             )
 
             self.skeleton_map = skeleton_map.astype(np.uint8) * 255
             rows, cols = np.where(skeleton_map)
-            # Add back the crop offset to get original map coordinates
+
             skeleton_points = np.column_stack((cols, rows))
             skeleton_points = self.pixel_to_world_poly(skeleton_points)
 
@@ -809,7 +543,6 @@ class SpanningTreePath(SystematicNavigator):
         for contour in self.spanning_contours:
             waypoints = self.get_waypoints(contour)
             self.waypoint_groups.append(waypoints)
-        
 
     def get_waypoints(self, contour):
         """
@@ -910,8 +643,181 @@ class SpanningTreePath(SystematicNavigator):
             self.publish_path()
 
 
+class CVTPath(SystematicNavigator):
+    name="CVTPlanner"
+    
+    def __init__(self, node=None, resolution=0.1, area=0.06):
+        super().__init__(node, resolution)
+        self.area = area
+    
+    def generate_path(self):
+        ut.log(self.node, LogType.INFO, f"generating {self.name} path")
+        self.read()
+        self.paths = []
+
+        for waypoints in self.waypoint_groups:
+            
+            if len(waypoints) < 2:
+                continue
+            
+            graph = self.set_waypoints(
+                waypoints
+            )
+
+            path = self.plan_path(
+                start,
+                graph,
+                waypoints,
+            )
+            
+            self.paths.append(path)
+            
+            start = path[-1]
+
+        if self.node is not None:
+            self.publish_path()
+
+    def read(self):
+        ...
+
+    def get_free_pixels(self):
+        """Return pixel coordinates of all free cells in the costmap."""
+        rows, cols = np.where(self.binary_costmap > 0)
+        return np.column_stack((cols, rows)).astype(np.float64)  # (x, y)
+
+    def plam_path(self):
+        ...
+
+class CVTPath(SystematicNavigator):
+    """
+    Waypoint planner based on Centroidal Voronoi Tessellation (CVT).
+
+    The planner:
+    1. Samples N seed points in free space.
+    2. Iterates Lloyd's algorithm to converge to CVT centroids.
+    3. Solves a nearest-neighbor TSP over the centroids.
+
+    Reference: Cortes, Martinez, Karatas & Bullo,
+    "Coverage Control for Mobile Sensing Networks",
+    IEEE Trans. Robotics and Automation, 2004.
+
+    Attributes
+    ----------
+    name : str
+        Planner identifier.
+    n_seeds : int
+        Number of Voronoi cells (waypoints).
+    n_iterations : int
+        Number of Lloyd iterations.
+    """
+
+    name = "CVTPlanner"
+
+    def __init__(self, node=None, resolution=0.1, n_seeds=30, n_iterations=20):
+        super().__init__(node, resolution)
+        self.n_seeds = n_seeds
+        self.n_iterations = n_iterations
+
+    def get_free_pixels(self):
+        """Return pixel coordinates of all free cells in the costmap."""
+        rows, cols = np.where(self.binary_costmap > 0)
+        return np.column_stack((cols, rows)).astype(np.float64)  # (x, y)
+
+    def lloyd_iteration(self, seeds, free_pixels):
+        """
+        Run one Lloyd iteration: assign pixels to nearest seed,
+        then move each seed to the centroid of its cell.
+
+        Parameters
+        ----------
+        seeds : np.ndarray, shape (N, 2)
+        free_pixels : np.ndarray, shape (M, 2)
+
+        Returns
+        -------
+        np.ndarray
+            Updated seed positions.
+        """
+        tree = KDTree(seeds)
+        _, labels = tree.query(free_pixels)
+
+        new_seeds = np.zeros_like(seeds)
+        for i in range(len(seeds)):
+            members = free_pixels[labels == i]
+            if len(members) > 0:
+                new_seeds[i] = members.mean(axis=0)
+            else:
+                new_seeds[i] = seeds[i]  # keep seed if cell is empty
+
+        return new_seeds
+
+    def tsp_nearest_neighbor(self, points, start_idx=0):
+        """
+        Solve TSP with a nearest-neighbor heuristic.
+
+        Parameters
+        ----------
+        points : np.ndarray, shape (N, 2)
+        start_idx : int
+
+        Returns
+        -------
+        np.ndarray
+            Points in visit order.
+        """
+        unvisited = list(range(len(points)))
+        order = [start_idx]
+        unvisited.remove(start_idx)
+
+        while unvisited:
+            current = order[-1]
+            dists = np.linalg.norm(points[unvisited] - points[current], axis=1)
+            nearest = unvisited[int(np.argmin(dists))]
+            order.append(nearest)
+            unvisited.remove(nearest)
+
+        return points[order]
+
+    def generate_path(self, start=None):
+        ut.log(self.node, LogType.INFO, f"generating {self.name} path")
+
+        free_pixels = self.get_free_pixels()
+
+        if len(free_pixels) < self.n_seeds:
+            ut.log(self.node, LogType.WARN, "Fewer free pixels than seeds, reducing n_seeds")
+            self.n_seeds = len(free_pixels)
+
+        # 1. Initialise seeds randomly from free pixels
+        idx = np.random.choice(len(free_pixels), self.n_seeds, replace=False)
+        seeds = free_pixels[idx].astype(np.float64)
+
+        # 2. Lloyd iterations
+        for _ in range(self.n_iterations):
+            seeds = self.lloyd_iteration(seeds, free_pixels)
+
+        # 3. Keep only seeds that landed in free space
+        tree = KDTree(free_pixels)
+        dists, _ = tree.query(seeds)
+        seeds = seeds[dists < 3.0]  # tolerance in pixels
+
+        # 4. Convert pixel centroids to world coordinates
+        waypoints = np.array(self.pixel_to_world_poly(seeds.astype(np.int32)))
+
+        # 5. Find nearest seed to start and solve TSP from there
+        if start is not None:
+            dists_to_start = np.linalg.norm(waypoints - np.array(start[:2]), axis=1)
+            start_idx = int(np.argmin(dists_to_start))
+        else:
+            start_idx = 0
+
+        path = self.tsp_nearest_neighbor(waypoints, start_idx=start_idx)
+
+        self.paths = [path]
+
+        if self.node is not None:
+            self.publish_path()
+
 PLANNERS = {
-    BousPath.name: BousPath,
     SkeletonPath.name: SkeletonPath,
     SpanningTreePath.name: SpanningTreePath,
     StraightLinePath.name: StraightLinePath,

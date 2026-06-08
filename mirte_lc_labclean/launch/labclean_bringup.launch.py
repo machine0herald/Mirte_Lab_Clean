@@ -2,26 +2,19 @@
 ros2 launch mirte_lc_labclean labclean_bringup.launch.py
 """
 
-from sympy import true
-
 from launch import LaunchDescription
 from launch.actions import (
     IncludeLaunchDescription,
     DeclareLaunchArgument,
     TimerAction,
 )
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.launch_description_sources import (
     AnyLaunchDescriptionSource,
     PythonLaunchDescriptionSource,
 )
-from launch_ros.actions import Node, SetParameter
 from ament_index_python.packages import get_package_share_directory
 import os
-from launch.substitutions import PathJoinSubstitution
-from launch_ros.substitutions import FindPackageShare
-
-from launch.actions import DeclareLaunchArgument, LogInfo
 
 
 def generate_launch_description():
@@ -37,13 +30,18 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration(
         "use_sim_time",
     )
+    points_topic = PythonExpression([
+        '"/camera/points" if "',
+        use_sim_time,
+        '" == "true" else "/camera/depth/points"'
+    ])
 
     ##################
     # File Locations #
     ##################
     mirte_lc_nav = get_package_share_directory("mirte_lc_nav2")
-    mirte_lc_labclean_pkg = get_package_share_directory("mirte_lc_labclean")
-    twist_mux_yaml = os.path.join(mirte_lc_labclean_pkg, "config", "twist_mux.yaml")
+    mirte_lc_perception = get_package_share_directory("mirte_lc_vision")
+    mirte_lc_moveit_cpp =  get_package_share_directory("mirte_lc_moveit_cpp")
 
     #######################
     # Mirte Moveit Launch #
@@ -51,21 +49,14 @@ def generate_launch_description():
     moveit_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory("mirte_lc_moveit_cpp"),
+                mirte_lc_moveit_cpp,
                 "launch",
                 "mirte_lc_moveit.launch.py",
             )
         ),
-        launch_arguments={"use_sim_time": use_sim_time}.items(),
-    )
-
-    #####################
-    # Perception Launch #
-    #####################
-    PCnode = Node(
-        package="mirte_lc_vision",
-        executable="pc_node",
-        name="pc_node",
+        launch_arguments={
+            "use_sim_time": use_sim_time
+        }.items(),
     )
 
     ####################
@@ -73,34 +64,29 @@ def generate_launch_description():
     ####################
     nav2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(mirte_lc_nav, "launch", "mirte_lc_nav2.launch.py")
+            os.path.join(
+                mirte_lc_nav,
+                "launch",
+                "mirte_lc_nav2.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
         }.items(),
     )
 
-    ##################
-    # Twist Mux Node #
-    ##################
-    twist_mux = Node(
-        package="twist_mux",
-        executable="twist_mux",
-        parameters=[twist_mux_yaml, {"use_sim_time": use_sim_time}],
-        remappings=[("cmd_vel_out", "cmd_vel")],
-    )
-
-    ####################
-    # Labclean Manager #
-    ####################
-    labclean_manager = Node(
-        package="mirte_lc_labclean",
-        executable="labclean_manager",
-        name="labclean_manager",
-        output="screen",
-        parameters=[
-            {"use_sim_time": use_sim_time},
-        ],
+    #####################
+    # Perception Launch #
+    #####################
+    perception = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                mirte_lc_perception,
+                "launch",
+                "perception.launch.py")
+        ),
+        launch_arguments={
+            "points_topic": points_topic,
+        }.items(),
     )
 
     ###################
@@ -126,9 +112,6 @@ def generate_launch_description():
             # foxglove_bridge,
             TimerAction(period=10.0, actions=[moveit_launch]),
             TimerAction(period=30.0, actions=[nav2]),
-            TimerAction(
-                period=80.0,
-                actions=[LogInfo(msg="Starting Labclean Manager"), labclean_manager],
-            ),
+            TimerAction(period=30.0, actions=[perception])
         ]
     )

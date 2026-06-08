@@ -178,12 +178,17 @@ class SystematicNavigator(BasicNavigator):
         """
         # Set up Costmap Object
         self.costmap = PyCostmap2D(map_msg)
-        self.map = map_msg.data
-        self.map = np.array(self.map, dtype=np.int16).reshape((self.costmap.size_x, self.costmap.size_y))
+        self.map = self.costmap.costmap
+        self.map = np.array(self.map, dtype=np.int16).reshape((self.costmap.size_y, self.costmap.size_x))
         
-        self.binary_costmap = np.zeros_like(self.map, dtype=np.uint8)
-        self.binary_costmap[self.map < self.threshold] = 255
-        self.binary_costmap[self.map == -1] = 0
+        map_u8 = self.map.astype(np.uint8)
+
+        _, self.binary_costmap = cv2.threshold(
+            map_u8,
+            1,
+            255,
+            cv2.THRESH_BINARY_INV
+        )
 
         margin_m = 0.3
         margin_px = max(1, int(margin_m / self.costmap.resolution))
