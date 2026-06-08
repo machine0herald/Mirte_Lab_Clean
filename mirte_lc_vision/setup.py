@@ -41,6 +41,7 @@ setup(
             'vision_test = mirte_lc_vision.test_vision:main',
             'object_locator = mirte_lc_vision.object_locator2:main',
             'classifier_2d = mirte_lc_vision.classifier_2d:main',
+            'classifier_2d_pub = mirte_lc_vision.classifier_2d_pub:main',
         ],
     },
 )

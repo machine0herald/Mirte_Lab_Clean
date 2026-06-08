@@ -88,7 +88,15 @@ mirte-ros-packages/mirte_moveit_config/config/mirte_master.srdf
     </group_state>
 
 add gazebo camera
-    <gazebo reference="gripper_camera_link">
+   <joint name="gripper_camera_rgb_optical_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="1.5707963267949 -1.5707963267949 0" />
+        <parent link="gripper_camera_rgb_frame" />
+        <child link="gripper_camera_rgb_optical_frame" />
+    </joint>
+
+    <link name="gripper_camera_rgb_optical_frame" />
+
+    <gazebo reference="gripper_camera_rgb_optical_frame">
         <sensor name="gripper_camera_sensor" type="camera">
             <always_on>true</always_on>
             <visualize>false</visualize>
@@ -119,7 +127,28 @@ add gazebo camera
             </ros>
             <plugin name="gripper_camera_controller" filename="libgazebo_ros_camera.so">
                 <camera_name>gripper_camera</camera_name>
-                <frame_name>gripper_camera_link</frame_name>
             </plugin>
         </sensor>
     </gazebo>
+
+    <gazebo>
+        <plugin filename="libgazebo_grasp_fix.so" name="gazebo_grasp_fix">
+        <arm>
+            <arm_name>finger_gripper</arm_name>
+            <palm_link>wrist</palm_link>
+            <gripper_link>gripper</gripper_link>
+            <gripper_link>_Gripper_r</gripper_link>
+            <gripper_link>_gripper_link_l</gripper_link>
+            <gripper_link>gripper_finger_l</gripper_link>
+            <gripper_link>_gripper_link_r</gripper_link>
+            <gripper_link>gripper_finger_r</gripper_link>
+        </arm>
+        <forces_angle_tolerance>100</forces_angle_tolerance>
+        <update_rate>4</update_rate>
+        <grip_count_threshold>4</grip_count_threshold>
+        <max_grip_count>8</max_grip_count>
+        <release_tolerance>0.005</release_tolerance>
+        <disable_collisions_on_attach>false</disable_collisions_on_attach>
+        </plugin>
+    </gazebo>
+
