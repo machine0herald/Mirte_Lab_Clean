@@ -118,6 +118,6 @@ def generate_launch_description():
             # foxglove_bridge,
             TimerAction(period=10.0, actions=[moveit_launch]),
             TimerAction(period=30.0, actions=[nav2]),
-            # TimerAction(period=30.0, actions=[perception])
+            TimerAction(period=30.0, actions=[perception])
         ]
     )

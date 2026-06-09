@@ -39,14 +39,6 @@ class ObjectLocator2(Node):
         self.points = np.empty((0, 3))
         self.maxDim = 0.3
 
-        self.set_parameters([
-            Parameter(
-                'use_sim_time',
-                Parameter.Type.BOOL,
-                True
-            )
-        ])
-
         self.msg_queue = deque(maxlen=1)
         self.get_logger().info("Starting")
 

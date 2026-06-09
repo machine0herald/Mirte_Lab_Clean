@@ -1,7 +1,7 @@
 sudo ssh mirte@192.168.42.1 "sudo date -s '@$(date +%s.%N)'"
 
 
-
+sudo apt install ros-humble-image-pipeline
 
 
 mirte-gazebo/launch/gazebo_mirte_world_generated.launch.xml
