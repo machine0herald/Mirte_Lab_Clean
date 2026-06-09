@@ -88,7 +88,7 @@ class ObjectLocator2(Node):
         )
 
         self.processing_timer = self.create_timer(
-            0.05,
+            2,
             self.process_queued_messages
         )
 
@@ -217,7 +217,7 @@ class ObjectLocator2(Node):
             np.isfinite(points_np).all(axis=1)
         ]
 
-        # # Crop
+        # Crop
         # points_np = points_np[
         #     points_np[:, 1] >= -0.11
         # ]

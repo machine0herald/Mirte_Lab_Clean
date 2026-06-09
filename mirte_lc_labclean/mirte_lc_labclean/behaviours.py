@@ -91,8 +91,8 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
         # blue      green
         request.color = NeopixelColor()
         request.color.g = int(self.colour[0] * 255)
-        request.color.b = int(self.colour[1]* 255)
-        request.color.r = int(self.colour[2]* 255)
+        request.color.b = int(self.colour[1] * 255)
+        request.color.r = int(self.colour[2] * 255)
 
         self.future = self.neopixel_client.call_async(request)
         self.publish_led_marker(self.colour)

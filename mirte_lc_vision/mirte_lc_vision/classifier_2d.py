@@ -74,7 +74,7 @@ class Yolo26RosNode(Node):
             conf=0.3,
         )
 
-        gripper_cam_topic = "/gripper_camera/image_raw"
+        gripper_cam_topic = "/camera/color/image_raw"
         annotated_topic = "/gripper_camera/image_annotated"
 
         self.image_subscriber = self.create_subscription(
