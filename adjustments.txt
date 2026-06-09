@@ -158,13 +158,14 @@ add gazebo camera
 # Setting up the MIRTE Master
 ##############################################################
 
-Insert an SD card with an image into the MIRTE
+Insert an SD card with an image into the MIRTE.
+Wait for flashing to conclude.
 
-Turn on the MIRTE Master and wait for the hotspot to turn on
-Connect to the MIRTE's wifi
-On your pc, insert the command $ssh mirte@mirte_local and insert the password: mirte_mirte
+Turn on the MIRTE Master and wait for the hotspot to turn on.
+Connect to the MIRTE's wifi.
+On your pc, insert the command $ssh mirte@mirte_local and insert the password: mirte_mirte.
 
-If necessary, switch motor pins in home/mirte/mirte_ws/src/mirte-ros-packages/mirte_bringup/telemetrix_config/mirte_master_config.yaml
+If necessary, switch motor pins in home/mirte/mirte_ws/src/mirte-ros-packages/mirte_bringup/telemetrix_config/mirte_master_config.yaml.
 
 On the MIRTE, change the PID values in opt/ros/humble/share/mirte_base_control/config/mirte_base_control.yaml using "$ sudo nano":
 P = 0.5, I = 2.0, D = 0.0 for all motors.
