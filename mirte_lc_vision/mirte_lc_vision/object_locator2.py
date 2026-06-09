@@ -88,7 +88,7 @@ class ObjectLocator2(Node):
         )
 
         self.processing_timer = self.create_timer(
-            0.05,
+            2,
             self.process_queued_messages
         )
 
@@ -218,9 +218,9 @@ class ObjectLocator2(Node):
         ]
 
         # Crop
-        points_np = points_np[
-            points_np[:, 1] >= -0.11
-        ]
+        # points_np = points_np[
+        #     points_np[:, 1] >= -0.11
+        # ]
 
         self.get_logger().info(f"Converted to numpy array with shape {points_np.shape}")
         self.get_logger().info(f"Min point: {np.min(points_np, axis=0)}")
