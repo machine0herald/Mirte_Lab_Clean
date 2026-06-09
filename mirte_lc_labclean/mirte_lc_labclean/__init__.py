@@ -14,7 +14,6 @@ from .behaviours import (
     CoverageTask,
     GetPlanarObjects,
 )
-from .dashboard import Backend
 from .labclean_tree import create_root
 from .mirte_lc import LabcleanManager
 from .test_node import main as test_node_main
@@ -27,7 +26,6 @@ __all__ = [
     "PickObject",
     "CoverageTask",
     "GetPlanarObjects",
-    "Backend",
     "create_root",
     "LabcleanManager",
     "test_node_main",

@@ -47,7 +47,7 @@ def generate_launch_description():
         executable="classifier_2d",
         name="classifier_2d",
         remappings=[
-            ("/camera/color/image_raw", camera_topic),
+            ("/camera/color/image_raw/compressed", camera_topic),
         ],
     )
 
