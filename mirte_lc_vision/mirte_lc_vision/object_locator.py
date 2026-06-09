@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 
+"""Object locator node for mirte_lc vision stack.
+
+This module implements an `ObjectLocator` ROS 2 node that consumes a
+PointCloud2 topic, processes the point cloud to find object clusters,
+and publishes bounding boxes as a ``MarkerArray``. The docstrings
+follow the Google style so they are compatible with Sphinx (Napoleon)
+and common documentation tooling.
+
+Example:
+
+    $ ros2 run mirte_lc_vision object_locator
+
+"""
+
 import time
 import rclpy
 import std_srvs.srv
@@ -23,6 +37,18 @@ from scipy.spatial.transform import Rotation as Rot
 
 
 class ObjectLocator(Node):
+    """ROS 2 node that locates objects from a point cloud.
+
+    The node subscribes to a point cloud topic, removes planar surfaces
+    (floor/walls), clusters remaining points with DBSCAN, and publishes
+    bounding boxes as a ``MarkerArray``. It also periodically requests
+    an octomap reset to keep the environment map fresh.
+
+    Attributes:
+        points (np.ndarray): Accumulated point array used for processing.
+        marker_pub (rclpy.publisher.Publisher): Publisher for MarkerArray.
+        reset_timer (rclpy.timer.Timer): Timer to periodically reset octomap.
+    """
 
     def __init__(self):
 
@@ -466,6 +492,15 @@ class ObjectLocator(Node):
 ############################################################
 
 def main(args=None):
+
+    """Entry point for running the object locator node.
+
+    Args:
+        args (List[str] | None): Optional list of command-line arguments.
+
+    This function initializes the ROS client library, instantiates the
+    `ObjectLocator` node, and spins until shutdown.
+    """
 
     rclpy.init(args=args)
 

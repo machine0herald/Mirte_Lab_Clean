@@ -24,7 +24,7 @@ class Yolo26Cam:
     def __init__(self, targets: list, model_path=os.path.join(
             get_package_share_directory("mirte_lc_vision"),
             "models",
-            "ColourdetectionYOLO26n.pt",
+            "COLOURDETECTIONv2nano.pt",
         ), conf=0.4, imgsz=640):
         self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
         self.model = YOLO(model_path)
@@ -74,7 +74,7 @@ class Yolo26RosNode(Node):
             conf=0.3,
         )
 
-        gripper_cam_topic = "/gripper_camera/image_raw"
+        gripper_cam_topic = "/camera/color/image_raw"
         annotated_topic = "/gripper_camera/image_annotated"
 
         self.image_subscriber = self.create_subscription(

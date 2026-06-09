@@ -35,6 +35,11 @@ def generate_launch_description():
         use_sim_time,
         '" == "true" else "/camera/depth/points"'
     ])
+    camera_topic = PythonExpression([
+        '"/camera/image_raw" if "',
+        use_sim_time,
+        '" == "true" else "/camera/color/image_raw"'
+    ])
 
     ##################
     # File Locations #
@@ -86,6 +91,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             "points_topic": points_topic,
+            "camera_topic": camera_topic,
         }.items(),
     )
 
