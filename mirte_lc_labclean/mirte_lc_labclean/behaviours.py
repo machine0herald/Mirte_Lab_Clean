@@ -84,10 +84,14 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
         )
         request = SetNeopixel.Request()
 
-        # Adjust field names to match your srv definition
+        # Robot and message definitions differ
+        # msg       led strip
+        # red       blue
+        # green     red      
+        # blue      green
         request.color = NeopixelColor()
-        request.color.b = int(self.colour[0] * 255)
-        request.color.g = int(self.colour[1]* 255)
+        request.color.g = int(self.colour[0] * 255)
+        request.color.b = int(self.colour[1]* 255)
         request.color.r = int(self.colour[2]* 255)
 
         self.future = self.neopixel_client.call_async(request)

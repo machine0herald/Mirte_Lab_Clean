@@ -126,7 +126,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
         name="Battery2BB",
         topic_name="/io/power/power_watcher",
         qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
-        threshold=20.0
+        threshold=0.25
     )
 
     # 1.5: Detected bounding boxes topic to Blackboard #
