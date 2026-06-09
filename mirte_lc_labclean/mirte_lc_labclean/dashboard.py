@@ -38,6 +38,12 @@ from . import gui
 
 
 class Backend(qt_core.QObject):
+    """Qt backend for the LabClean dashboard.
+
+    The backend manages ROS2 subscriptions, publishers, and parameter clients
+    for the dashboard UI. It exposes signals to update UI widgets in response
+    to ROS2 messages.
+    """
 
     led_colour_changed = qt_core.pyqtSignal(str, name="ledColourChanged")
     safety_sensors_enabled_changed = qt_core.pyqtSignal(bool, name="safetySensorsEnabledChanged")
@@ -103,6 +109,12 @@ class Backend(qt_core.QObject):
         }
 
     def spin(self):
+        """Run the ROS2 spinner until shutdown is requested.
+
+        The method waits for required parameter services to become available and
+        then enters a loop that periodically fetches safety parameters and
+        processes ROS2 callbacks.
+        """
         initialised = {name: False for name in self.parameter_clients.keys()}
         while rclpy.ok() and not self.shutdown_requested and not all(value for value in initialised.values()):
             for name, client in self.parameter_clients.items():
@@ -171,14 +183,25 @@ class Backend(qt_core.QObject):
             self.safety_sensors_enabled_changed.emit(value.bool_value)
 
     def publish_button_message(self, publisher):
+        """Publish an empty message when a dashboard button is pressed.
+
+        Args:
+            publisher: A ROS2 publisher for a button-triggered topic.
+        """
         publisher.publish(std_msgs.Empty())
 
     def terminate_ros_spinner(self):
+        """Request shutdown of the ROS2 spinner thread."""
         self.node.get_logger().info("ros backend -> shutdown requested")
         self.shutdown_requested = True
 
     # TODO: shift to the ui
     def reality_report_callback(self, msg):
+        """Update the dashboard UI when the reality report topic changes.
+
+        Args:
+            msg (:class:`std_msgs.msg.String`): Status report from the behaviour tree.
+        """
         if msg.data == "cancelling":
             self.set_scanning_colour(False)
             self.ui.set_cancel_push_button_colour(True)
@@ -193,6 +216,11 @@ class Backend(qt_core.QObject):
             self.ui.ui.cancel_push_button.setEnabled(False)
 
     def led_strip_display_callback(self, msg):
+        """Handle LED strip display status updates from ROS2.
+
+        Args:
+            msg (:class:`std_msgs.msg.String`): Colour command published by the LED strip.
+        """
         colour = "grey"
         if not msg.data:
             self.node.get_logger().info("no colour specified, setting '{}'".format(colour))
@@ -203,9 +231,10 @@ class Backend(qt_core.QObject):
         self.led_colour_changed.emit(colour)
 
     def battery_state_callback(self, msg):
-        """
+        """Process battery state messages and update dashboard indicators.
+
         Args:
-            msg (:class:`sensor_msgs.msg.BatteryState`): battery state
+            msg (:class:`sensor_msgs.msg.BatteryState`): Battery state message.
         """
         self.battery_percentage_changed.emit(msg.percentage)
         if msg.power_supply_status == sensor_msgs.BatteryState.POWER_SUPPLY_STATUS_DISCHARGING:
@@ -217,6 +246,11 @@ class Backend(qt_core.QObject):
         self.last_battery_charging_status = charging
 
     def update_battery_percentage(self, percentage):
+        """Request an update to the battery charging percentage.
+
+        Args:
+            percentage (float): New battery percentage to set.
+        """
         request = rcl_srvs.SetParameters.Request()
         parameter = rcl_msgs.Parameter()
         parameter.name = "charging_percentage"
@@ -226,6 +260,11 @@ class Backend(qt_core.QObject):
         unused_future = self.parameter_clients['battery'].call_async(request)
 
     def update_battery_charging_status(self, charging):
+        """Request an update to the battery charging status.
+
+        Args:
+            charging (bool): Whether the battery is charging.
+        """
         request = rcl_srvs.SetParameters.Request()
         parameter = rcl_msgs.Parameter()
         parameter.name = "charging"
@@ -245,6 +284,11 @@ class Backend(qt_core.QObject):
         #     self.node.get_logger().error('exception while calling service: %r' % future.exception())
 
     def update_safety_sensors_enabled(self, enabled):
+        """Request an update to the safety sensors enabled parameter.
+
+        Args:
+            enabled (bool): Whether the safety sensors should be enabled.
+        """
         request = rcl_srvs.SetParameters.Request()
         parameter = rcl_msgs.Parameter()
         parameter.name = "enabled"
@@ -259,6 +303,11 @@ class Backend(qt_core.QObject):
 ##############################################################################
 
 def main():
+    """Launch the LabClean dashboard application.
+
+    This function initializes rclpy, starts the Qt application, and begins the
+    ROS2 backend spinner thread.
+    """
     # picks up sys.argv automagically internally
     rclpy.init()
     # enable handling of ctrl-c (from roslaunch as well)

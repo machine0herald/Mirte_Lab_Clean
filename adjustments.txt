@@ -1,3 +1,9 @@
+sudo ssh mirte@192.168.42.1 "sudo date -s '@$(date +%s.%N)'"
+
+
+
+
+
 mirte-gazebo/launch/gazebo_mirte_world_generated.launch.xml
     - Add verbosity and add to gazebo model path
 
