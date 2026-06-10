@@ -283,8 +283,8 @@ class ObjectLocator2(Node):
 
         while True:
 
-            self.get_logger().info(
-                f"Using downsampled pointcloud with {len(pcd_LQ.points)} points")
+            # self.get_logger().info(f
+            #     f"Using downsampled pointcloud with {len(pcd_LQ.points)} points")
 
             if len(pcd_LQ.points) < 100:
                 break
@@ -314,7 +314,7 @@ class ObjectLocator2(Node):
                 plane_model[2]**2
             )
 
-            plane_mask = dist < 0.007
+            plane_mask = dist < 0.003
 
             remaining_mask &= ~plane_mask
 
@@ -389,7 +389,7 @@ class ObjectLocator2(Node):
 
         clustering = DBSCAN(
             eps=0.03,
-            min_samples=2
+            min_samples=4
         ).fit(points_map)
 
         labels = clustering.labels_
