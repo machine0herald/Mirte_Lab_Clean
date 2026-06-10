@@ -321,9 +321,9 @@ class ObjectLocator2(Node):
             points_np
         )
 
-        pcd_LQ = pcd_HQ.voxel_down_sample(voxel_size = 0.01)
-
-        message = self.point_cloud(pcd_LQ.points, 'camera_depth_optical_frame')
+        # pcd_LQ = pcd_HQ.voxel_down_sample(voxel_size = 0.01)
+        pcd_LQ = pcd_HQ
+        message = self.point_cloud(np.asarray(pcd_LQ.points), 'camera_depth_optical_frame')
 
         self.downsampled_pub.publish(message)
         
@@ -347,7 +347,7 @@ class ObjectLocator2(Node):
                 num_iterations=2000
             )
 
-            if len(inliers) < 100:
+            if len(inliers) < 500:
                 break
 
             pcd_LQ = pcd_LQ.select_by_index(
@@ -366,7 +366,7 @@ class ObjectLocator2(Node):
                 plane_model[2]**2
             )
 
-            plane_mask = dist < 0.005
+            plane_mask = dist < 0.008
 
             remaining_mask &= ~plane_mask
 
@@ -445,7 +445,7 @@ class ObjectLocator2(Node):
 
         clustering = DBSCAN(
             eps=0.03,
-            min_samples=3
+            min_samples=20
         ).fit(points_map)
 
         labels = clustering.labels_
@@ -502,8 +502,8 @@ class ObjectLocator2(Node):
                     .get_oriented_bounding_box()
                 )
 
-            except RuntimeError:
-
+            except RuntimeError as e:
+                self.get_logger().warn(f"OBB failed: {e}")
                 continue
 
             center = obb.center
@@ -524,7 +524,7 @@ class ObjectLocator2(Node):
                 continue
 
 
-            extent[2] = max(extent[2], 0.5 * extent[2] + center[2])
+            # extent[2] = max(extent[2], 0.5 * extent[2] + center[2])
 
             # if (extent[0] > self.maxDim or
             #     extent[1] > self.maxDim or
@@ -623,7 +623,7 @@ class ObjectLocator2(Node):
             marker_array
         )
         self.get_logger().info(
-            "Published {len(marker_array.markers)-1} bounding boxes"
+            f"Published {len(marker_array.markers)-1} bounding boxes"
         )
         
         self.object_pub.publish(

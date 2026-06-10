@@ -131,8 +131,8 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            # labclean_tree,
-            # viewer,
+            labclean_tree,
+            viewer,
             use_sim_time_arg,
             # foxglove_bridge,
             TimerAction(period=1.0, actions=[moveit_launch]),
