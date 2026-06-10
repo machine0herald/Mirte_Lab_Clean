@@ -1,28 +1,15 @@
-"""
-About
-^^^^^
+"""LabClean behaviour tree entrypoint for ROS2.
 
-This file implements the Lab Cleanup behaviour tree for the Mirte lab cleaning
-application. It coordinates topic input, battery monitoring, navigation, scanning,
-and object detection through a central behaviour tree so the platform can
-clean the lab safely and recover to idle or home when required.
+This module builds and returns the root of the LabClean behaviour tree used by
+ROS2 and py_trees. It wires topic subscriptions, blackboard variables, and task
+branches for exploration, object handling, and coverage navigation.
 
-The tree is designed for ROS2 and py_trees, with subscriptions, event handling,
-and action-like task composition managed from the tree itself.
-
-Tree commands
-^^^^^^^^^^^^^
-
-$ py-trees-render -b mirte_lc_labclean.labclean_tree.create_root
-$ py-trees-blackboard-watcher --list
-$ py-trees-blackboard-watcher /battery.percentage
-$ sudo apt install ros-humble-py-trees-ros-viewer
-$ py-trees-tree-viewer --no-sandbox
-
-$ ros2 run mirte_lc_labclean labclean_tree 
-
-The commands above help inspect runtime blackboard state and visualize the
-behaviour tree structure.
+Examples:
+    $ py-trees-render -b mirte_lc_labclean.labclean_tree.create_root
+    $ py-trees-blackboard-watcher --list
+    $ py-trees-blackboard-watcher /battery.percentage
+    $ ros2 run mirte_lc_labclean labclean_tree
+    
 """
 import operator
 import sys
@@ -44,22 +31,13 @@ import launch_ros
 # Tree #
 ########
 def create_root() -> py_trees.behaviour.Behaviour:
-    """
-    Lab Cleanup Behaviour Tree
+    """Build the LabClean behaviour tree root.
 
-    Subscribed Topics:
-    - /explore/status (std_msgs/Bool): Triggers after exploration is complete to start the lab cleaning task
-    - /dashboard/cancel (std_msgs/Bool): Trigger to cancel the current task and return home
-    - /battery/state (sensor_msgs/BatteryState): Battery state to monitor for
-
-    Published Topics:
-    - /led_strip (std_msgs/ColorRGBA): To control the LED strip for visual feedback
-    - /navigate (MoveBase action): To send navigation goals for moving out and returning home
-    - /rotate (Rotate action): To send rotation goals for scanning
-    - /dock (Dock action): To send docking/undocking commands
+    The returned root node executes blackboard updates, task selection, and
+    safety monitoring for the lab cleaning application.
 
     Returns:
-        the root of the tree
+        py_trees.behaviour.Behaviour: The root behaviour node for the tree.
     """
 
     ##################################################################################
@@ -126,7 +104,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
         name="Battery2BB",
         topic_name="/io/power/power_watcher",
         qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
-        threshold=20.0
+        threshold=0.25
     )
 
     # 1.5: Detected bounding boxes topic to Blackboard #

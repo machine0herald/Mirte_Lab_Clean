@@ -1,3 +1,10 @@
+"""ROS2 behaviours for the Mirte LabClean application.
+
+This module defines a set of py_trees behaviours used in the LabClean
+behaviour tree. Behaviours include LED control, coverage navigation, object
+retrieval, and plan execution using ROS2 action servers and services.
+"""
+
 from mirte_msgs.msg import NeopixelColor
 from mirte_msgs.srv import SetNeopixel
 
@@ -24,23 +31,16 @@ from tf2_ros import Buffer, TransformListener
 import numpy as np
 
 class FlashLedStrip(py_trees.behaviour.Behaviour):
-    """
-    This behaviour simply shoots a command off to the LEDStrip to flash
-    a certain colour and returns :attr:`~py_trees.common.Status.RUNNING`.
-    Note that this behaviour will never return with
-    :attr:`~py_trees.common.Status.SUCCESS` but will send a clearing
-    command to the LEDStrip if it is cancelled or interrupted by a higher
-    priority behaviour.
+    """Flash the LabClean LED strip with a colour command.
 
-    Publishers:
-        * **/led_strip/command** (:class:`std_msgs.msg.String`)
-
-          * colourised string command for the led strip ['red', 'green', 'blue']
+    This behaviour publishes a Neopixel colour request and shows an LED marker
+    in the simulated map. It remains in the running state and does not
+    complete successfully until interrupted or cancelled.
 
     Args:
-        name: name of the behaviour
-        topic_name : name of the battery state topic
-        colour: colour to flash ['red', 'green', blue']
+        name (str): Name of the behaviour.
+        colour (list[float], optional): RGB colour values in range [0.0, 1.0].
+            Defaults to [0, 0, 1.0].
     """
 
     def __init__(
@@ -78,23 +78,32 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
         self.led_marker_publisher = self.node.create_publisher(Marker, '/labclean_led_markers', 10)
 
     def initialise(self):
-        """ """
+        """Send the LED colour request and publish a marker."""
         self.logger.info(
             "%s.initialise(), sending led request" % self.__class__.__name__
         )
         request = SetNeopixel.Request()
 
-        # Adjust field names to match your srv definition
+        # Robot and message definitions differ
+        # msg       led strip
+        # red       blue
+        # green     red      
+        # blue      green
         request.color = NeopixelColor()
-        request.color.b = int(self.colour[0] * 255)
-        request.color.g = int(self.colour[1]* 255)
-        request.color.r = int(self.colour[2]* 255)
+        request.color.g = int(self.colour[0] * 255)
+        request.color.b = int(self.colour[1] * 255)
+        request.color.r = int(self.colour[2] * 255)
 
         self.future = self.neopixel_client.call_async(request)
         self.publish_led_marker(self.colour)
         self.feedback_message = "Sent LED request"
         
     def publish_led_marker(self, colour):
+        """Publish a visualization marker describing the LED colour.
+
+        Args:
+            colour (list[float]): The RGB colour values to display in RViz.
+        """
         marker = Marker()
         marker.header.frame_id = "map"
         marker.type = Marker.CUBE
@@ -119,16 +128,15 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
 
 
 class SetCoverageStatus(py_trees.behaviour.Behaviour):
-    """
-    Tells the coverage server to pause or resume navigating the coverage path
-        - pause: Sends service request with pause which makes the node around
-        the server store the remaining waypoints and cancel the action
+    """Update the coverage navigation status using a service call.
 
-        - resume: sends service request with resume which tells the coverage
-        server node to resume the coverage navigation where it left off from
-        the saved remaining waypoints
+    The behaviour sends a pause, resume, or stop command to the coverage
+    navigation server. It monitors the asynchronous service response and
+    reports success when the request is complete.
+
     Args:
-        py_trees
+        name (str): Name of the behaviour.
+        requested_status (str): One of ``pause``, ``resume``, or ``stop``.
     """
 
     status_commands = {
@@ -171,7 +179,7 @@ class SetCoverageStatus(py_trees.behaviour.Behaviour):
         self.feedback_message = "Coverage Status service client created"
 
     def initialise(self):
-        """ """
+        """Send the requested coverage status command."""
         self.logger.info(
             f"%s.initialise(), sending {self.requested_status} request"
             % self.__class__.__name__
@@ -211,14 +219,16 @@ class SetCoverageStatus(py_trees.behaviour.Behaviour):
 
 
 class NavigateToPosition(py_trees.behaviour.Behaviour):
-    """
-    This behaviour sends a goal to the navigation stack to move the robot to a specified position.
-    It returns RUNNING while the robot is moving, SUCCESS when it reaches the goal, and FAILURE if it fails to reach the goal.
+    """Navigate the robot to a target position.
+
+    This behaviour sends a navigation goal to the ROS2 navigation stack and
+    monitors the distance remaining until the target is reached.
 
     Args:
-        name: name of the behaviour
-        predefined_pose: predefined pose to move the arm to
-        target_position: a tuple (x, y) representing the target position in the map frame
+        name (str): Name of the behaviour.
+        blackboard_key (str, optional): Blackboard key containing detected objects.
+        target_position (list[float] | tuple[float, float], optional): Fixed
+            XY position in the map frame.
     """
 
     def __init__(self, name: str, blackboard_key: str=None, target_position=None):
@@ -227,14 +237,14 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
         self.blackboard_key = blackboard_key
 
     def setup(self, **kwargs):
-        """
-        Setup the publisher which will stream commands to the mock robot.
+        """Create ROS2 subscriptions and blackboard bindings for navigation.
 
         Args:
-            **kwargs (:obj:`dict`): look for the 'node' object being passed down from the tree
+            **kwargs: Dictionary containing runtime context from the behaviour
+                tree. Expects a ROS2 node under the key ``node``.
 
         Raises:
-            :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
+            KeyError: If ``node`` is not provided in ``kwargs``.
         """
         self.logger.info("{}.setup()".format(self.qualified_name))
         try:
@@ -324,13 +334,17 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
 
 
 class MoveArm(py_trees.behaviour.Behaviour):
-    """
-    This behaviour sends a goal to the arm manipulation stack to move the robot's arm to a specified position.
-    It returns RUNNING while the arm is moving, SUCCESS when it reaches the goal, and FAILURE if it fails to reach the goal.
+    """Move the robot arm to a named or explicit target pose.
+
+    The behaviour can use a predefined pose name, a blackboard key, or an explicit
+    target position to build an arm movement action goal.
 
     Args:
-        name: name of the behaviour
-        target_position: a tuple (x, y, z) representing the target position for the arm in the robot's coordinate frame
+        name (str): Name of the behaviour.
+        blackboard_key (str, optional): Blackboard key holding a target pose.
+        target_position (tuple[float, float, float], optional): Explicit arm pose
+            position.
+        predefined_pose (str, optional): Name of a predefined arm pose.
     """
 
     def __init__(self, name: str, blackboard_key: str=None, target_position=None, predefined_pose: str=None):
@@ -340,11 +354,11 @@ class MoveArm(py_trees.behaviour.Behaviour):
         self.predefined_pose = predefined_pose
 
     def setup(self, **kwargs):
-        """
-        Setup the action client for arm manipulation.
+        """Prepare the arm action client and attach a blackboard client.
 
         Args:
-            **kwargs (:obj:`dict`): look for the 'node' object being passed down from the tree
+            **kwargs: Dictionary containing runtime context from the behaviour
+                tree. Expects a ROS2 node under the key ``node``.
         """
         self.logger.info("{}.setup()".format(self.qualified_name))
         try:
@@ -368,9 +382,7 @@ class MoveArm(py_trees.behaviour.Behaviour):
         
     
     def initialise(self):
-        """
-        Send the arm movement goal to the robot.
-        """
+        """Build and send a target goal to the arm action server."""
         self.goal_handle = None
         self.result_future = None
         
@@ -400,12 +412,23 @@ class MoveArm(py_trees.behaviour.Behaviour):
 
 
 class PickObject(py_trees.behaviour.Behaviour):
+    """Pick an object from the workspace using a multi-step manipulation sequence.
+
+    The behaviour chooses the closest detected object and executes a series of
+    manipulation steps, including approach, gripper control, and placement.
+    """
 
     STEPS = [
         "approach", "open", "dive", "grip", "place", "let_go", "standby"
     ]
 
     def __init__(self, name: str, blackboard_key: str = "planar_objects_detected_array"):
+        """Create the pick object behaviour.
+
+        Args:
+            name (str): Name of the behaviour.
+            blackboard_key (str): Blackboard key from which to read detected objects.
+        """
         super(PickObject, self).__init__(name=name)
         self.blackboard_key = blackboard_key
 
@@ -571,13 +594,14 @@ class PickObject(py_trees.behaviour.Behaviour):
 
 
 class CoverageTask(py_trees.behaviour.Behaviour):
-    """
-    This behaviour sends a goal to the coverage navigation stack to start covering a specified area.
-    It returns RUNNING while the robot is covering, SUCCESS when it finishes covering the area, and FAILURE if it fails.
+    """Start a coverage navigation action for lab cleaning.
+
+    The behaviour sends a coverage goal and monitors the action server until
+    coverage completes or fails.
 
     Args:
-        name: name of the behaviour
-        area: a list of tuples [(x1, y1), (x2, y2), ...] representing the vertices of the area to cover in the map frame
+        name (str): Name of the behaviour.
+        planner (str): Planner type for coverage navigation, such as ``skeleton``.
     """
 
     def __init__(self, name: str, planner: str):
@@ -585,14 +609,14 @@ class CoverageTask(py_trees.behaviour.Behaviour):
         self.planner = planner
 
     def setup(self, **kwargs):
-        """
-        Setup the publisher which will stream commands to the mock robot.
+        """Create the coverage action client and capture the ROS2 node.
 
         Args:
-            **kwargs (:obj:`dict`): look for the 'node' object being passed down from the tree
+            **kwargs: Dictionary containing runtime context from the behaviour
+                tree. Expects a ROS2 node under the key ``node``.
 
         Raises:
-            :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
+            KeyError: If ``node`` is not provided in ``kwargs``.
         """
         try:
             self.node = kwargs["node"]
@@ -606,9 +630,7 @@ class CoverageTask(py_trees.behaviour.Behaviour):
         self.goal_handle = None
 
     def initialise(self):
-        """
-        Send the coverage navigation goal to the robot.
-        """
+        """Send the coverage navigation action goal."""
         self.logger.info("{}.initialise()".format(self.qualified_name))
         goal_msg = NavigateCoverage.Goal()
         goal_msg.planner_type = NavigateCoverage.Goal.SKELETON
@@ -619,11 +641,11 @@ class CoverageTask(py_trees.behaviour.Behaviour):
         self.feedback_message = "Sent request"
 
     def update(self):
-        """
-        Check the status of the coverage navigation action and return the appropriate status for the behaviour.
+        """Check the coverage action status and return the behaviour result.
 
         Returns:
-            :attr:`~py_trees.common.Status.SUCCESS` if the robot finishes covering the area, :attr:`~py_trees.common.Status.FAILURE` if it fails, and :attr:`~py_trees.common.Status.RUNNING` while it's still covering.
+            py_trees.common.Status: SUCCESS when coverage completes,
+                FAILURE if the action fails, or RUNNING while still active.
         """
         if self.coverage_future is None:
             return py_trees.common.Status.FAILURE
@@ -687,22 +709,33 @@ class CoverageTask(py_trees.behaviour.Behaviour):
 #                 self.bounding_boxes = sorted(self.bounding_boxes, key=)
 
 class GetPlanarObjects(py_trees.behaviour.Behaviour):
-    """
-    Calls the planar object detection service and writes the detected objects
-    to the blackboard. Returns SUCCESS if at least one object is detected,
-    FAILURE if the service returns no objects or is unavailable, and RUNNING
-    while waiting for the service response.
+    """Query the planar object detection service and store results on the blackboard.
+
+    The behaviour requests detected objects from the perception service and writes
+    them to the specified blackboard key.
 
     Args:
-        name: name of the behaviour
-        blackboard_key: key to write the detected objects to on the blackboard
+        name (str): Name of the behaviour.
+        blackboard_key (str): Blackboard key to write detected objects into.
     """
 
     def __init__(self, name: str, blackboard_key: str = "planar_objects_detected_array"):
+        """Create the planar object detection behaviour.
+
+        Args:
+            name (str): Name of the behaviour.
+            blackboard_key (str): Blackboard key for detected objects storage.
+        """
         super(GetPlanarObjects, self).__init__(name=name)
         self.blackboard_key = blackboard_key
 
     def setup(self, **kwargs):
+        """Register the service client and prepare the blackboard write keys.
+
+        Args:
+            **kwargs: Dictionary containing runtime context from the behaviour
+                tree. Expects a ROS2 node under the key ``node``.
+        """
         self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]

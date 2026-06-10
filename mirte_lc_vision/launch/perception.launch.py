@@ -12,6 +12,7 @@ Example:
     $ ros2 launch mirte_lc_vision perception.launch.py
 
 """
+from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import LogInfo
@@ -46,14 +47,33 @@ def generate_launch_description():
         executable="classifier_2d",
         name="classifier_2d",
         remappings=[
-            ("/camera/color/image_raw", points_topic),
+            ("/camera/color/image_raw/compressed", camera_topic),
         ],
     )
+
+    depth_image_proc = Node(
+    package='depth_image_proc',
+    executable='point_cloud_xyz_node',
+    name='point_cloud_xyz',
+    remappings=[
+        ('image_rect', '/camera/depth/image_raw'),
+        ('camera_info', '/camera/depth/camera_info'),
+        ('points', '/camera/depth/points'),
+    ],
+    arguments=[
+    #     # '--ros-args',
+    #     # '--qos-overrides',
+    #     # '/image_rect.subscription.reliability=reliable',
+        'reliability=1'
+    ]
+)
+
 
     return LaunchDescription(
         [
             LogInfo(msg="Starting Perception Stack"),
             object_detector,
             object_classifier,
+            depth_image_proc,
         ]
     )

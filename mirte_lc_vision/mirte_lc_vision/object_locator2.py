@@ -32,20 +32,14 @@ from scipy.spatial.transform import Rotation
 
 from nav2_simple_commander.costmap_2d import PyCostmap2D
 
+from rclpy.qos import QoSProfile, ReliabilityPolicy
+
 class ObjectLocator2(Node):
 
     def __init__(self):
         super().__init__('object_locator')
         self.points = np.empty((0, 3))
         self.maxDim = 0.3
-
-        self.set_parameters([
-            Parameter(
-                'use_sim_time',
-                Parameter.Type.BOOL,
-                True
-            )
-        ])
 
         self.msg_queue = deque(maxlen=1)
         self.get_logger().info("Starting")
@@ -72,12 +66,16 @@ class ObjectLocator2(Node):
         ############################################################
         # Point cloud subscriber
         ############################################################
+        pontcloud_qos = QoSProfile(
+            depth=10,
+            reliability=ReliabilityPolicy.BEST_EFFORT
+        )
 
         self.subscription = self.create_subscription(
             PointCloud2,
             '/camera/depth/points',
             self.pointcloud_callback,
-            1
+            qos_profile=pontcloud_qos,
         )
 
         self.costmap_sub = self.create_subscription(
@@ -88,7 +86,7 @@ class ObjectLocator2(Node):
         )
 
         self.processing_timer = self.create_timer(
-            0.05,
+            2,
             self.process_queued_messages
         )
 
@@ -216,12 +214,6 @@ class ObjectLocator2(Node):
         points_np = points_np[
             np.isfinite(points_np).all(axis=1)
         ]
-
-        # Crop
-        points_np = points_np[
-            points_np[:, 1] >= -0.11
-        ]
-
         self.get_logger().info(f"Converted to numpy array with shape {points_np.shape}")
         self.get_logger().info(f"Min point: {np.min(points_np, axis=0)}")
         self.get_logger().info(f"Max point: {np.max(points_np, axis=0)}")
@@ -337,7 +329,7 @@ class ObjectLocator2(Node):
         self.preprocessed_pub.publish(message)
 
         clustering = DBSCAN(
-            eps=0.2,
+            eps=0.03,
             min_samples=2
         ).fit(points_map)
 

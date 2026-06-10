@@ -5,9 +5,12 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /PointCloud21
+        - /PointCloud21/Topic1
+        - /Image1
         - /MarkerArray3
       Splitter Ratio: 0.5
-    Tree Height: 280
+    Tree Height: 270
   - Class: rviz_common/Help
     Name: Help
   - Class: rviz_common/Views
@@ -143,10 +146,6 @@ Visualization Manager:
             Show Trail: false
             Value: true
           gripper_camera_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          gripper_camera_rgb_frame:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -345,10 +344,6 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          gripper_camera_rgb_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
           gripper_camera_rgb_optical_frame:
             Alpha: 1
             Show Axes: false
@@ -457,7 +452,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: AxisColor
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
@@ -467,18 +462,18 @@ Visualization Manager:
       Position Transformer: XYZ
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.029999999329447746
+      Size (m): 0.009999999776482582
       Style: Flat Squares
       Topic:
         Depth: 5
         Durability Policy: Volatile
         Filter size: 10
         History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /octomap_point_cloud_centers
+        Reliability Policy: Best Effort
+        Value: /camera/depth/points
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
     - Class: rviz_default_plugins/Image
       Enabled: true
       Max Value: 1
@@ -491,7 +486,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /camera/image_raw
+        Value: /camera/depth/image_raw
       Value: true
     - Acceleration_Scaling_Factor: 0.1
       Class: moveit_rviz_plugin/MotionPlanning
@@ -600,10 +595,6 @@ Visualization Manager:
             Show Trail: false
             Value: true
           gripper_camera_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          gripper_camera_rgb_frame:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -802,10 +793,6 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          gripper_camera_rgb_frame:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
           gripper_camera_rgb_optical_frame:
             Alpha: 1
             Show Axes: false
@@ -959,7 +946,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        path: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -971,7 +958,7 @@ Visualization Manager:
       Enabled: true
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -981,7 +968,7 @@ Visualization Manager:
         Value: /labclean_led_markers
       Value: true
     - Class: rviz_default_plugins/Image
-      Enabled: true
+      Enabled: false
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -993,7 +980,7 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /gripper_camera/image_annotated
-      Value: true
+      Value: false
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
       Name: MarkerArray
@@ -1031,30 +1018,30 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 14.30354118347168
+      Distance: 1.8737083673477173
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.31175941228866577
-        Y: 1.310238242149353
-        Z: 0.21580694615840912
+        X: 0.0013015340082347393
+        Y: 0.7533836960792542
+        Z: 0.4015144407749176
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7397975921630859
+      Pitch: 0.5797977447509766
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 2.363898992538452
+      Yaw: 3.088899612426758
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1019
+  Height: 993
   Help:
     collapsed: false
   Hide Left Dock: false
@@ -1065,9 +1052,9 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000200000000000001c9000003a5fc0200000008fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003f00fffffffb000000100044006900730070006c006100790073010000003b00000153000000c700fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000001080000016a0000016900fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a005600690065007700730000000321000000bf000000a000fffffffb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003f00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000001940000024c0000016900ffffff0000000100000140000003a5fc0200000002fb0000000a0049006d006100670065010000003b000001b00000002800fffffffb0000000a0049006d00610067006501000001f1000001ef0000002800ffffff0000046b000003a500000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000200000000000001c90000038bfc0200000008fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003f00fffffffb000000100044006900730070006c006100790073010000003b00000149000000c700fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000001080000016a0000016900fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a005600690065007700730000000321000000bf000000a000fffffffb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000003f00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e0067010000018a0000023c0000016900ffffff00000001000001400000038bfc0200000002fb0000000a0049006d006100670065010000003b0000038b0000002800fffffffb0000000a0049006d00610067006500000001e5000001e10000002800ffffff0000046b0000038b00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1920
   X: 0
-  Y: 31
+  Y: 38

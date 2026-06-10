@@ -21,22 +21,26 @@ def generate_launch_description():
 
     update_parameters.append(ExecuteProcess(
             cmd=[
-                'ros2', 'param', 'set',
-                '/ros2_arm_control_hw_interface',
-                'servo_moved_dead_band',
-                '0.0001'
+                'bash', '-c',
+                '''
+                ros2 param set /ros2_arm_control_hw_interface servo_moved_dead_band 0.0001
+                '''
             ],
+
+            shell=False,
             output='screen'
         ),
     )
 
     update_parameters.append(ExecuteProcess(
             cmd=[
-                'ros2', 'param', 'set',
-                '/ros2_arm_control_hw_interface',
-                'servo_update_dead_band',
-                '0.001'
+                'bash', '-c',
+                '''
+                ros2 param set /ros2_arm_control_hw_interface servo_update_dead_band 0.001
+                '''
             ],
+
+            shell=False,
             output='screen'
         ),
     )

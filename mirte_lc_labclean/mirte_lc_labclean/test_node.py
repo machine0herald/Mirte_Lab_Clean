@@ -1,3 +1,9 @@
+"""Simple ROS2 test node for Mirte sensor-driven base control.
+
+This module defines a basic test controller that subscribes to front range
+sensors and publishes Twist commands for simple motion behavior.
+"""
+
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
@@ -5,8 +11,10 @@ from sensor_msgs.msg import Range
 
 
 class MirteTestController(Node):
+    """ROS2 node for testing Mirte base control via range sensors."""
 
     def __init__(self):
+        """Create the test controller node and initialize ROS2 interfaces."""
         super().__init__("test_node")
 
         self.twist_pub = self.create_publisher(
@@ -27,26 +35,25 @@ class MirteTestController(Node):
         self.k_p_l = 0.5
 
     def controller_callback(self):
+        """Compute and publish wheel commands from front range sensors."""
         if self.distance_left + self.distance_right < 0.4:
             ang_vel = 5.0
         else:
             ang_vel = (self.k_p_t * (self.distance_left - self.distance_right))
         lin_vel = self.k_p_l * (self.distance_left + self.distance_right)
 
-        # self.get_logger().info(
-        #     f"Linear velocity: {lin_vel}, Angular velocity: {ang_vel}"
-        # )
         twist_msg = Twist()
-
-        # Apply values to message (with clamping)
         twist_msg.linear.x = min(lin_vel, 0.6)
         twist_msg.angular.z = ang_vel
-
         self.twist_pub.publish(twist_msg)
         return
     
     def left_sensor_callback(self, msg: Range):
-        # self.get_logger().info(f'Received {msg.range} from left')
+        """Update the left range measurement from the sensor.
+
+        Args:
+            msg (:class:`sensor_msgs.msg.Range`): The left distance measurement.
+        """
         try:
             self.distance_left = min(msg.range, 0.4)
         except Exception as e:
@@ -54,7 +61,11 @@ class MirteTestController(Node):
         return
     
     def right_sensor_callback(self, msg: Range):
-        # self.get_logger().info(f'Received {msg.range} from right')
+        """Update the right range measurement from the sensor.
+
+        Args:
+            msg (:class:`sensor_msgs.msg.Range`): The right distance measurement.
+        """
         try:
             self.distance_right = min(msg.range, 0.4)
         except Exception as e:
@@ -62,6 +73,11 @@ class MirteTestController(Node):
         return
 
 def main(args=None):
+    """Initialize and run the Mirte test controller node.
+
+    Args:
+        args (list, optional): Arguments forwarded to :func:`rclpy.init`.
+    """
     rclpy.init(args=args)
     rclpy.spin(MirteTestController())
     rclpy.shutdown()
