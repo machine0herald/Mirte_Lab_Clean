@@ -1,3 +1,9 @@
+"""Launch file for the explore_lite node in the MIRTE Nav2 stack.
+
+This launch description starts the explore_lite node with the package's
+preconfigured parameters.
+"""
+
 import os
 
 from ament_index_python.packages import get_package_share_directory

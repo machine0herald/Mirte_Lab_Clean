@@ -107,6 +107,7 @@ mirte-ros-packages/mirte_moveit_config/config/mirte_master.srdf
         <joint name="shoulder_lift_joint" value="-0.5"/>
         <joint name="elbow_joint" value="-1.3"/>
         <joint name="wrist_joint" value="-0.4"/>
+    </group_state>
 
 add gazebo camera
    <joint name="gripper_camera_rgb_optical_joint" type="fixed">

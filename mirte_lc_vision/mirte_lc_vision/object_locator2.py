@@ -1,3 +1,9 @@
+"""Depth-based object locator node for MIRTE labclean.
+
+This module provides a ROS 2 node that processes depth point clouds,
+identifies clusters, and publishes detected object bounding boxes.
+"""
+
 from collections import deque
 
 import rclpy
@@ -35,8 +41,15 @@ from nav2_simple_commander.costmap_2d import PyCostmap2D
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 
 class ObjectLocator2(Node):
+    """ROS 2 node that locates objects using depth point clouds.
+
+    The node subscribes to a depth point cloud topic, uses TF transforms to
+    maintain coordinate consistency, filters ground/plane points, and
+    publishes bounding box markers and detected object arrays.
+    """
 
     def __init__(self):
+        """Initialize the depth point cloud object locator."""
         super().__init__('object_locator')
         self.points = np.empty((0, 3))
         self.maxDim = 0.3
@@ -63,6 +76,11 @@ class ObjectLocator2(Node):
         )
 
     def finish_startup(self):
+        """Configure subscriptions, publishers, and periodic processing.
+
+        This method is called after startup to register all runtime ROS 2
+        interfaces once TF is available.
+        """
         ############################################################
         # Point cloud subscriber
         ############################################################
@@ -135,12 +153,32 @@ class ObjectLocator2(Node):
         self.startup_timer.cancel()
 
     def pointcloud_callback(self, msg):
+        """Queue incoming point cloud messages for later processing.
+
+        Args:
+            msg (sensor_msgs.msg.PointCloud2): Incoming depth point cloud.
+        """
         self.msg_queue.append(msg)
 
     def costmap_callback(self, msg):
+        """Update the local costmap representation from the incoming message.
+
+        Args:
+            msg (nav_msgs.msg.OccupancyGrid): Costmap message.
+        """
         self.map = PyCostmap2D(msg)
 
     def is_occupied(self, x, y, threshold=5):
+        """Check whether a world coordinate falls inside an occupied costmap cell.
+
+        Args:
+            x (float): World x coordinate.
+            y (float): World y coordinate.
+            threshold (int): Cost threshold above which a cell is treated as occupied.
+
+        Returns:
+            bool: True if the location is occupied or the cost exceeds threshold.
+        """
 
         if not hasattr(self, 'map'):
             return False
@@ -161,6 +199,7 @@ class ObjectLocator2(Node):
             return False
 
     def process_queued_messages(self):
+        """Process one queued point cloud message when TF is available."""
 
         if len(self.msg_queue) == 0:
             return
@@ -197,6 +236,11 @@ class ObjectLocator2(Node):
 
 
     def process_point_cloud(self, msg):
+        """Convert, filter, and cluster a single point cloud message.
+
+        Args:
+            msg (sensor_msgs.msg.PointCloud2): Point cloud message to process.
+        """
 
         object_points = np.empty((0, 3))
 

@@ -1,3 +1,9 @@
+"""Utility helpers for the mirte_lc_nav2 package.
+
+This module includes logging helpers and ROS path conversion utilities used by
+coverage planners and navigation nodes.
+"""
+
 from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Path
 from enum import IntEnum
@@ -18,13 +24,15 @@ from geometry_msgs.msg import PoseStamped
 import numpy as np
 
 def to_ros_path(points, frame_id="map", spacing=0.1):
-    """
-    Convert a list of (x, y) tuples into a uniformly sampled nav_msgs/Path.
+    """Convert a list of points into a ROS nav_msgs/Path message.
 
-    Features:
-    - removes duplicate points
-    - resamples path at consistent spacing
-    - generates orientations from path tangent
+    Args:
+        points (list): Sequence of 2D points as (x, y) tuples.
+        frame_id (str): ROS frame for the output path.
+        spacing (float): Desired spacing between returned poses.
+
+    Returns:
+        nav_msgs.msg.Path: Path message containing sampled poses.
     """
     # -----------------------------------------
     # Remove duplicates
@@ -116,6 +124,13 @@ def to_ros_path(points, frame_id="map", spacing=0.1):
 
 
 def log(node, msg_type: LogType, msg: str):
+    """Log a message using the provided ROS node.
+
+    Args:
+        node: Optional ROS2 node used for logging.
+        msg_type (LogType): Log severity level.
+        msg (str): Text to log.
+    """
     if node is not None:
         match msg_type:
             case LogType.INFO:
