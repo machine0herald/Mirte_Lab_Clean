@@ -31,7 +31,6 @@ setup(
             'test_node = mirte_lc_labclean.test_node:main',
             'labclean_manager = mirte_lc_labclean.mirte_lc:main',
             'labclean_tree = mirte_lc_labclean.labclean_tree:main',
-            'labclean_dashboard = mirte_lc_labclean.dashboard:main',
         ],
     },
 )
