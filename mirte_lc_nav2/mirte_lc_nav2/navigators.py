@@ -170,8 +170,8 @@ class SkeletonPath(SystematicNavigator):
                     -1,
                 )
             
-            skeleton_map = medial_axis(
-                local_contour_map > 0,
+            skeleton_map = skeletonize(
+                self.binary_costmap > 0,
             )
 
             self.skeleton_map = skeleton_map.astype(np.uint8) * 255
@@ -644,51 +644,6 @@ class SpanningTreePath(SystematicNavigator):
 
 
 class CVTPath(SystematicNavigator):
-    name="CVTPlanner"
-    
-    def __init__(self, node=None, resolution=0.1, area=0.06):
-        super().__init__(node, resolution)
-        self.area = area
-    
-    def generate_path(self):
-        ut.log(self.node, LogType.INFO, f"generating {self.name} path")
-        self.read()
-        self.paths = []
-
-        for waypoints in self.waypoint_groups:
-            
-            if len(waypoints) < 2:
-                continue
-            
-            graph = self.set_waypoints(
-                waypoints
-            )
-
-            path = self.plan_path(
-                start,
-                graph,
-                waypoints,
-            )
-            
-            self.paths.append(path)
-            
-            start = path[-1]
-
-        if self.node is not None:
-            self.publish_path()
-
-    def read(self):
-        ...
-
-    def get_free_pixels(self):
-        """Return pixel coordinates of all free cells in the costmap."""
-        rows, cols = np.where(self.binary_costmap > 0)
-        return np.column_stack((cols, rows)).astype(np.float64)  # (x, y)
-
-    def plam_path(self):
-        ...
-
-class CVTPath(SystematicNavigator):
     """
     Waypoint planner based on Centroidal Voronoi Tessellation (CVT).
 
@@ -821,4 +776,5 @@ PLANNERS = {
     SkeletonPath.name: SkeletonPath,
     SpanningTreePath.name: SpanningTreePath,
     StraightLinePath.name: StraightLinePath,
+    CVTPath.name: CVTPath,
 }

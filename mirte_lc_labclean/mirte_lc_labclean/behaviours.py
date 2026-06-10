@@ -317,16 +317,41 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
         if self._close_enough:
             return py_trees.common.Status.SUCCESS
 
-        self.node.get_logger().info(str(self._distance_remaining))
+        current_distance = self._distance_remaining
 
-        if 0.0 < self._distance_remaining < 0.5:
+        self.node.get_logger().info(
+            f"distance_remaining={current_distance:.3f}"
+        )
+
+        # Progress detection
+        progress_threshold = 0.10  # meters
+        stuck_timeout = 15.0       # seconds
+        self._best_distance = inf
+
+        if current_distance < self._best_distance - progress_threshold:
+            self._best_distance = current_distance
+            self._last_progress_time = time.monotonic()
+
+        elapsed = time.monotonic() - self._last_progress_time
+
+        if elapsed > stuck_timeout:
+            self.node.get_logger().warn(
+                f"No navigation progress for {elapsed:.1f}s"
+            )
+            self.Navigator.cancelTask()
+            return py_trees.common.Status.FAILURE
+
+        # Existing close-enough logic
+        if 0.0 < current_distance < 0.5:
             self._close_enough = True
             self.Navigator.cancelTask()
             return py_trees.common.Status.SUCCESS
 
         navigation_result = self.Navigator.getResult()
+
         if navigation_result == TaskResult.SUCCEEDED:
             return py_trees.common.Status.SUCCESS
+
         elif navigation_result in [TaskResult.FAILED, TaskResult.CANCELED]:
             return py_trees.common.Status.FAILURE
 
@@ -505,7 +530,7 @@ class PickObject(py_trees.behaviour.Behaviour):
 
             pose = Pose()
             pose.position.x = rx + obj.pose.position.x * k_p
-            pose.position.y = ry + error * k_p
+            pose.position.y = ry + error * k_pf
             pose.position.z = rz
             goal_msg.target_pose = pose
 
@@ -545,7 +570,7 @@ class PickObject(py_trees.behaviour.Behaviour):
             goal_msg.mirte_gripper_named_target = "open"
 
         elif step == "standby":
-            goal_msg.mirte_arm_named_target = "standby"
+            goal_msg.mirte_arm_named_target = "vigilant"
 
         return goal_msg
 
@@ -647,8 +672,8 @@ class CoverageTask(py_trees.behaviour.Behaviour):
             py_trees.common.Status: SUCCESS when coverage completes,
                 FAILURE if the action fails, or RUNNING while still active.
         """
-        if self.coverage_future is None:
-            return py_trees.common.Status.FAILURE
+        # if self.coverage_future is None:
+        #     return py_trees.common.Status.FAILURE
 
         # Stage 1: wait for server to accept the goal
         if not self.coverage_future.done():
@@ -656,8 +681,8 @@ class CoverageTask(py_trees.behaviour.Behaviour):
 
         if self.goal_handle is None:
             self.goal_handle = self.coverage_future.result()
-            if not self.goal_handle.accepted:
-                return py_trees.common.Status.FAILURE
+            # if not self.goal_handle.accepted:
+            #     return py_trees.common.Status.FAILURE
             # Stage 2: now request the actual result
             self.result_future = self.goal_handle.get_result_async()
 
@@ -666,9 +691,9 @@ class CoverageTask(py_trees.behaviour.Behaviour):
             return py_trees.common.Status.RUNNING
 
         result = self.result_future.result()
-        if result.status == GoalStatus.STATUS_SUCCEEDED:
-            return py_trees.common.Status.SUCCESS
-        return py_trees.common.Status.FAILURE
+        # if result.status == GoalStatus.STATUS_SUCCEEDED:
+        #     return py_trees.common.Status.SUCCESS
+        # return py_trees.common.Status.FAILURE
 
 # class BoundingBoxes2BB(py_trees.behaviour.Behaviour):
 #     def __init__(self, name: str):

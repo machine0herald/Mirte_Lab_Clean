@@ -1,9 +1,9 @@
-"""
+"""LabClean navigation server implementation for ROS 2.
 
-ros2 service call /labclean_navigator/set_state \
-mirte_lc_msgs/srv/ServeCoverageStatus \
-"{command: 0}"
-
+This module implements the `LabCleanActionServer` node, which exposes a
+`/labclean_navigator/coverage` action and a `/labclean_navigator/set_state`
+service. It coordinates coverage planning, pause/resume handling, and
+integration with the Nav2 costmap.
 """
 
 import rclpy
@@ -32,6 +32,12 @@ import mirte_lc_nav2.utils as ut
 import time
 
 class LabCleanActionServer(Node):
+    """Action server node for LabClean coverage navigation.
+
+    The node accepts `NavigateCoverage` goals, executes coverage segments
+    using planner classes from :mod:`mirte_lc_nav2.navigators`, and supports
+    pause/resume/stop commands through a service interface.
+    """
 
     def __init__(self):
         super().__init__("labclean_action_server")
@@ -71,6 +77,11 @@ class LabCleanActionServer(Node):
     ###########
 
     def get_robot_position(self):
+        """Retrieve the current robot position in the map frame.
+
+        Returns:
+            numpy.ndarray | None: Robot position as [x, y] or None if unavailable.
+        """
 
         try:
             transform = self.tf_buffer.lookup_transform(
@@ -87,6 +98,14 @@ class LabCleanActionServer(Node):
             return None
 
     def lookup_planner(self, planner_name):
+        """Select a coverage planner implementation by name.
+
+        Args:
+            planner_name (str): Requested planner identifier.
+
+        Returns:
+            Callable: Planner class associated with the name.
+        """
 
         planners = nv.PLANNERS
 
@@ -102,6 +121,11 @@ class LabCleanActionServer(Node):
     ####################
 
     def costmap_callback(self, msg):
+        """Store the latest occupancy grid costmap message.
+
+        Args:
+            msg (nav_msgs.msg.OccupancyGrid): Costmap message.
+        """
         self.map_msg = msg
 
     ####################################
@@ -109,10 +133,26 @@ class LabCleanActionServer(Node):
     ####################################
 
     def goal_callback(self, goal_request):
+        """Accept or reject incoming coverage action goals.
+
+        Args:
+            goal_request: Incoming action goal request.
+
+        Returns:
+            GoalResponse: Acceptance decision for the goal.
+        """
         self.get_logger().info("Received cleaning goal")
         return GoalResponse.ACCEPT
 
     def cancel_callback(self, goal_handle):
+        """Accept cancel requests for the current coverage goal.
+
+        Args:
+            goal_handle: Handle for the currently executing action goal.
+
+        Returns:
+            CancelResponse: Response indicating cancellation acceptance.
+        """
         self.get_logger().info("Received cancel request")
         return CancelResponse.ACCEPT
 
@@ -121,6 +161,17 @@ class LabCleanActionServer(Node):
     ###########################
 
     def execute_callback(self, goal_handle):
+        """Execute a accepted coverage navigation goal.
+
+        This callback plans coverage segments, sends navigation poses to the
+        selected planner, and monitors pause, resume, and cancellation states.
+
+        Args:
+            goal_handle: Handle for the accepted NavigateCoverage goal.
+
+        Returns:
+            NavigateCoverage.Result: Action result containing success status.
+        """
         self.segment_idx = 0
         self.current_goal_handle = goal_handle
         planner_type = goal_handle.request.planner_type
@@ -261,6 +312,15 @@ class LabCleanActionServer(Node):
     #########################
 
     def status_callback(self, request, response):
+        """Handle pause/resume/stop service requests for coverage execution.
+
+        Args:
+            request: ServeCoverageStatus service request.
+            response: ServeCoverageStatus service response.
+
+        Returns:
+            ServeCoverageStatus.Response: Response with success state and remaining poses.
+        """
 
         requested_status = request.command
 
@@ -297,8 +357,10 @@ class LabCleanActionServer(Node):
         return response
 
     def save_path(self):
-        """
-            saves remaining coverage path
+        """Save the remaining coverage path when navigation is paused.
+
+        This method attempts to compute the remaining segment from the current
+        robot pose and inserts the remaining path back into the queue.
         """
 
         if self.remaining_poses <= 0:
@@ -351,6 +413,7 @@ class LabCleanActionServer(Node):
 
 
 def main():
+    """Run the LabClean navigation action server node."""
     rclpy.init()
     node = LabCleanActionServer()
     rclpy.spin(node)

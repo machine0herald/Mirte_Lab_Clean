@@ -1,9 +1,17 @@
+/**
+ * @file moveit_example.cpp
+ * @brief Simple MoveIt example demonstrating planning and execution.
+ */
+
 #include <memory>
 #include <thread>
 #include <rclcpp/rclcpp.hpp>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 
+/**
+ * @brief Run an example MoveIt plan and execute it for the MIRTE arm.
+ */
 int main(int argc, char * argv[])
 {
   // Initialize ROS and create the Node

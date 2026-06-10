@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""Point cloud object detection node for MIRTE labclean.
+
+This module implements a ROS 2 node that converts incoming point clouds to
+Open3D format, performs clustering, and publishes bounding boxes for
+visualization in RViz.
+"""
 
 from platform import node
 
@@ -19,8 +25,15 @@ from sensor_msgs_py import point_cloud2
 
 
 class PointCloudObjectDetector(Node):
+    """ROS 2 node that detects objects from point cloud clusters.
+
+    This node subscribes to a point cloud topic, processes the incoming data
+    using Open3D and DBSCAN clustering, and publishes RViz markers for each
+    detected object.
+    """
 
     def __init__(self):
+        """Create the point cloud object detector and initialize ROS interfaces."""
         super().__init__('pc_node')
 
         # Subscribe to incoming point cloud
@@ -42,6 +55,11 @@ class PointCloudObjectDetector(Node):
 
 
     def cloud_callback(self, msg):
+        """Handle incoming point cloud messages and generate bounding boxes.
+
+        Args:
+            msg (sensor_msgs.msg.PointCloud2): Incoming point cloud message.
+        """
 
         ############################################################
         # 1. Convert ROS PointCloud2 -> NumPy array
@@ -206,9 +224,13 @@ class PointCloudObjectDetector(Node):
 
 
     def rotation_matrix_to_quaternion(self, R):
+        """Convert a 3x3 rotation matrix into a quaternion.
 
-        """
-        Convert 3x3 rotation matrix into quaternion
+        Args:
+            R (np.ndarray): 3x3 rotation matrix.
+
+        Returns:
+            list: Quaternion [x, y, z, w].
         """
 
         qw = np.sqrt(1 + R[0,0] + R[1,1] + R[2,2]) / 2
@@ -221,6 +243,7 @@ class PointCloudObjectDetector(Node):
 
 
 def main(args=None):
+    """Start the point cloud object detection node."""
 
     rclpy.init(args=args)
 

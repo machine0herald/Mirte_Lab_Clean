@@ -1,6 +1,9 @@
-'''
-Only works on real robot as the simulation has no gripper camera yet.
-'''
+"""YOLO object detection ROS 2 node for MIRTE labclean.
+
+This module implements a YOLO-based detector that publishes both annotated
+camera frames and detected object arrays. It also offers a service API for
+requesting the latest detection results.
+"""
 
 import os
 from ament_index_python.packages import get_package_share_directory
@@ -21,6 +24,22 @@ from ultralytics import YOLO
 
 
 class Yolo26Cam:
+    """YOLO object detector wrapper for the gripper camera.
+
+    Args:
+        targets (list): Class names treated as valid targets.
+        model_path (str): Path to the YOLO model file.
+        conf (float): Confidence threshold for detections.
+        imgsz (int): Input image size for inference.
+
+    Attributes:
+        device (str): Device used for inference.
+        model (YOLO): Loaded YOLO model instance.
+        conf (float): Confidence threshold.
+        imgsz (int): Input image size.
+        target_classes (list): Target class names.
+        results: Last inference result object.
+    """
     def __init__(self, targets: list, model_path=os.path.join(
             get_package_share_directory("mirte_lc_vision"),
             "models",
@@ -34,6 +53,14 @@ class Yolo26Cam:
         self.results = None
 
     def predict_frame(self, frame):
+        """Run inference on a single image frame.
+
+        Args:
+            frame: OpenCV image frame.
+
+        Returns:
+            list: Detected object dictionaries with label, pose, and size.
+        """
         self.results = self.model.predict(
             frame,
             device=self.device,
@@ -63,7 +90,14 @@ class Yolo26Cam:
 
 
 class Yolo26RosNode(Node):
+    """ROS 2 node that publishes YOLO detections and serves object data.
+
+    The node subscribes to the gripper camera image stream and publishes
+    annotated images as well as detected object arrays through a service.
+    """
+
     def __init__(self):
+        """Initialize the YOLO ROS node."""
         super().__init__("yolo26_object_detector")
 
         self.bridge = CvBridge()
@@ -97,6 +131,11 @@ class Yolo26RosNode(Node):
         self.get_logger().info(f"Publishing to: /perception/planar/detected_objects")
 
     def image_callback(self, msg):
+        """Receive and process the latest camera image.
+
+        Args:
+            msg (sensor_msgs.msg.Image): Incoming gripper camera image message.
+        """
         self.latest_frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")
         objects = self.detector.predict_frame(self.latest_frame)
 
@@ -126,11 +165,13 @@ class Yolo26RosNode(Node):
         return
 
     def destroy_node(self):
+        """Destroy the node and close OpenCV windows."""
         cv2.destroyAllWindows()
         super().destroy_node()
 
 
 def main(args=None):
+    """Run the YOLO ROS 2 node."""
     rclpy.init(args=args)
     node = Yolo26RosNode()
     try:

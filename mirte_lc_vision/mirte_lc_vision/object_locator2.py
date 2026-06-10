@@ -1,3 +1,9 @@
+"""Depth-based object locator node for MIRTE labclean.
+
+This module provides a ROS 2 node that processes depth point clouds,
+identifies clusters, and publishes detected object bounding boxes.
+"""
+
 from collections import deque
 
 import rclpy
@@ -35,8 +41,15 @@ from nav2_simple_commander.costmap_2d import PyCostmap2D
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 
 class ObjectLocator2(Node):
+    """ROS 2 node that locates objects using depth point clouds.
+
+    The node subscribes to a depth point cloud topic, uses TF transforms to
+    maintain coordinate consistency, filters ground/plane points, and
+    publishes bounding box markers and detected object arrays.
+    """
 
     def __init__(self):
+        """Initialize the depth point cloud object locator."""
         super().__init__('object_locator')
         self.points = np.empty((0, 3))
         self.maxDim = 0.3
@@ -63,6 +76,11 @@ class ObjectLocator2(Node):
         )
 
     def finish_startup(self):
+        """Configure subscriptions, publishers, and periodic processing.
+
+        This method is called after startup to register all runtime ROS 2
+        interfaces once TF is available.
+        """
         ############################################################
         # Point cloud subscriber
         ############################################################
@@ -111,14 +129,54 @@ class ObjectLocator2(Node):
         )
 
         ############################################################
-        # Preprocessed Point Cloud Publisher
+        # Obtained PointCloud
         ############################################################
 
-        self.preprocessed_pub = self.create_publisher(
+        self.og_pointcloud_pub = self.create_publisher(
             PointCloud2,
-            '/preprocessed_points',
+            '/obtained_pointcloud',
             10
-        )   
+        )
+
+        ############################################################
+        # Sculpted PointCloud Publisher
+        ############################################################
+
+        self.sculpted_pub = self.create_publisher(
+            PointCloud2,
+            '/sculpted_pointcloud',
+            10
+        )
+    
+        ############################################################
+        # Downsampled PointCloud Publisher
+        ############################################################
+
+        self.downsampled_pub = self.create_publisher(
+            PointCloud2,
+            '/downsampled_pointcloud',
+            10
+        )
+
+        ############################################################
+        # PlaneSegmented Pointcloud Publisher  
+        ############################################################
+
+        self.plane_segmented_pub = self.create_publisher(
+            PointCloud2,
+            '/plane_segmented_pointcloud',
+            10
+        )  
+
+        ############################################################
+        # Exclusive PointCloud publisher    
+        ############################################################
+
+        self.exclusive_pub = self.create_publisher(
+            PointCloud2,
+            '/exclusive_pointcloud',
+            10
+        )
 
         self.get_logger().info(
             "Object Locator Started"
@@ -135,12 +193,32 @@ class ObjectLocator2(Node):
         self.startup_timer.cancel()
 
     def pointcloud_callback(self, msg):
+        """Queue incoming point cloud messages for later processing.
+
+        Args:
+            msg (sensor_msgs.msg.PointCloud2): Incoming depth point cloud.
+        """
         self.msg_queue.append(msg)
 
     def costmap_callback(self, msg):
+        """Update the local costmap representation from the incoming message.
+
+        Args:
+            msg (nav_msgs.msg.OccupancyGrid): Costmap message.
+        """
         self.map = PyCostmap2D(msg)
 
     def is_occupied(self, x, y, threshold=5):
+        """Check whether a world coordinate falls inside an occupied costmap cell.
+
+        Args:
+            x (float): World x coordinate.
+            y (float): World y coordinate.
+            threshold (int): Cost threshold above which a cell is treated as occupied.
+
+        Returns:
+            bool: True if the location is occupied or the cost exceeds threshold.
+        """
 
         if not hasattr(self, 'map'):
             return False
@@ -161,6 +239,7 @@ class ObjectLocator2(Node):
             return False
 
     def process_queued_messages(self):
+        """Process one queued point cloud message when TF is available."""
 
         if len(self.msg_queue) == 0:
             return
@@ -197,6 +276,11 @@ class ObjectLocator2(Node):
 
 
     def process_point_cloud(self, msg):
+        """Convert, filter, and cluster a single point cloud message.
+
+        Args:
+            msg (sensor_msgs.msg.PointCloud2): Point cloud message to process.
+        """
 
         object_points = np.empty((0, 3))
 
@@ -210,10 +294,24 @@ class ObjectLocator2(Node):
             f"Received {points_np.shape[0]} points"
         )
 
+        message = self.point_cloud(points_np, 'camera_depth_optical_frame')
+
+        self.og_pointcloud_pub.publish(message)
+
         # Remove non-finite points
         points_np = points_np[
             np.isfinite(points_np).all(axis=1)
         ]
+
+        # Crop
+        # points_np = points_np[
+        #     points_np[:, 1] <= 0.0
+        # ]
+
+        message = self.point_cloud(points_np, 'camera_depth_optical_frame')
+
+        self.sculpted_pub.publish(message)
+
         self.get_logger().info(f"Converted to numpy array with shape {points_np.shape}")
         self.get_logger().info(f"Min point: {np.min(points_np, axis=0)}")
         self.get_logger().info(f"Max point: {np.max(points_np, axis=0)}")
@@ -223,7 +321,11 @@ class ObjectLocator2(Node):
             points_np
         )
 
-        pcd_LQ = pcd_HQ.voxel_down_sample(voxel_size = 0.01)
+        # pcd_LQ = pcd_HQ.voxel_down_sample(voxel_size = 0.01)
+        pcd_LQ = pcd_HQ
+        message = self.point_cloud(np.asarray(pcd_LQ.points), 'camera_depth_optical_frame')
+
+        self.downsampled_pub.publish(message)
         
         object_pcd = o3d.geometry.PointCloud()
 
@@ -245,7 +347,7 @@ class ObjectLocator2(Node):
                 num_iterations=2000
             )
 
-            if len(inliers) < 50:
+            if len(inliers) < 500:
                 break
 
             pcd_LQ = pcd_LQ.select_by_index(
@@ -264,7 +366,7 @@ class ObjectLocator2(Node):
                 plane_model[2]**2
             )
 
-            plane_mask = dist < 0.004
+            plane_mask = dist < 0.008
 
             remaining_mask &= ~plane_mask
 
@@ -277,8 +379,12 @@ class ObjectLocator2(Node):
             f"Extracted {len(object_pcd.points)} object points after plane segmentation"
         )
 
-        if (object_points.shape[0] < 5):
+        if (object_points.shape[0] < 3):
             return
+        
+        message = self.point_cloud(object_points, 'camera_depth_optical_frame')
+
+        self.plane_segmented_pub.publish(message)
 
         transform = self.tf_buffer.lookup_transform(
             target_frame='base_link',
@@ -324,13 +430,22 @@ class ObjectLocator2(Node):
 
         points_map = (R @ points_base_link_np.T).T + t
 
+        for i in range(len(points_map)):
+            
+            if (self.is_occupied(points_map[i, 0], points_map[i, 1])):
+                points_map[i, 0] = np.inf
+
+        points_map = points_map[
+            np.isfinite(points_map).all(axis=1)
+        ]
+
         message = self.point_cloud(points_map, 'map')
 
-        self.preprocessed_pub.publish(message)
+        self.exclusive_pub.publish(message)
 
         clustering = DBSCAN(
             eps=0.03,
-            min_samples=2
+            min_samples=20
         ).fit(points_map)
 
         labels = clustering.labels_
@@ -387,8 +502,8 @@ class ObjectLocator2(Node):
                     .get_oriented_bounding_box()
                 )
 
-            except RuntimeError:
-
+            except RuntimeError as e:
+                self.get_logger().warn(f"OBB failed: {e}")
                 continue
 
             center = obb.center
@@ -408,10 +523,13 @@ class ObjectLocator2(Node):
 
                 continue
 
-            if (extent[0] > self.maxDim or
-                extent[1] > self.maxDim or
-                extent[2] > self.maxDim):
-                continue
+
+            # extent[2] = max(extent[2], 0.5 * extent[2] + center[2])
+
+            # if (extent[0] > self.maxDim or
+            #     extent[1] > self.maxDim or
+            #     extent[2] > self.maxDim):
+            #     continue
 
             rotation = obb.R #(3,3) float 64 array
 
@@ -489,7 +607,7 @@ class ObjectLocator2(Node):
             # Lifetime
             ########################################################
 
-            marker.lifetime.sec = 5
+            marker.lifetime.sec = 10
 
             marker_array.markers.append(
                 marker
