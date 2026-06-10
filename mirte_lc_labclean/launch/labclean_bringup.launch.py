@@ -7,6 +7,7 @@ from launch.actions import (
     IncludeLaunchDescription,
     DeclareLaunchArgument,
     TimerAction,
+    ExecuteProcess
 )
 from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.launch_description_sources import (
@@ -15,6 +16,8 @@ from launch.launch_description_sources import (
 )
 from ament_index_python.packages import get_package_share_directory
 import os
+
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -48,6 +51,20 @@ def generate_launch_description():
     mirte_lc_perception = get_package_share_directory("mirte_lc_vision")
     mirte_lc_moveit_cpp =  get_package_share_directory("mirte_lc_moveit_cpp")
 
+    ########################
+    # Labclean Tree Launch #
+    ########################
+    labclean_tree = Node(
+        package="mirte_lc_labclean",
+        executable="labclean_tree",
+        name="labclean_tree",
+        output="screen",
+    )
+    viewer = ExecuteProcess(
+        cmd=['py-trees-tree-viewer', '--no-sandbox'],
+        output='screen'
+    )
+    
     #######################
     # Mirte Moveit Launch #
     #######################
@@ -114,6 +131,8 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
+            labclean_tree,
+            viewer,
             use_sim_time_arg,
             # foxglove_bridge,
             TimerAction(period=1.0, actions=[moveit_launch]),
