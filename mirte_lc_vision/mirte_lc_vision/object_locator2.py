@@ -129,14 +129,54 @@ class ObjectLocator2(Node):
         )
 
         ############################################################
-        # Preprocessed Point Cloud Publisher
+        # Obtained PointCloud
         ############################################################
 
-        self.preprocessed_pub = self.create_publisher(
+        self.og_pointcloud_pub = self.create_publisher(
             PointCloud2,
-            '/preprocessed_points',
+            '/obtained_pointcloud',
             10
-        )   
+        )
+
+        ############################################################
+        # Sculpted PointCloud Publisher
+        ############################################################
+
+        self.sculpted_pub = self.create_publisher(
+            PointCloud2,
+            '/sculpted_pointcloud',
+            10
+        )
+    
+        ############################################################
+        # Downsampled PointCloud Publisher
+        ############################################################
+
+        self.downsampled_pub = self.create_publisher(
+            PointCloud2,
+            '/downsampled_pointcloud',
+            10
+        )
+
+        ############################################################
+        # PlaneSegmented Pointcloud Publisher  
+        ############################################################
+
+        self.plane_segmented_pub = self.create_publisher(
+            PointCloud2,
+            '/plane_segmented_pointcloud',
+            10
+        )  
+
+        ############################################################
+        # Exclusive PointCloud publisher    
+        ############################################################
+
+        self.exclusive_pub = self.create_publisher(
+            PointCloud2,
+            '/exclusive_pointcloud',
+            10
+        )
 
         self.get_logger().info(
             "Object Locator Started"
@@ -254,6 +294,10 @@ class ObjectLocator2(Node):
             f"Received {points_np.shape[0]} points"
         )
 
+        message = self.point_cloud(points_np, 'camera_depth_optical_frame')
+
+        self.og_pointcloud_pub.publish(message)
+
         # Remove non-finite points
         points_np = points_np[
             np.isfinite(points_np).all(axis=1)
@@ -263,6 +307,10 @@ class ObjectLocator2(Node):
         points_np = points_np[
             points_np[:, 1] <= 0.0
         ]
+
+        message = self.point_cloud(points_np, 'camera_depth_optical_frame')
+
+        self.sculpted_pub.publish(message)
 
         self.get_logger().info(f"Converted to numpy array with shape {points_np.shape}")
         self.get_logger().info(f"Min point: {np.min(points_np, axis=0)}")
@@ -274,6 +322,10 @@ class ObjectLocator2(Node):
         )
 
         pcd_LQ = pcd_HQ.voxel_down_sample(voxel_size = 0.01)
+
+        message = self.point_cloud(pcd_LQ.points, 'camera_depth_optical_frame')
+
+        self.downsampled_pub.publish(message)
         
         object_pcd = o3d.geometry.PointCloud()
 
@@ -283,8 +335,8 @@ class ObjectLocator2(Node):
 
         while True:
 
-            # self.get_logger().info(f
-            #     f"Using downsampled pointcloud with {len(pcd_LQ.points)} points")
+            self.get_logger().info(
+                f"Using downsampled pointcloud with {len(pcd_LQ.points)} points")
 
             if len(pcd_LQ.points) < 100:
                 break
@@ -295,7 +347,7 @@ class ObjectLocator2(Node):
                 num_iterations=2000
             )
 
-            if len(inliers) < 50:
+            if len(inliers) < 100:
                 break
 
             pcd_LQ = pcd_LQ.select_by_index(
@@ -330,6 +382,10 @@ class ObjectLocator2(Node):
         if (object_points.shape[0] < 3):
             return
         
+        message = self.point_cloud(object_points, 'camera_depth_optical_frame')
+
+        self.plane_segmented_pub.publish(message)
+
         transform = self.tf_buffer.lookup_transform(
             target_frame='base_link',
             source_frame=msg.header.frame_id,
@@ -385,11 +441,11 @@ class ObjectLocator2(Node):
 
         message = self.point_cloud(points_map, 'map')
 
-        self.preprocessed_pub.publish(message)
+        self.exclusive_pub.publish(message)
 
         clustering = DBSCAN(
             eps=0.03,
-            min_samples=4
+            min_samples=3
         ).fit(points_map)
 
         labels = clustering.labels_
@@ -550,7 +606,7 @@ class ObjectLocator2(Node):
             # Lifetime
             ########################################################
 
-            marker.lifetime.sec = 5
+            marker.lifetime.sec = 10
 
             marker_array.markers.append(
                 marker
