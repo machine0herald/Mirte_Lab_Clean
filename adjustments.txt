@@ -84,7 +84,6 @@ mirte-ros-packages/mirte_moveit_config/config/mirte_master.srdf
     # under the "home" move group (line 29)
     ##################################################
 
-    <group_state>
         <group_state name="place_right" group="mirte_arm">
         <joint name="shoulder_pan_joint" value="-2.88"/>
         <joint name="shoulder_lift_joint" value="0.262"/>
