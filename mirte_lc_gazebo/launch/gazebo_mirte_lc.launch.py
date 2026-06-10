@@ -1,6 +1,8 @@
-'''
-ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
-'''
+"""Launch file for Gazebo and labclean integration.
+
+This launch description starts Gazebo with the MIRTE labclean world and then
+launches the LabClean bringup stack after the simulator is ready.
+"""
 
 import math
 

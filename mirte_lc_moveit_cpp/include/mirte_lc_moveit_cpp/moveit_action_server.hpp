@@ -1,3 +1,8 @@
+/**
+ * @file moveit_action_server.hpp
+ * @brief Defines the MIRTE MoveIt action server node and execution helpers.
+ */
+
 #ifndef MIRTE_LC_MOVEIT_CPP__MOVEIT_ACTION_SERVER_HPP_
 #define MIRTE_LC_MOVEIT_CPP__MOVEIT_ACTION_SERVER_HPP_
 
@@ -29,6 +34,12 @@
 namespace mirte_lc_moveit_cpp
 {
 
+/**
+ * @brief Implements a MoveIt-based action server for robot and gripper motion.
+ *
+ * The node exposes the /move_to_position action and handles named targets,
+ * pose goals, and gripper commands for the MIRTE arm and gripper groups.
+ */
 class MirteLCMoveItActionServer : public rclcpp::Node
 {
 public:
@@ -36,6 +47,11 @@ public:
   using GoalHandleMoveToPosition =
     rclcpp_action::ServerGoalHandle<MoveToPosition>;
 
+  /**
+   * @brief Construct a new MoveIt action server node.
+   *
+   * @param options Node options for ROS 2 component configuration.
+   */
   explicit MirteLCMoveItActionServer(
     const rclcpp::NodeOptions & options =
       rclcpp::NodeOptions()
@@ -71,6 +87,9 @@ public:
       "MoveIt Action Server READY on /move_to_position");
   }
 
+  /**
+   * @brief Initialize MoveIt interfaces and configure the arm and gripper groups.
+   */
   void initialize_moveit()
   {
      robot_model_loader_ =
@@ -98,7 +117,7 @@ public:
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     mirte_arm_move_group_->setStartStateToCurrentState();
-    mirte_arm_move_group_->setNamedTarget("standby");
+    mirte_arm_move_group_->setNamedTarget("vigilant");
     mirte_arm_move_group_->move();
 
     // Mirte_gripper initialization
@@ -159,6 +178,13 @@ private:
    * Action callbacks
    */
 
+  /**
+   * @brief Evaluate and accept or reject a new action goal.
+   *
+   * @param[in] The goal UUID (unused).
+   * @param[in] goal The requested move-to-position goal.
+   * @return rclcpp_action::GoalResponse Whether the goal is accepted.
+   */
   rclcpp_action::GoalResponse handle_goal(
     const rclcpp_action::GoalUUID &,
     std::shared_ptr<const MoveToPosition::Goal> goal)
@@ -180,6 +206,12 @@ private:
     return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
   }
 
+  /**
+   * @brief Handle cancel requests for an active action goal.
+   *
+   * @param[in] Goal handle for the move-to-position action.
+   * @return rclcpp_action::CancelResponse Whether cancellation is allowed.
+   */
   rclcpp_action::CancelResponse handle_cancel(
     const std::shared_ptr<GoalHandleMoveToPosition>)
   {
@@ -188,6 +220,11 @@ private:
     return rclcpp_action::CancelResponse::ACCEPT;
   }
 
+  /**
+   * @brief Start asynchronous execution for an accepted goal.
+   *
+   * @param[in] goal_handle Handle to the accepted move-to-position goal.
+   */
   void handle_accepted(
     const std::shared_ptr<GoalHandleMoveToPosition> goal_handle)
   {
@@ -209,6 +246,11 @@ private:
    * Main execution
    */
 
+  /**
+   * @brief Execute an accepted move-to-position action goal.
+   *
+   * @param[in] goal_handle Handle to the accepted goal being executed.
+   */
   void execute(const std::shared_ptr<GoalHandleMoveToPosition> goal_handle)
   {
     RCLCPP_INFO(
@@ -581,6 +623,9 @@ private:
    * Helper functions
    */
 
+  /**
+   * @brief Log basic MoveGroup information for debugging.
+   */
   void print_move_group_info()
   {
     RCLCPP_INFO(
@@ -594,6 +639,9 @@ private:
       mirte_arm_move_group_->getEndEffectorLink().c_str());
   }
 
+  /**
+   * @brief Log currently configured planner tolerances.
+   */
   void print_planner_info()
   {
     RCLCPP_INFO(
@@ -617,6 +665,12 @@ private:
       mirte_arm_move_group_->getGoalJointTolerance());
   }
 
+  /**
+   * @brief Log joint values for a robot state.
+   *
+   * @param[in] state Robot state to inspect.
+   * @param[in] label Label used in the log output.
+   */
   void print_joint_values(
     const moveit::core::RobotStatePtr & state,
     const std::string & label)

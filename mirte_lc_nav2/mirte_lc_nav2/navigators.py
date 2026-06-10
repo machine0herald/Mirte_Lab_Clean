@@ -170,8 +170,8 @@ class SkeletonPath(SystematicNavigator):
                     -1,
                 )
             
-            skeleton_map = medial_axis(
-                local_contour_map > 0,
+            skeleton_map = skeletonize(
+                self.binary_costmap > 0,
             )
 
             self.skeleton_map = skeleton_map.astype(np.uint8) * 255

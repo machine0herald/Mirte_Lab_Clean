@@ -75,7 +75,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
         overwrite=False,
     )
 
-    init_flash_orange = behaviours.FlashLedStrip(name= "Flash Orange", colour=[1.0, 0.117, 0])
+    init_flash_orange = behaviours.FlashLedStrip(name= "Flash Orange", colour=[1.0, 0.117, 0.0])
 
     # 1.1: Exploration status to Blackboard #
     exploration2bb = py_trees_ros.subscribers.ToBlackboard(
@@ -217,7 +217,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
     approach = behaviours.NavigateToPosition(name="Approach", blackboard_key="cloud_objects_detected")
     deploy_arm = behaviours.MoveArm(name="Deploy Arm", predefined_pose='standby')
     pick_or_skip = py_trees.composites.Selector(name="Pick or Skip", memory=True)
-    flash_orange_2 = behaviours.FlashLedStrip(name= "Flash Orange", colour=[1.0, 0.117, 0])
+    flash_orange_2 = behaviours.FlashLedStrip(name= "Flash Orange", colour=[1.0, 0.117, 0.0])
 
     def check_planar_detected_on_blackboard(
         blackboard: py_trees.blackboard.Blackboard,
@@ -312,14 +312,14 @@ def create_root() -> py_trees.behaviour.Behaviour:
 
     cover_and_discover.add_children([tasks, cover])
     # 2. Tasks branch
-    tasks.add_children([approach_and_handle, idle_tasks])
+    tasks.add_children([approach_and_handle, flash_orange_2])
 
     # 2.1: Battery Emergency dock
     dock.add_children([flash_red, dock_action])
 
     # 2.2: Detection and handling
     approach_and_handle.add_children([detection_check, pause_coverage, handle, resume_coverage])
-    handle.add_children([flash_green, pick_up, flash_orange_2])
+    handle.add_children([flash_green, pick_up])
     pick_up.add_children([approach, deploy_arm, pick_or_skip])
     pick_or_skip.add_children([sort, idle_pick])
     

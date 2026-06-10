@@ -51,6 +51,7 @@ class ObjectLocator(Node):
     """
 
     def __init__(self):
+        """Initialize the object locator node and its ROS 2 interfaces."""
 
         super().__init__('object_locator')
         self.points = np.empty((0, 3))
@@ -128,6 +129,7 @@ class ObjectLocator(Node):
     ############################################################
 
     def reset_octomap(self):
+        """Request an octomap reset service call."""
 
         self.client.call_async(self.request)
 
@@ -140,6 +142,11 @@ class ObjectLocator(Node):
     ############################################################
 
     def cloud_callback(self, msg):
+        """Handle incoming PointCloud2 messages and store their points.
+
+        Args:
+            msg (sensor_msgs.msg.PointCloud2): Incoming point cloud message.
+        """
 
         ############################################################
         # 1. Convert PointCloud2 -> NumPy
@@ -185,6 +192,8 @@ class ObjectLocator(Node):
         )
 
     def process_point_cloud(self):
+        """Process accumulated points to remove planes and identify objects."""
+
         ############################################################
         # 2. Create Open3D cloud
         ############################################################
