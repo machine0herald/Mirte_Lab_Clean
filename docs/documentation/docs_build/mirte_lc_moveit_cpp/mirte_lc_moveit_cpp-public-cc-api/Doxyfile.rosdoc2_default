@@ -5,7 +5,6 @@ PROJECT_NUMBER         = 0.0.0
 PROJECT_BRIEF          = "TODO: Package description"
 
 INPUT                  = /workspaces/lcr/src/mirte_lc/mirte_lc_moveit_cpp/include
-FILE_PATTERNS          = *.h *.hpp *.hh *.h++ *.hxx
 RECURSIVE              = YES
 
 GENERATE_LATEX         = NO

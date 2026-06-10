@@ -9,7 +9,6 @@ Directory mirte_lc_moveit_cpp
 
 .. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
 
-
 *Directory path:* ``include/mirte_lc_moveit_cpp``
 
 

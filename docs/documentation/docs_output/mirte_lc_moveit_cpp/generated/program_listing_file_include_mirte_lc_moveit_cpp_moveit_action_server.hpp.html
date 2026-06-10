@@ -1,28 +1,24 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Program Listing for File moveit_action_server.hpp &mdash; mirte_lc_moveit_cpp: Humble 0.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
-
+  <title>Program Listing for File moveit_action_server.hpp &mdash; mirte_lc_moveit_cpp 0.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
   
-      <script src="../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=7026087e"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
-      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Standard Documents" href="../__standards.html" />
+    <link rel="next" title="Standard Documents" href="../standards.html" />
     <link rel="prev" title="File moveit_action_server.hpp" href="file_include_mirte_lc_moveit_cpp_moveit_action_server.hpp.html" /> 
 </head>
 
@@ -31,25 +27,20 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            mirte_lc_moveit_cpp: Humble
+            <a href="../index.html" class="icon icon-home"> mirte_lc_moveit_cpp
           </a>
+              <div class="version">
+                0.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../__links.html">Links</a><ul>
-<li class="toctree-l2"><a class="reference external" href="https://index.ros.org/p/mirte_lc_moveit_cpp">Rosindex</a></li>
-</ul>
-</li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html#class-hierarchy">Class Hierarchy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#file-hierarchy">File Hierarchy</a></li>
@@ -76,23 +67,23 @@
 </li>
 </ul>
 </li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../__standards.html">Standard Documents</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../__PACKAGE.html">PACKAGE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../standard_docs/PACKAGE.html">PACKAGE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../standard_docs/README.html">README</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../standard_docs/README.html#mirte-lc-moveit-cpp">mirte_lc_moveit_cpp</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../standard_docs/README.html#run">Run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../standard_docs/README.html#node-information">Node information</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../standard_docs/README.html#goal-field-execution-logic">Goal field execution logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../standard_docs/README.html#cartesian-pose-execution-pipeline">Cartesian pose execution pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../standard_docs/README.html#tolerances">Tolerances</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../standard_docs/README.html#logging">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../standard_docs/README.html#dependencies">Dependencies</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../__ros_package_dependencies.html">ROS Package Dependencies</a><ul>
-<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/rclcpp/">rclcpp</a></li>
-<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/rclcpp_action/">rclcpp_action</a></li>
-<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/moveit_ros_planning_interface/">moveit_ros_planning_interface</a></li>
-<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/geometry_msgs/">geometry_msgs</a></li>
-<li class="toctree-l2"><a class="reference external" href="https://docs.ros.org/en/humble/p/action_msgs/">action_msgs</a></li>
 </ul>
 </li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+</li>
 </ul>
 
         </div>
@@ -101,17 +92,17 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">mirte_lc_moveit_cpp: Humble</a>
+          <a href="../index.html">mirte_lc_moveit_cpp</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">C++ API</a></li>
-          <li class="breadcrumb-item"><a href="file_include_mirte_lc_moveit_cpp_moveit_action_server.hpp.html">File moveit_action_server.hpp</a></li>
-      <li class="breadcrumb-item active">Program Listing for File moveit_action_server.hpp</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">C++ API</a> &raquo;</li>
+          <li><a href="file_include_mirte_lc_moveit_cpp_moveit_action_server.hpp.html">File moveit_action_server.hpp</a> &raquo;</li>
+      <li>Program Listing for File moveit_action_server.hpp</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/generated/program_listing_file_include_mirte_lc_moveit_cpp_moveit_action_server.hpp.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -122,651 +113,651 @@
            <div itemprop="articleBody">
              
   <section id="program-listing-for-file-moveit-action-server-hpp">
-<span id="program-listing-file-include-mirte-lc-moveit-cpp-moveit-action-server-hpp"></span><h1>Program Listing for File moveit_action_server.hpp<a class="headerlink" href="#program-listing-for-file-moveit-action-server-hpp" title="Link to this heading"></a></h1>
+<span id="program-listing-file-include-mirte-lc-moveit-cpp-moveit-action-server-hpp"></span><h1>Program Listing for File moveit_action_server.hpp<a class="headerlink" href="#program-listing-for-file-moveit-action-server-hpp" title="Permalink to this headline"></a></h1>
 <p>↰ <a class="reference internal" href="file_include_mirte_lc_moveit_cpp_moveit_action_server.hpp.html#file-include-mirte-lc-moveit-cpp-moveit-action-server-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">include/mirte_lc_moveit_cpp/moveit_action_server.hpp</span></code>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef MIRTE_LC_MOVEIT_CPP__MOVEIT_ACTION_SERVER_HPP_</span>
 <span class="cp">#define MIRTE_LC_MOVEIT_CPP__MOVEIT_ACTION_SERVER_HPP_</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;functional&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;chrono&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;functional&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp/rclcpp.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp_action/rclcpp_action.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp_components/register_node_macro.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp/rclcpp.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp_action/rclcpp_action.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp_components/register_node_macro.hpp&quot;</span><span class="cp"></span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;mirte_lc_msgs/action/move_to_position.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;mirte_lc_msgs/action/move_to_position.hpp&quot;</span><span class="cp"></span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;geometry_msgs/msg/pose_stamped.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;geometry_msgs/msg/pose_stamped.hpp&gt;</span><span class="cp"></span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/move_group_interface/move_group_interface.h&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/moveit_cpp/planning_component.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/move_group_interface/move_group_interface.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/moveit_cpp/planning_component.h&gt;</span><span class="cp"></span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/robot_model_loader/robot_model_loader.h&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/robot_model/robot_model.h&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/robot_state/robot_state.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/robot_model_loader/robot_model_loader.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/robot_model/robot_model.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/robot_state/robot_state.h&gt;</span><span class="cp"></span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/trajectory_processing/time_optimal_trajectory_generation.h&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/robot_trajectory/robot_trajectory.h&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit_msgs/msg/robot_trajectory.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/trajectory_processing/time_optimal_trajectory_generation.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit/robot_trajectory/robot_trajectory.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;moveit_msgs/msg/robot_trajectory.hpp&gt;</span><span class="cp"></span>
 
-<span class="k">namespace</span><span class="w"> </span><span class="nn">mirte_lc_moveit_cpp</span>
-<span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mirte_lc_moveit_cpp</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">MirteLCMoveItActionServer</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span>
-<span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">MoveToPosition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_lc_msgs</span><span class="o">::</span><span class="n">action</span><span class="o">::</span><span class="n">MoveToPosition</span><span class="p">;</span>
-<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">GoalHandleMoveToPosition</span><span class="w"> </span><span class="o">=</span>
-<span class="w">    </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">ServerGoalHandle</span><span class="o">&lt;</span><span class="n">MoveToPosition</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MirteLCMoveItActionServer</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Node</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">MoveToPosition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_lc_msgs</span><span class="o">::</span><span class="n">action</span><span class="o">::</span><span class="n">MoveToPosition</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">GoalHandleMoveToPosition</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">    </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">ServerGoalHandle</span><span class="o">&lt;</span><span class="n">MoveToPosition</span><span class="o">&gt;</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">  </span><span class="k">explicit</span><span class="w"> </span><span class="n">MirteLCMoveItActionServer</span><span class="p">(</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span><span class="p">()</span>
-<span class="w">        </span><span class="p">.</span><span class="n">automatically_declare_parameters_from_overrides</span><span class="p">(</span><span class="nb">true</span><span class="p">))</span>
-<span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="s">&quot;mirte_lc_moveit_action_server&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">)</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">std</span><span class="o">::</span><span class="nn">placeholders</span><span class="p">;</span>
+<span class="w">  </span><span class="k">explicit</span><span class="w"> </span><span class="n">MirteLCMoveItActionServer</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span><span class="p">()</span><span class="w"></span>
+<span class="w">        </span><span class="p">.</span><span class="n">automatically_declare_parameters_from_overrides</span><span class="p">(</span><span class="nb">true</span><span class="p">))</span><span class="w"></span>
+<span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="s">&quot;mirte_lc_moveit_action_server&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">std</span><span class="o">::</span><span class="nn">placeholders</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">      </span><span class="s">&quot;Constructing MoveIt Action Server...&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;Constructing MoveIt Action Server...&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">action_server_</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">create_server</span><span class="o">&lt;</span><span class="n">MoveToPosition</span><span class="o">&gt;</span><span class="p">(</span>
-<span class="w">        </span><span class="k">this</span><span class="p">,</span>
-<span class="w">        </span><span class="s">&quot;move_to_position&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span>
-<span class="w">          </span><span class="o">&amp;</span><span class="n">MirteLCMoveItActionServer</span><span class="o">::</span><span class="n">handle_goal</span><span class="p">,</span>
-<span class="w">          </span><span class="k">this</span><span class="p">,</span>
-<span class="w">          </span><span class="n">_1</span><span class="p">,</span>
-<span class="w">          </span><span class="n">_2</span><span class="p">),</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span>
-<span class="w">          </span><span class="o">&amp;</span><span class="n">MirteLCMoveItActionServer</span><span class="o">::</span><span class="n">handle_cancel</span><span class="p">,</span>
-<span class="w">          </span><span class="k">this</span><span class="p">,</span>
-<span class="w">          </span><span class="n">_1</span><span class="p">),</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span>
-<span class="w">          </span><span class="o">&amp;</span><span class="n">MirteLCMoveItActionServer</span><span class="o">::</span><span class="n">handle_accepted</span><span class="p">,</span>
-<span class="w">          </span><span class="k">this</span><span class="p">,</span>
-<span class="w">          </span><span class="n">_1</span><span class="p">));</span>
+<span class="w">    </span><span class="n">action_server_</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">create_server</span><span class="o">&lt;</span><span class="n">MoveToPosition</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="k">this</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;move_to_position&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="o">&amp;</span><span class="n">MirteLCMoveItActionServer</span><span class="o">::</span><span class="n">handle_goal</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="k">this</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">_1</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">_2</span><span class="p">),</span><span class="w"></span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="o">&amp;</span><span class="n">MirteLCMoveItActionServer</span><span class="o">::</span><span class="n">handle_cancel</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="k">this</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">_1</span><span class="p">),</span><span class="w"></span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="o">&amp;</span><span class="n">MirteLCMoveItActionServer</span><span class="o">::</span><span class="n">handle_accepted</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="k">this</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">_1</span><span class="p">));</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">      </span><span class="s">&quot;MoveIt Action Server READY on /move_to_position&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;MoveIt Action Server READY on /move_to_position&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">initialize_moveit</span><span class="p">()</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">     </span><span class="n">robot_model_loader_</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">robot_model_loader</span><span class="o">::</span><span class="n">RobotModelLoader</span><span class="o">&gt;</span><span class="p">(</span>
-<span class="w">        </span><span class="n">shared_from_this</span><span class="p">());</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">initialize_moveit</span><span class="p">()</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">     </span><span class="n">robot_model_loader_</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">robot_model_loader</span><span class="o">::</span><span class="n">RobotModelLoader</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">shared_from_this</span><span class="p">());</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// Mirte_arm initialization</span>
 
-<span class="w">    </span><span class="n">mirte_arm_move_group_</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span><span class="n">MoveGroupInterface</span><span class="o">&gt;</span><span class="p">(</span>
-<span class="w">        </span><span class="n">shared_from_this</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;mirte_arm&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">mirte_arm_move_group_</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span><span class="n">MoveGroupInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">shared_from_this</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;mirte_arm&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">mirte_arm_kinematic_model_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">robot_model_loader_</span><span class="o">-&gt;</span><span class="n">getModel</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mirte_arm_kinematic_model_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">robot_model_loader_</span><span class="o">-&gt;</span><span class="n">getModel</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">mirte_arm_robot_state_</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotState</span><span class="o">&gt;</span><span class="p">(</span>
-<span class="w">        </span><span class="n">mirte_arm_kinematic_model_</span><span class="p">);</span>
+<span class="w">    </span><span class="n">mirte_arm_robot_state_</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotState</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_kinematic_model_</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">mirte_arm_robot_state_</span><span class="o">-&gt;</span><span class="n">setToDefaultValues</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mirte_arm_robot_state_</span><span class="o">-&gt;</span><span class="n">setToDefaultValues</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">mirte_arm_joint_model_group_</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">mirte_arm_kinematic_model_</span><span class="o">-&gt;</span><span class="n">getJointModelGroup</span><span class="p">(</span><span class="s">&quot;mirte_arm&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">mirte_arm_joint_model_group_</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_kinematic_model_</span><span class="o">-&gt;</span><span class="n">getJointModelGroup</span><span class="p">(</span><span class="s">&quot;mirte_arm&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">1000</span><span class="p">));</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">1000</span><span class="p">));</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setStartStateToCurrentState</span><span class="p">();</span>
-<span class="w">    </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setNamedTarget</span><span class="p">(</span><span class="s">&quot;home&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setStartStateToCurrentState</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setNamedTarget</span><span class="p">(</span><span class="s">&quot;vigilant&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">// Mirte_gripper initialization</span>
 
-<span class="w">    </span><span class="n">mirte_gripper_move_group_</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span><span class="n">MoveGroupInterface</span><span class="o">&gt;</span><span class="p">(</span>
-<span class="w">        </span><span class="n">shared_from_this</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;mirte_gripper&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">mirte_gripper_move_group_</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span><span class="n">MoveGroupInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">shared_from_this</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;mirte_gripper&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">mirte_gripper_kinematic_model_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">robot_model_loader_</span><span class="o">-&gt;</span><span class="n">getModel</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mirte_gripper_kinematic_model_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">robot_model_loader_</span><span class="o">-&gt;</span><span class="n">getModel</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">mirte_gripper_robot_state_</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotState</span><span class="o">&gt;</span><span class="p">(</span>
-<span class="w">        </span><span class="n">mirte_gripper_kinematic_model_</span><span class="p">);</span>
+<span class="w">    </span><span class="n">mirte_gripper_robot_state_</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotState</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_gripper_kinematic_model_</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">mirte_gripper_robot_state_</span><span class="o">-&gt;</span><span class="n">setToDefaultValues</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mirte_gripper_robot_state_</span><span class="o">-&gt;</span><span class="n">setToDefaultValues</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">mirte_gripper_joint_model_group_</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">mirte_gripper_kinematic_model_</span><span class="o">-&gt;</span><span class="n">getJointModelGroup</span><span class="p">(</span><span class="s">&quot;mirte_gripper&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">mirte_gripper_joint_model_group_</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_gripper_kinematic_model_</span><span class="o">-&gt;</span><span class="n">getJointModelGroup</span><span class="p">(</span><span class="s">&quot;mirte_gripper&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;MoveIt initialized&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;MoveIt initialized&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-<span class="k">private</span><span class="o">:</span>
+<span class="k">private</span><span class="o">:</span><span class="w"></span>
 <span class="w">  </span><span class="cm">/*</span>
 <span class="cm">   * MoveIt</span>
-<span class="cm">   */</span>
+<span class="cm">   */</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">robot_model_loader</span><span class="o">::</span><span class="n">RobotModelLoader</span><span class="o">&gt;</span>
-<span class="w">    </span><span class="n">robot_model_loader_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">robot_model_loader</span><span class="o">::</span><span class="n">RobotModelLoader</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="n">robot_model_loader_</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotModelPtr</span><span class="w"> </span><span class="n">mirte_arm_kinematic_model_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotModelPtr</span><span class="w"> </span><span class="n">mirte_arm_kinematic_model_</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotStatePtr</span><span class="w"> </span><span class="n">mirte_arm_robot_state_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotStatePtr</span><span class="w"> </span><span class="n">mirte_arm_robot_state_</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">JointModelGroup</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">JointModelGroup</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span><span class="n">MoveGroupInterface</span><span class="o">&gt;</span>
-<span class="w">    </span><span class="n">mirte_arm_move_group_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span><span class="n">MoveGroupInterface</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="n">mirte_arm_move_group_</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotModelPtr</span><span class="w"> </span><span class="n">mirte_gripper_kinematic_model_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotModelPtr</span><span class="w"> </span><span class="n">mirte_gripper_kinematic_model_</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotStatePtr</span><span class="w"> </span><span class="n">mirte_gripper_robot_state_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotStatePtr</span><span class="w"> </span><span class="n">mirte_gripper_robot_state_</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">JointModelGroup</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mirte_gripper_joint_model_group_</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">JointModelGroup</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mirte_gripper_joint_model_group_</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span><span class="n">MoveGroupInterface</span><span class="o">&gt;</span>
-<span class="w">    </span><span class="n">mirte_gripper_move_group_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span><span class="n">MoveGroupInterface</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="n">mirte_gripper_move_group_</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">  </span><span class="cm">/*</span>
 <span class="cm">   * Action server</span>
-<span class="cm">   */</span>
+<span class="cm">   */</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">Server</span><span class="o">&lt;</span><span class="n">MoveToPosition</span><span class="o">&gt;::</span><span class="n">SharedPtr</span>
-<span class="w">    </span><span class="n">action_server_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">Server</span><span class="o">&lt;</span><span class="n">MoveToPosition</span><span class="o">&gt;::</span><span class="n">SharedPtr</span><span class="w"></span>
+<span class="w">    </span><span class="n">action_server_</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">  </span><span class="cm">/*</span>
 <span class="cm">   * Action callbacks</span>
-<span class="cm">   */</span>
+<span class="cm">   */</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">GoalResponse</span><span class="w"> </span><span class="nf">handle_goal</span><span class="p">(</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">GoalUUID</span><span class="w"> </span><span class="o">&amp;</span><span class="p">,</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="k">const</span><span class="w"> </span><span class="n">MoveToPosition</span><span class="o">::</span><span class="n">Goal</span><span class="o">&gt;</span><span class="w"> </span><span class="n">goal</span><span class="p">)</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Action Contents: goal-&gt;target_pose = [%.3f, %.3f, %.3f]&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
-<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
-<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+<span class="w">  </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">GoalResponse</span><span class="w"> </span><span class="nf">handle_goal</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">GoalUUID</span><span class="w"> </span><span class="o">&amp;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="k">const</span><span class="w"> </span><span class="n">MoveToPosition</span><span class="o">::</span><span class="n">Goal</span><span class="o">&gt;</span><span class="w"> </span><span class="n">goal</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Action Contents: goal-&gt;target_pose = [%.3f, %.3f, %.3f]&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Action Contents: goal-&gt;mirte_arm_named_target = %s&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_named_target</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Action Contents: goal-&gt;mirte_arm_named_target = %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_named_target</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Action Contents: goal-&gt;gripper_named_target = %s&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_named_target</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Action Contents: goal-&gt;gripper_named_target = %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_named_target</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Action Contents: goal-&gt;gripper_joint_target = [%.3f]&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_joint_target</span><span class="p">);</span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Action Contents: goal-&gt;gripper_joint_target = [%.3f]&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_joint_target</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">GoalResponse</span><span class="o">::</span><span class="n">ACCEPT_AND_EXECUTE</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">GoalResponse</span><span class="o">::</span><span class="n">ACCEPT_AND_EXECUTE</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">  </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">CancelResponse</span><span class="w"> </span><span class="nf">handle_cancel</span><span class="p">(</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GoalHandleMoveToPosition</span><span class="o">&gt;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="n">RCLCPP_WARN</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Cancel request received&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">CancelResponse</span><span class="w"> </span><span class="nf">handle_cancel</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GoalHandleMoveToPosition</span><span class="o">&gt;</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">RCLCPP_WARN</span><span class="p">(</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Cancel request received&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">CancelResponse</span><span class="o">::</span><span class="n">ACCEPT</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rclcpp_action</span><span class="o">::</span><span class="n">CancelResponse</span><span class="o">::</span><span class="n">ACCEPT</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">handle_accepted</span><span class="p">(</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GoalHandleMoveToPosition</span><span class="o">&gt;</span><span class="w"> </span><span class="n">goal_handle</span><span class="p">)</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">      </span><span class="s">&quot;Goal accepted → starting execution thread&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">handle_accepted</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GoalHandleMoveToPosition</span><span class="o">&gt;</span><span class="w"> </span><span class="n">goal_handle</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;Goal accepted → starting execution thread&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">std</span><span class="o">::</span><span class="nn">placeholders</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">std</span><span class="o">::</span><span class="nn">placeholders</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span>
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span>
-<span class="w">        </span><span class="o">&amp;</span><span class="n">MirteLCMoveItActionServer</span><span class="o">::</span><span class="n">execute</span><span class="p">,</span>
-<span class="w">        </span><span class="k">this</span><span class="p">,</span>
-<span class="w">        </span><span class="n">_1</span><span class="p">),</span>
-<span class="w">      </span><span class="n">goal_handle</span><span class="p">).</span><span class="n">detach</span><span class="p">();</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="o">&amp;</span><span class="n">MirteLCMoveItActionServer</span><span class="o">::</span><span class="n">execute</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="k">this</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">_1</span><span class="p">),</span><span class="w"></span>
+<span class="w">      </span><span class="n">goal_handle</span><span class="p">).</span><span class="n">detach</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
 <span class="w">  </span><span class="cm">/*</span>
 <span class="cm">   * Main execution</span>
-<span class="cm">   */</span>
+<span class="cm">   */</span><span class="w"></span>
 
-<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">execute</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GoalHandleMoveToPosition</span><span class="o">&gt;</span><span class="w"> </span><span class="n">goal_handle</span><span class="p">)</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">      </span><span class="s">&quot;Execution thread started&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">execute</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">GoalHandleMoveToPosition</span><span class="o">&gt;</span><span class="w"> </span><span class="n">goal_handle</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;Execution thread started&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">goal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">get_goal</span><span class="p">();</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">goal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">get_goal</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">MoveToPosition</span><span class="o">::</span><span class="n">Result</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">MoveToPosition</span><span class="o">::</span><span class="n">Result</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_named_target</span><span class="p">.</span><span class="n">empty</span><span class="p">()){</span>
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Named target specified: %s&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_named_target</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_named_target</span><span class="p">.</span><span class="n">empty</span><span class="p">()){</span><span class="w"></span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Named target specified: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_named_target</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setNamedTarget</span><span class="p">(</span>
-<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_named_target</span><span class="p">);</span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setNamedTarget</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_named_target</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setStartStateToCurrentState</span><span class="p">();</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setStartStateToCurrentState</span><span class="p">();</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">      </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">succeed</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="w">      </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">succeed</span><span class="p">(</span><span class="n">result</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Goal completed successfully&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Goal completed successfully&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">return</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mirte_arm_joint_values</span><span class="p">;</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setGoalPositionTolerance</span><span class="p">(</span><span class="mf">0.001</span><span class="p">);</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setGoalJointTolerance</span><span class="p">(</span><span class="mf">0.001</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mirte_arm_joint_values</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setGoalPositionTolerance</span><span class="p">(</span><span class="mf">0.001</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setGoalJointTolerance</span><span class="p">(</span><span class="mf">0.001</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">print_move_group_info</span><span class="p">();</span>
+<span class="w">      </span><span class="n">print_move_group_info</span><span class="p">();</span><span class="w"></span>
 
 <span class="w">      </span><span class="cm">/*</span>
 <span class="cm">      * Current state</span>
-<span class="cm">      */</span>
+<span class="cm">      */</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">mirte_arm_current_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentState</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">mirte_arm_current_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentState</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_current_state</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">();</span>
-<span class="w">      </span><span class="n">mirte_arm_current_state</span><span class="o">-&gt;</span><span class="n">enforceBounds</span><span class="p">();</span>
-<span class="w">      </span><span class="n">mirte_arm_current_state</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">();</span>
+<span class="w">      </span><span class="n">mirte_arm_current_state</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">();</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_current_state</span><span class="o">-&gt;</span><span class="n">enforceBounds</span><span class="p">();</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_current_state</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setStartState</span><span class="p">(</span><span class="o">*</span><span class="n">mirte_arm_current_state</span><span class="p">);</span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setStartState</span><span class="p">(</span><span class="o">*</span><span class="n">mirte_arm_current_state</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">print_joint_values</span><span class="p">(</span><span class="n">mirte_arm_current_state</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CURRENT&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">print_joint_values</span><span class="p">(</span><span class="n">mirte_arm_current_state</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CURRENT&quot;</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">      </span><span class="cm">/*</span>
 <span class="cm">      * Planner configuration</span>
-<span class="cm">      */</span>
+<span class="cm">      */</span><span class="w"></span>
 
 
-<span class="w">      </span><span class="n">print_planner_info</span><span class="p">();</span>
+<span class="w">      </span><span class="n">print_planner_info</span><span class="p">();</span><span class="w"></span>
 
 <span class="w">      </span><span class="cm">/*</span>
 <span class="cm">      * Target pose</span>
-<span class="cm">      */</span>
+<span class="cm">      */</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">geometry_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">Pose</span><span class="w"> </span><span class="n">mirte_arm_target_pose</span><span class="w"> </span><span class="o">=</span>
-<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_target_pose</span><span class="p">;</span>
+<span class="w">      </span><span class="n">geometry_msgs</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">Pose</span><span class="w"> </span><span class="n">mirte_arm_target_pose</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_arm_target_pose</span><span class="p">;</span><span class="w"></span>
 <span class="w">      </span><span class="cm">/*</span>
 <span class="cm">      * Collision check</span>
-<span class="cm">      */</span>
+<span class="cm">      */</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">planning_scene</span><span class="o">::</span><span class="n">PlanningScene</span><span class="w"> </span><span class="nf">planning_scene</span><span class="p">(</span>
-<span class="w">        </span><span class="n">mirte_arm_kinematic_model_</span><span class="p">);</span>
+<span class="w">      </span><span class="n">planning_scene</span><span class="o">::</span><span class="n">PlanningScene</span><span class="w"> </span><span class="nf">planning_scene</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_kinematic_model_</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">collision</span><span class="w"> </span><span class="o">=</span>
-<span class="w">        </span><span class="n">planning_scene</span><span class="p">.</span><span class="n">isStateColliding</span><span class="p">(</span><span class="o">*</span><span class="n">mirte_arm_current_state</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">collision</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">        </span><span class="n">planning_scene</span><span class="p">.</span><span class="n">isStateColliding</span><span class="p">(</span><span class="o">*</span><span class="n">mirte_arm_current_state</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Collision: %s&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">collision</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Collision: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">collision</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">      </span><span class="cm">/*</span>
 <span class="cm">      * IK</span>
-<span class="cm">      */</span>
+<span class="cm">      */</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">mirte_arm_target_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_arm_current_state</span><span class="p">;</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">mirte_arm_target_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_arm_current_state</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">kinematics</span><span class="o">::</span><span class="n">KinematicsQueryOptions</span><span class="w"> </span><span class="n">options</span><span class="p">;</span>
-<span class="w">      </span><span class="n">options</span><span class="p">.</span><span class="n">return_approximate_solution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">      </span><span class="n">kinematics</span><span class="o">::</span><span class="n">KinematicsQueryOptions</span><span class="w"> </span><span class="n">options</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="n">options</span><span class="p">.</span><span class="n">return_approximate_solution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">found_ik</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">setFromIK</span><span class="p">(</span>
-<span class="w">        </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span>
-<span class="w">        </span><span class="n">mirte_arm_target_pose</span><span class="p">,</span>
-<span class="w">        </span><span class="s">&quot;wrist&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="mf">0.0</span><span class="p">,</span>
-<span class="w">        </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">GroupStateValidityCallbackFn</span><span class="p">(),</span>
-<span class="w">        </span><span class="n">options</span>
-<span class="w">      </span><span class="p">);</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">found_ik</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">setFromIK</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_target_pose</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;wrist&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="mf">0.0</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">GroupStateValidityCallbackFn</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="n">options</span><span class="w"></span>
+<span class="w">      </span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Exact IK solution found: %s, trying approximate IK. Disregard Target joint values.&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">found_ik</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Exact IK solution found: %s, trying approximate IK. Disregard Target joint values.&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">found_ik</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">found_ik</span><span class="p">){</span>
-<span class="w">        </span><span class="n">kinematics</span><span class="o">::</span><span class="n">KinematicsQueryOptions</span><span class="w"> </span><span class="n">options</span><span class="p">;</span>
-<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">return_approximate_solution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">found_ik</span><span class="p">){</span><span class="w"></span>
+<span class="w">        </span><span class="n">kinematics</span><span class="o">::</span><span class="n">KinematicsQueryOptions</span><span class="w"> </span><span class="n">options</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">return_approximate_solution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">        </span><span class="n">found_ik</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">setFromIK</span><span class="p">(</span>
-<span class="w">          </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span>
-<span class="w">          </span><span class="n">mirte_arm_target_pose</span><span class="p">,</span>
-<span class="w">          </span><span class="s">&quot;wrist&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="mf">0.0</span><span class="p">,</span>
-<span class="w">          </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">GroupStateValidityCallbackFn</span><span class="p">(),</span>
-<span class="w">          </span><span class="n">options</span>
-<span class="w">        </span><span class="p">);</span>
-<span class="w">        </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">          </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">          </span><span class="s">&quot;Approximate IK solution found: %s&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="n">found_ik</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span>
-<span class="w">      </span><span class="p">}</span>
+<span class="w">        </span><span class="n">found_ik</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">setFromIK</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">mirte_arm_target_pose</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;wrist&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="mf">0.0</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">GroupStateValidityCallbackFn</span><span class="p">(),</span><span class="w"></span>
+<span class="w">          </span><span class="n">options</span><span class="w"></span>
+<span class="w">        </span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;Approximate IK solution found: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">found_ik</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">valid</span><span class="w"> </span><span class="o">=</span>
-<span class="w">        </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">satisfiesBounds</span><span class="p">(</span>
-<span class="w">          </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">valid</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">satisfiesBounds</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Bounds valid: %s&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">valid</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Bounds valid: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">valid</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">found_ik</span><span class="p">)</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="n">RCLCPP_ERROR</span><span class="p">(</span>
-<span class="w">          </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">          </span><span class="s">&quot;IK failed&quot;</span><span class="p">);</span>
-<span class="w">        </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">abort</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">found_ik</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;IK failed&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">abort</span><span class="p">(</span><span class="n">result</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">        </span><span class="k">return</span><span class="p">;</span>
-<span class="w">      </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
 
 <span class="w">      </span><span class="cm">/*</span>
 <span class="cm">      * Target joints</span>
-<span class="cm">      */</span>
+<span class="cm">      */</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">();</span>
-<span class="w">      </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">enforceBounds</span><span class="p">();</span>
+<span class="w">      </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">();</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">enforceBounds</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">copyJointGroupPositions</span><span class="p">(</span>
-<span class="w">        </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span>
-<span class="w">        </span><span class="n">mirte_arm_joint_values</span><span class="p">);</span>
+<span class="w">      </span><span class="n">mirte_arm_target_state</span><span class="o">-&gt;</span><span class="n">copyJointGroupPositions</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_joint_values</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">print_joint_values</span><span class="p">(</span><span class="n">mirte_arm_target_state</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;TARGET&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">print_joint_values</span><span class="p">(</span><span class="n">mirte_arm_target_state</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;TARGET&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setPositionTarget</span><span class="p">(</span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wrist&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setPositionTarget</span><span class="p">(</span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">mirte_arm_target_pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wrist&quot;</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">      </span><span class="cm">/*</span>
 <span class="cm">      * Planning</span>
-<span class="cm">      */</span>
+<span class="cm">      */</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">success</span><span class="p">,</span><span class="w"> </span><span class="n">plan</span><span class="p">]</span><span class="w"> </span><span class="o">=</span>
-<span class="w">        </span><span class="p">[</span><span class="k">this</span><span class="p">]</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span>
-<span class="w">            </span><span class="n">MoveGroupInterface</span><span class="o">::</span><span class="n">Plan</span><span class="w"> </span><span class="n">msg</span><span class="p">;</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">success</span><span class="p">,</span><span class="w"> </span><span class="n">plan</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">        </span><span class="p">[</span><span class="k">this</span><span class="p">]</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span><span class="w"></span>
+<span class="w">            </span><span class="n">MoveGroupInterface</span><span class="o">::</span><span class="n">Plan</span><span class="w"> </span><span class="n">msg</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">          </span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span>
-<span class="w">            </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span>
-<span class="w">              </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">plan</span><span class="p">(</span><span class="n">msg</span><span class="p">));</span>
+<span class="w">          </span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">            </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">              </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">plan</span><span class="p">(</span><span class="n">msg</span><span class="p">));</span><span class="w"></span>
 
-<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">ok</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}();</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">ok</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">}();</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="n">RCLCPP_ERROR</span><span class="p">(</span>
-<span class="w">          </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">          </span><span class="s">&quot;Initial planning failed, increasing tolerances&quot;</span><span class="p">);</span>
-<span class="w">        </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setGoalPositionTolerance</span><span class="p">(</span><span class="mf">0.001</span><span class="p">);</span>
-<span class="w">        </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setGoalJointTolerance</span><span class="p">(</span><span class="mf">0.01</span><span class="p">);</span>
-<span class="w">        </span><span class="n">print_planner_info</span><span class="p">();</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;Initial planning failed, increasing tolerances&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setGoalPositionTolerance</span><span class="p">(</span><span class="mf">0.001</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setGoalJointTolerance</span><span class="p">(</span><span class="mf">0.01</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">print_planner_info</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">success</span><span class="p">,</span><span class="w"> </span><span class="n">plan</span><span class="p">]</span><span class="w"> </span><span class="o">=</span>
-<span class="w">          </span><span class="p">[</span><span class="k">this</span><span class="p">]</span>
-<span class="w">          </span><span class="p">{</span>
-<span class="w">            </span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span>
-<span class="w">              </span><span class="n">MoveGroupInterface</span><span class="o">::</span><span class="n">Plan</span><span class="w"> </span><span class="n">msg</span><span class="p">;</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">success</span><span class="p">,</span><span class="w"> </span><span class="n">plan</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">          </span><span class="p">[</span><span class="k">this</span><span class="p">]</span><span class="w"></span>
+<span class="w">          </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">moveit</span><span class="o">::</span><span class="n">planning_interface</span><span class="o">::</span><span class="w"></span>
+<span class="w">              </span><span class="n">MoveGroupInterface</span><span class="o">::</span><span class="n">Plan</span><span class="w"> </span><span class="n">msg</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span>
-<span class="w">              </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span>
-<span class="w">                </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">plan</span><span class="p">(</span><span class="n">msg</span><span class="p">));</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">              </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">                </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">plan</span><span class="p">(</span><span class="n">msg</span><span class="p">));</span><span class="w"></span>
 
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">ok</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
-<span class="w">          </span><span class="p">}();</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">ok</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span><span class="w"></span>
+<span class="w">          </span><span class="p">}();</span><span class="w"></span>
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">){</span>
-<span class="w">          </span><span class="n">RCLCPP_ERROR</span><span class="p">(</span>
-<span class="w">            </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">            </span><span class="s">&quot;Planning failed&quot;</span><span class="p">);</span>
-<span class="w">          </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">abort</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
-<span class="w">          </span><span class="k">return</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">      </span><span class="n">robot_trajectory</span><span class="o">::</span><span class="n">RobotTrajectory</span><span class="w"> </span><span class="n">rt</span><span class="p">(</span>
-<span class="w">      </span><span class="n">mirte_arm_kinematic_model_</span><span class="p">,</span>
-<span class="w">      </span><span class="s">&quot;mirte_arm&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">){</span><span class="w"></span>
+<span class="w">          </span><span class="n">RCLCPP_ERROR</span><span class="p">(</span><span class="w"></span>
+<span class="w">            </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">            </span><span class="s">&quot;Planning failed&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">          </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">abort</span><span class="p">(</span><span class="n">result</span><span class="p">);</span><span class="w"></span>
+<span class="w">          </span><span class="k">return</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="n">robot_trajectory</span><span class="o">::</span><span class="n">RobotTrajectory</span><span class="w"> </span><span class="n">rt</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_kinematic_model_</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;mirte_arm&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">rt</span><span class="p">.</span><span class="n">setRobotTrajectoryMsg</span><span class="p">(</span>
-<span class="w">          </span><span class="o">*</span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentState</span><span class="p">(),</span>
-<span class="w">          </span><span class="n">plan</span><span class="p">.</span><span class="n">trajectory_</span><span class="p">);</span>
+<span class="w">      </span><span class="n">rt</span><span class="p">.</span><span class="n">setRobotTrajectoryMsg</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="o">*</span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentState</span><span class="p">(),</span><span class="w"></span>
+<span class="w">          </span><span class="n">plan</span><span class="p">.</span><span class="n">trajectory_</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">trajectory_processing</span><span class="o">::</span><span class="n">TimeOptimalTrajectoryGeneration</span><span class="w"> </span><span class="n">totg</span><span class="p">;</span>
+<span class="w">      </span><span class="n">trajectory_processing</span><span class="o">::</span><span class="n">TimeOptimalTrajectoryGeneration</span><span class="w"> </span><span class="n">totg</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">timing_success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">totg</span><span class="p">.</span><span class="n">computeTimeStamps</span><span class="p">(</span><span class="n">rt</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="n">timing_success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">totg</span><span class="p">.</span><span class="n">computeTimeStamps</span><span class="p">(</span><span class="n">rt</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">          </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">          </span><span class="s">&quot;Time parameterization success: %s&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="n">timing_success</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;Time parameterization success: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">timing_success</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">rt</span><span class="p">.</span><span class="n">getRobotTrajectoryMsg</span><span class="p">(</span><span class="n">plan</span><span class="p">.</span><span class="n">trajectory_</span><span class="p">);</span>
+<span class="w">      </span><span class="n">rt</span><span class="p">.</span><span class="n">getRobotTrajectoryMsg</span><span class="p">(</span><span class="n">plan</span><span class="p">.</span><span class="n">trajectory_</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Planning successful&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Planning successful&quot;</span><span class="p">);</span><span class="w"></span>
 
 <span class="w">      </span><span class="cm">/*</span>
 <span class="cm">      * Execution</span>
-<span class="cm">      */</span>
+<span class="cm">      */</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">pts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">plan</span><span class="p">.</span><span class="n">trajectory_</span><span class="p">.</span><span class="n">joint_trajectory</span><span class="p">.</span><span class="n">points</span><span class="p">;</span>
+<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">pts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">plan</span><span class="p">.</span><span class="n">trajectory_</span><span class="p">.</span><span class="n">joint_trajectory</span><span class="p">.</span><span class="n">points</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">          </span><span class="s">&quot;Trajectory contains %zu points&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">          </span><span class="s">&quot;Trajectory contains %zu points&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">());</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">            </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">            </span><span class="s">&quot;Point %zu time: %f&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="n">i</span><span class="p">,</span>
-<span class="w">            </span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">time_from_start</span><span class="p">.</span><span class="n">sec</span><span class="w"> </span><span class="o">+</span>
-<span class="w">            </span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">time_from_start</span><span class="p">.</span><span class="n">nanosec</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e-9</span><span class="p">);</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">execute</span><span class="p">(</span><span class="n">plan</span><span class="p">);</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">pts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">            </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">            </span><span class="s">&quot;Point %zu time: %f&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">i</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">time_from_start</span><span class="p">.</span><span class="n">sec</span><span class="w"> </span><span class="o">+</span><span class="w"></span>
+<span class="w">            </span><span class="n">pts</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">time_from_start</span><span class="p">.</span><span class="n">nanosec</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e-9</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">execute</span><span class="p">(</span><span class="n">plan</span><span class="p">);</span><span class="w"></span>
 
 
 
 <span class="w">      </span><span class="cm">/*</span>
 <span class="cm">      * Final pose</span>
-<span class="cm">      */</span>
+<span class="cm">      */</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">current_pose</span><span class="w"> </span><span class="o">=</span>
-<span class="w">        </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentPose</span><span class="p">(</span><span class="s">&quot;wrist&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">current_pose</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentPose</span><span class="p">(</span><span class="s">&quot;wrist&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Current pose: &quot;</span>
-<span class="w">        </span><span class="s">&quot;position = [%f, %f, %f], &quot;</span>
-<span class="w">        </span><span class="s">&quot;orientation = [%f, %f, %f, %f]&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
-<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
-<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">,</span>
-<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">orientation</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
-<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">orientation</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
-<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">orientation</span><span class="p">.</span><span class="n">z</span><span class="p">,</span>
-<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">orientation</span><span class="p">.</span><span class="n">w</span><span class="p">);</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Current pose: &quot;</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;position = [%f, %f, %f], &quot;</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;orientation = [%f, %f, %f, %f]&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">orientation</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">orientation</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">orientation</span><span class="p">.</span><span class="n">z</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">current_pose</span><span class="p">.</span><span class="n">pose</span><span class="p">.</span><span class="n">orientation</span><span class="p">.</span><span class="n">w</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_current_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentState</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
-<span class="w">      </span><span class="n">mirte_arm_current_state</span><span class="o">-&gt;</span><span class="n">copyJointGroupPositions</span><span class="p">(</span>
-<span class="w">        </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span>
-<span class="w">        </span><span class="n">mirte_arm_joint_values</span><span class="p">);</span>
+<span class="w">      </span><span class="n">mirte_arm_current_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentState</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_current_state</span><span class="o">-&gt;</span><span class="n">copyJointGroupPositions</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_joint_values</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_joint_values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-3.14</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mirte_arm_joint_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mirte_arm_joint_values</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setJointValueTarget</span><span class="p">(</span><span class="n">mirte_arm_joint_values</span><span class="p">);</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span>
+<span class="w">      </span><span class="n">mirte_arm_joint_values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-3.14</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mirte_arm_joint_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mirte_arm_joint_values</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setJointValueTarget</span><span class="p">(</span><span class="n">mirte_arm_joint_values</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span><span class="w"></span>
 
 
 <span class="w">      </span><span class="cm">/*</span>
 <span class="cm">      * Finish action</span>
-<span class="cm">      */</span>
+<span class="cm">      */</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">      </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">succeed</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="w">      </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">succeed</span><span class="p">(</span><span class="n">result</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Goal completed successfully&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Goal completed successfully&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">return</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_wrist_joint_target</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">){</span>
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Wrist joint target specified: %f&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_wrist_joint_target</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_wrist_joint_target</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">){</span><span class="w"></span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Wrist joint target specified: %f&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_wrist_joint_target</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">joint_values</span><span class="p">;</span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">joint_values</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentState</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">copyJointGroupPositions</span><span class="p">(</span>
-<span class="w">          </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span>
-<span class="w">          </span><span class="n">joint_values</span><span class="p">);</span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentState</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">copyJointGroupPositions</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="n">joint_values</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">joint_values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_wrist_joint_target</span><span class="p">;</span>
+<span class="w">      </span><span class="n">joint_values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_wrist_joint_target</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setJointValueTarget</span><span class="p">(</span><span class="n">joint_values</span><span class="p">);</span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">setJointValueTarget</span><span class="p">(</span><span class="n">joint_values</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_named_target</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">&quot;none&quot;</span><span class="p">){</span>
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Named target specified: %s&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_named_target</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_named_target</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">&quot;none&quot;</span><span class="p">){</span><span class="w"></span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Named target specified: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_named_target</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">setNamedTarget</span><span class="p">(</span>
-<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_named_target</span><span class="p">);</span>
+<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">setNamedTarget</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_named_target</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">setStartStateToCurrentState</span><span class="p">();</span>
-<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span>
+<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">setStartStateToCurrentState</span><span class="p">();</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">      </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">succeed</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="w">      </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">succeed</span><span class="p">(</span><span class="n">result</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Goal completed successfully&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Goal completed successfully&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">return</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_joint_target</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">){</span>
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Joint target specified: %f&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_joint_target</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_joint_target</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">){</span><span class="w"></span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Joint target specified: %f&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_joint_target</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">gripper_joint_values</span><span class="p">;</span>
-<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentState</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">copyJointGroupPositions</span><span class="p">(</span>
-<span class="w">        </span><span class="n">mirte_gripper_joint_model_group_</span><span class="p">,</span>
-<span class="w">        </span><span class="n">gripper_joint_values</span><span class="p">);</span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">gripper_joint_values</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">getCurrentState</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">copyJointGroupPositions</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_gripper_joint_model_group_</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">gripper_joint_values</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">gripper_joint_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_joint_target</span><span class="p">;</span>
+<span class="w">      </span><span class="n">gripper_joint_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">goal</span><span class="o">-&gt;</span><span class="n">mirte_gripper_joint_target</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">setJointValueTarget</span><span class="p">(</span><span class="n">gripper_joint_values</span><span class="p">);</span>
+<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">setJointValueTarget</span><span class="p">(</span><span class="n">gripper_joint_values</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span>
+<span class="w">      </span><span class="n">mirte_gripper_move_group_</span><span class="o">-&gt;</span><span class="n">move</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">      </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">succeed</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="w">      </span><span class="n">result</span><span class="o">-&gt;</span><span class="n">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="n">goal_handle</span><span class="o">-&gt;</span><span class="n">succeed</span><span class="p">(</span><span class="n">result</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;Goal completed successfully&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;Goal completed successfully&quot;</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">      </span><span class="k">return</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">      </span><span class="k">return</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
 
 <span class="w">  </span><span class="cm">/*</span>
 <span class="cm">   * Helper functions</span>
-<span class="cm">   */</span>
+<span class="cm">   */</span><span class="w"></span>
 
-<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">print_move_group_info</span><span class="p">()</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">      </span><span class="s">&quot;Pose Reference Frame: %s&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getPoseReferenceFrame</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">print_move_group_info</span><span class="p">()</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;Pose Reference Frame: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getPoseReferenceFrame</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">      </span><span class="s">&quot;End Effector Link: %s&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getEndEffectorLink</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;End Effector Link: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getEndEffectorLink</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">print_planner_info</span><span class="p">()</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">      </span><span class="s">&quot;Planning frame: %s&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getPlanningFrame</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">print_planner_info</span><span class="p">()</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;Planning frame: %s&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getPlanningFrame</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">      </span><span class="s">&quot;Goal position tolerance: %f&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getGoalPositionTolerance</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;Goal position tolerance: %f&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getGoalPositionTolerance</span><span class="p">());</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">      </span><span class="s">&quot;Goal orientation tolerance: %f&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getGoalOrientationTolerance</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;Goal orientation tolerance: %f&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getGoalOrientationTolerance</span><span class="p">());</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">      </span><span class="s">&quot;Goal joint tolerance: %f&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getGoalJointTolerance</span><span class="p">());</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">    </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;Goal joint tolerance: %f&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_move_group_</span><span class="o">-&gt;</span><span class="n">getGoalJointTolerance</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
 
-<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">print_joint_values</span><span class="p">(</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotStatePtr</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">,</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">label</span><span class="p">)</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">joint_names</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">mirte_arm_joint_model_group_</span><span class="o">-&gt;</span><span class="n">getVariableNames</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">print_joint_values</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">moveit</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">RobotStatePtr</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">label</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">joint_names</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_joint_model_group_</span><span class="o">-&gt;</span><span class="n">getVariableNames</span><span class="p">();</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mirte_arm_joint_values</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mirte_arm_joint_values</span><span class="p">;</span><span class="w"></span>
 
-<span class="w">    </span><span class="n">state</span><span class="o">-&gt;</span><span class="n">copyJointGroupPositions</span><span class="p">(</span>
-<span class="w">      </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span>
-<span class="w">      </span><span class="n">mirte_arm_joint_values</span><span class="p">);</span>
+<span class="w">    </span><span class="n">state</span><span class="o">-&gt;</span><span class="n">copyJointGroupPositions</span><span class="p">(</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_joint_model_group_</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="n">mirte_arm_joint_values</span><span class="p">);</span><span class="w"></span>
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">joint_names</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span>
-<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">        </span><span class="s">&quot;[%s] %s: %f&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">label</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span>
-<span class="w">        </span><span class="n">joint_names</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">c_str</span><span class="p">(),</span>
-<span class="w">        </span><span class="n">mirte_arm_joint_values</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">};</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">joint_names</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="n">RCLCPP_INFO</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">get_logger</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;[%s] %s: %f&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="n">label</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="n">joint_names</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">c_str</span><span class="p">(),</span><span class="w"></span>
+<span class="w">        </span><span class="n">mirte_arm_joint_values</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 
 <span class="p">}</span><span class="w">  </span><span class="c1">// namespace mirte_lc_moveit_cpp</span>
 
@@ -780,7 +771,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="file_include_mirte_lc_moveit_cpp_moveit_action_server.hpp.html" class="btn btn-neutral float-left" title="File moveit_action_server.hpp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../__standards.html" class="btn btn-neutral float-right" title="Standard Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../standards.html" class="btn btn-neutral float-right" title="Standard Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

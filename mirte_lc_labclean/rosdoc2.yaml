@@ -1,0 +1,61 @@
+project:
+  name: mirte_lc_labclean
+  version: 1.0.0
+  description: "Lab cleanup behavior package for lab cleanup robot"
+
+builder:
+  type: sphinx
+
+inputs:
+  code:
+    - config
+    - launch
+    - mirte_lc_labclean
+
+  docs:
+    - docs
+    - examples
+    - README.md
+
+exclude:
+  - "**/test/**"
+  - "**/tests/**"
+  - "**/build/**"
+  - "**/install/**"
+  - "**/*.pyc"
+
+doxygen:
+  enable: true
+  config:
+    PROJECT_NAME: "My Robot Package"
+    OUTPUT_LANGUAGE: English
+    RECURSIVE: YES
+    EXTRACT_ALL: YES
+    EXTRACT_PRIVATE: NO
+    EXTRACT_STATIC: YES
+    INPUT:
+      - include
+      - src
+    FILE_PATTERNS:
+      - "*.h"
+      - "*.hpp"
+      - "*.cpp"
+
+sphinx:
+  builder: html
+  config:
+    html_theme: sphinx_rtd_theme
+    html_static_path: ["_static"]
+    extensions:
+      - breathe
+      - exhale
+      - sphinx.ext.autodoc
+      - sphinx.ext.viewcode
+      - sphinx.ext.napoleon
+
+output:
+  directory: docs_output
+
+breathe:
+  project: "Lab Clean Package"
+  doxygen_output: "doxygen/xml"

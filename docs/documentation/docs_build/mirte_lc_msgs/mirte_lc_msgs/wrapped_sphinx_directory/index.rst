@@ -5,25 +5,17 @@ mirte_lc_msgs
 
 TODO: Package description
 
-
 .. toctree::
    :maxdepth: 2
 
-   Links <__links>
 
 
+   Message Definitions <interfaces/message_definitions>
+   Service Definitions <interfaces/service_definitions>
+   Action Definitions <interfaces/action_definitions>
+   Standard Documents <standards>
 
-
-.. toctree::
-   :maxdepth: 2
-
-   Message Definitions <__message_definitions>
-   Service Definitions <__service_definitions>
-   Action Definitions <__action_definitions>
-   Standard Documents <__standards>
-   ROS Package Dependencies <__ros_package_dependencies>
-
-
+.. include:: __readme_include.rst
 
 .. toctree::
    :hidden:

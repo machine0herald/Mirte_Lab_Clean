@@ -1,27 +1,53 @@
 # Quickstart for mirte_lc_nav2
 
-This quickstart explains common usage for the `mirte_lc_nav2` package.
+This quickstart explains common usage for the [`mirte_lc_nav2`](https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_nav2) package.
 
-## Run (example)
-Launch the LabClean Nav2 stack with the coverage and exploration nodes:
+## Run
 
 ```bash
-ros2 launch mirte_lc_nav2 mirte_lc_nav2.launch.py use_sim_time:=false
+ros2 run mirte_lc_nav2 labclean_manager
 ```
 
-This launch will start:
-- `labclean_navigator` (package: `mirte_lc_nav2`)
-- `planner_server`, `controller_server`, `bt_navigator`, `behavior_server` (Nav2)
-- `explore_node` (package: `explore_lite`)
+The node connects to Nav2's `goThroughPoses` action server and subscribes to `/global_costmap/costmap`. It is ready to accept goals once Nav2 is running.
 
 ## Node information
-- `labclean_navigator`: coverage action server for LabClean navigation
-- `explore_node`: exploration planner for map discovery
+
+### labclean_action_server
+
+**Action servers**
+
+| Action | Type | Description |
+|---|---|---|
+| `/labclean_navigator/coverage` | `mirte_lc_msgs/NavigateCoverage` | Execute a full coverage plan |
+
+**Services**
+
+| Service | Type | Description |
+|---|---|---|
+| `/labclean_navigator/set_state` | `mirte_lc_msgs/ServeCoverageStatus` | Pause (`0`), resume (`1`), or stop (`2`) ongoing coverage |
+
+**Subscribed topics**
+
+| Topic | Type | Description |
+|---|---|---|
+| `/global_costmap/costmap` | `nav_msgs/OccupancyGrid` | Costmap used for path planning |
+
+**Feedback published during coverage**
+
+| Field | Description |
+|---|---|
+| `completion_percentage` | Percentage of segments completed |
+| `current_segment` | Index of the segment being executed |
+| `total_segments` | Total number of segments in the plan |
+
+## Available planners
+
+| Planner string | Class | Algorithm |
+|---|---|---|
+| `SkeletonPlanner` | `SkeletonPath` | Medial axis skeleton → graph traversal |
+| `SpanningTreePlanner` | `SpanningTreePath` | DFS spanning tree → contour circumnavigation |
+| `CVTPlanner` | `CVTPath` | Centroidal Voronoi Tessellation + TSP |
 
 ## Configuration
-Use the package config files in `config/`, including:
-- `nav2_coverage_params.yaml`
-- `fbe_params.yaml`
 
-Common launch arguments:
-- `use_sim_time` (bool): whether to use simulation clock
+The planner is selected per goal via the `planner_type` field of the `NavigateCoverage` action. No static configuration file is required. Planner parameters (resolution, scale, seed count) are set at construction time in `navigators.py` and can be adjusted there.

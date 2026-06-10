@@ -75,12 +75,17 @@ $(function() {
 <div class="title">mirte_lc_moveit_cpp::MirteLCMoveItActionServer Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Implements a MoveIt-based action server for robot and gripper motion.  
+ <a href="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="moveit__action__server_8hpp_source.html">moveit_action_server.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for mirte_lc_moveit_cpp::MirteLCMoveItActionServer:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer__inherit__graph.png" border="0" usemap="#amirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_inherit__map" alt="Inheritance graph"/></div>
 <map name="amirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_inherit__map" id="amirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,80,213,121"/>
+<area shape="rect" title="Implements a MoveIt&#45;based action server for robot and gripper motion." alt="" coords="5,80,213,121"/>
 <area shape="rect" title=" " alt="" coords="58,5,161,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -89,7 +94,7 @@ Collaboration diagram for mirte_lc_moveit_cpp::MirteLCMoveItActionServer:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer__coll__graph.png" border="0" usemap="#amirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_coll__map" alt="Collaboration graph"/></div>
 <map name="amirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_coll__map" id="amirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer_coll__map">
-<area shape="rect" title=" " alt="" coords="5,80,213,121"/>
+<area shape="rect" title="Implements a MoveIt&#45;based action server for robot and gripper motion." alt="" coords="5,80,213,121"/>
 <area shape="rect" title=" " alt="" coords="58,5,161,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -105,13 +110,52 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>GoalHandleMoveToPosi
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a135156009bc26a9128de64c306859aa3"><td class="memItemLeft" align="right" valign="top"><a id="a135156009bc26a9128de64c306859aa3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>MirteLCMoveItActionServer</b> (const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions() .automatically_declare_parameters_from_overrides(true))</td></tr>
+<tr class="memitem:a135156009bc26a9128de64c306859aa3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer.html#a135156009bc26a9128de64c306859aa3">MirteLCMoveItActionServer</a> (const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions() .automatically_declare_parameters_from_overrides(true))</td></tr>
+<tr class="memdesc:a135156009bc26a9128de64c306859aa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new MoveIt action server node.  <a href="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer.html#a135156009bc26a9128de64c306859aa3">More...</a><br /></td></tr>
 <tr class="separator:a135156009bc26a9128de64c306859aa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70f2d4305649047f1791e99ba26823eb"><td class="memItemLeft" align="right" valign="top"><a id="a70f2d4305649047f1791e99ba26823eb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>initialize_moveit</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmirte__lc__moveit__cpp_1_1MirteLCMoveItActionServer.html#a70f2d4305649047f1791e99ba26823eb">initialize_moveit</a> ()</td></tr>
+<tr class="memdesc:a70f2d4305649047f1791e99ba26823eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize MoveIt interfaces and configure the arm and gripper groups. <br /></td></tr>
 <tr class="separator:a70f2d4305649047f1791e99ba26823eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Implements a MoveIt-based action server for robot and gripper motion. </p>
+<p>The node exposes the /move_to_position action and handles named targets, pose goals, and gripper commands for the MIRTE arm and gripper groups. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a135156009bc26a9128de64c306859aa3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a135156009bc26a9128de64c306859aa3">&#9670;&nbsp;</a></span>MirteLCMoveItActionServer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mirte_lc_moveit_cpp::MirteLCMoveItActionServer::MirteLCMoveItActionServer </td>
+          <td>(</td>
+          <td class="paramtype">const rclcpp::NodeOptions &amp;&#160;</td>
+          <td class="paramname"><em>options</em> = <code>rclcpp::NodeOptions()&#160;.automatically_declare_parameters_from_overrides(true)</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a new MoveIt action server node. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">options</td><td>Node options for ROS 2 component configuration. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/mirte_lc_moveit_cpp/<a class="el" href="moveit__action__server_8hpp_source.html">moveit_action_server.hpp</a></li>
 </ul>

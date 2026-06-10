@@ -8,10 +8,11 @@ builder:
 
 inputs:
   code:
-    - include
-    - src
+    - launch
+    - worlds
+    - config
   docs:
-    - doc
+    - docs
     - README.md
 
 exclude:
