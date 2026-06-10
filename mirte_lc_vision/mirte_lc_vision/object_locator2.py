@@ -260,9 +260,9 @@ class ObjectLocator2(Node):
         ]
 
         # Crop
-        points_np = points_np[
-            points_np[:, 1] <= 0.0
-        ]
+        # points_np = points_np[
+        #     points_np[:, 1] <= 0.0
+        # ]
 
         self.get_logger().info(f"Converted to numpy array with shape {points_np.shape}")
         self.get_logger().info(f"Min point: {np.min(points_np, axis=0)}")
@@ -295,7 +295,7 @@ class ObjectLocator2(Node):
                 num_iterations=2000
             )
 
-            if len(inliers) < 50:
+            if len(inliers) < 100:
                 break
 
             pcd_LQ = pcd_LQ.select_by_index(
@@ -314,7 +314,7 @@ class ObjectLocator2(Node):
                 plane_model[2]**2
             )
 
-            plane_mask = dist < 0.003
+            plane_mask = dist < 0.005
 
             remaining_mask &= ~plane_mask
 
@@ -467,12 +467,13 @@ class ObjectLocator2(Node):
 
                 continue
 
+
             extent[2] = max(extent[2], 0.5 * extent[2] + center[2])
 
-            if (extent[0] > self.maxDim or
-                extent[1] > self.maxDim or
-                extent[2] > self.maxDim):
-                continue
+            # if (extent[0] > self.maxDim or
+            #     extent[1] > self.maxDim or
+            #     extent[2] > self.maxDim):
+            #     continue
 
             rotation = obb.R #(3,3) float 64 array
 
@@ -566,7 +567,7 @@ class ObjectLocator2(Node):
             marker_array
         )
         self.get_logger().info(
-            f"Published {len(marker_array.markers)-1} bounding boxes"
+            "Published {len(marker_array.markers)-1} bounding boxes"
         )
         
         self.object_pub.publish(

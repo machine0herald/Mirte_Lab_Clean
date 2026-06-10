@@ -30,7 +30,7 @@ amcl:
     save_pose_rate: 0.5
     sigma_hit: 0.2
     tf_broadcast: true
-    transform_tolerance: 3.0
+    transform_tolerance: 0.3
     update_min_a: 0.2
     update_min_d: 0.25
     z_hit: 0.5
@@ -151,7 +151,7 @@ controller_server:
     general_goal_checker:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.5
+      xy_goal_tolerance: 0.75    # was 0.5
       yaw_goal_tolerance: 1.0
 
     # MPPI params
@@ -174,7 +174,7 @@ controller_server:
       wz_max: 1.9
       iteration_count: 1
       prune_distance: 0.5
-      transform_tolerance: 0.7
+      transform_tolerance: 0.3
       temperature: 0.3
       gamma: 0.015
       motion_model: "DiffDrive"
@@ -329,8 +329,8 @@ global_costmap:
         map_subscribe_transient_local: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 2.0
-        inflation_radius: 0.6
+        cost_scaling_factor: 3.0   # sharper dropoff = less spread
+        inflation_radius: 0.35     # was 0.6
       always_send_full_costmap: True
 
 map_server:
@@ -355,8 +355,8 @@ planner_server:
     planner_plugins: ["GridBased"]
     GridBased:
       plugin: "nav2_navfn_planner/NavfnPlanner"
-      tolerance: 0.5
-      use_astar: false
+      tolerance: 1.0             # was 0.5
+      use_astar: true            # A* handles near-obstacle goals better than Dijkstra
       allow_unknown: true
 
 smoother_server:
@@ -387,7 +387,7 @@ behavior_server:
       plugin: "nav2_behaviors/AssistedTeleop"
     global_frame: odom
     robot_base_frame: base_link
-    transform_tolerance: 1.2
+    transform_tolerance: 0.3
     use_sim_time: false
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
