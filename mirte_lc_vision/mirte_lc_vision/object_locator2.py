@@ -270,7 +270,7 @@ class ObjectLocator2(Node):
                 plane_model[2]**2
             )
 
-            plane_mask = dist < 0.004
+            plane_mask = dist < 0.007
 
             remaining_mask &= ~plane_mask
 
@@ -283,9 +283,9 @@ class ObjectLocator2(Node):
             f"Extracted {len(object_pcd.points)} object points after plane segmentation"
         )
 
-        if (object_points.shape[0] < 5):
+        if (object_points.shape[0] < 3):
             return
-
+        
         transform = self.tf_buffer.lookup_transform(
             target_frame='base_link',
             source_frame=msg.header.frame_id,
@@ -329,6 +329,15 @@ class ObjectLocator2(Node):
         ).as_matrix()
 
         points_map = (R @ points_base_link_np.T).T + t
+
+        for i in range(len(points_map)):
+            
+            if (self.is_occupied(points_map[i, 0], points_map[i, 1])):
+                points_map[i, 0] = np.inf
+
+        points_map = points_map[
+            np.isfinite(points_map).all(axis=1)
+        ]
 
         message = self.point_cloud(points_map, 'map')
 
