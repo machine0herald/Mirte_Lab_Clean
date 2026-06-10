@@ -467,6 +467,8 @@ class ObjectLocator2(Node):
 
                 continue
 
+            extent[2] = max(extent[2], 0.5 * extent[2] + center[2])
+
             if (extent[0] > self.maxDim or
                 extent[1] > self.maxDim or
                 extent[2] > self.maxDim):

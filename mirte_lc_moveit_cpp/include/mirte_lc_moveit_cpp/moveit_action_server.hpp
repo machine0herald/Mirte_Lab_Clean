@@ -117,7 +117,7 @@ public:
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     mirte_arm_move_group_->setStartStateToCurrentState();
-    mirte_arm_move_group_->setNamedTarget("standby");
+    mirte_arm_move_group_->setNamedTarget("vigilant");
     mirte_arm_move_group_->move();
 
     // Mirte_gripper initialization
