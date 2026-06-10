@@ -5,25 +5,17 @@ mirte_lc_gazebo
 
 TODO: Package description
 
-
-.. toctree::
-   :maxdepth: 2
-
-   Links <__links>
-
-
-
-
 .. toctree::
    :maxdepth: 2
 
 
 
 
-   Standard Documents <__standards>
 
 
+   Standard Documents <standards>
 
+.. include:: __readme_include.rst
 
 .. toctree::
    :hidden:
