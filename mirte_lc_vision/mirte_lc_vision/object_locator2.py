@@ -214,6 +214,12 @@ class ObjectLocator2(Node):
         points_np = points_np[
             np.isfinite(points_np).all(axis=1)
         ]
+
+        # Crop
+        points_np = points_np[
+            points_np[:, 1] <= 0.0
+        ]
+
         self.get_logger().info(f"Converted to numpy array with shape {points_np.shape}")
         self.get_logger().info(f"Min point: {np.min(points_np, axis=0)}")
         self.get_logger().info(f"Max point: {np.max(points_np, axis=0)}")
