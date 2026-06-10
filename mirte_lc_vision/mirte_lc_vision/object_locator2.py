@@ -264,7 +264,7 @@ class ObjectLocator2(Node):
                 plane_model[2]**2
             )
 
-            plane_mask = dist < 0.004
+            plane_mask = dist < 0.007
 
             remaining_mask &= ~plane_mask
 

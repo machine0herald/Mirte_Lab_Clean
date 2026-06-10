@@ -4,11 +4,12 @@ This module builds and returns the root of the LabClean behaviour tree used by
 ROS2 and py_trees. It wires topic subscriptions, blackboard variables, and task
 branches for exploration, object handling, and coverage navigation.
 
-Examples:
+Handy cli commands:
     $ py-trees-render -b mirte_lc_labclean.labclean_tree.create_root
     $ py-trees-blackboard-watcher --list
     $ py-trees-blackboard-watcher /battery.percentage
     $ ros2 run mirte_lc_labclean labclean_tree
+    $ py-trees-tree-viewer --no-sandbox
     
 """
 import operator
@@ -73,6 +74,8 @@ def create_root() -> py_trees.behaviour.Behaviour:
         variable_value="",
         overwrite=False,
     )
+
+    init_flash_orange = behaviours.FlashLedStrip(name= "Flash Orange", colour=[1.0, 0.117, 0])
 
     # 1.1: Exploration status to Blackboard #
     exploration2bb = py_trees_ros.subscribers.ToBlackboard(
@@ -214,6 +217,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
     approach = behaviours.NavigateToPosition(name="Approach", blackboard_key="cloud_objects_detected")
     deploy_arm = behaviours.MoveArm(name="Deploy Arm", predefined_pose='standby')
     pick_or_skip = py_trees.composites.Selector(name="Pick or Skip", memory=True)
+    flash_orange_2 = behaviours.FlashLedStrip(name= "Flash Orange", colour=[1.0, 0.117, 0])
 
     def check_planar_detected_on_blackboard(
         blackboard: py_trees.blackboard.Blackboard,
@@ -291,6 +295,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
 
     # 1. Topics to Blackboard branch
     topics2bb.add_children([
+        init_flash_orange,
         init_cloud,
         init_planar,
         init_explore,
@@ -314,7 +319,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
 
     # 2.2: Detection and handling
     approach_and_handle.add_children([detection_check, pause_coverage, handle, resume_coverage])
-    handle.add_children([flash_green, pick_up])
+    handle.add_children([flash_green, pick_up, flash_orange_2])
     pick_up.add_children([approach, deploy_arm, pick_or_skip])
     pick_or_skip.add_children([sort, idle_pick])
     
