@@ -190,3 +190,5 @@ On the MIRTE, execute the following commands:
     $ros2 run mirte_test mirte_master_set_voltage_ranges
     $ros2 run mirte_test mirte_master_calibrate
 Turn off ROS2 on the MIRTE and reassemble the arm components so they match the "home" pose.
+
+sudo apt install ros-humble-image-pipeline

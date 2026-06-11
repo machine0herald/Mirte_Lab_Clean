@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coverage Navigation package &mdash; mirte_lc_nav2 0.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> mirte_lc_nav2
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../mirte_lc_nav2.html">mirte_lc_nav2 package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../mirte_lc_nav2.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../mirte_lc_nav2.navigation.html">mirte_lc_nav2.navigation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mirte_lc_nav2.navigator_types.html">mirte_lc_nav2.navigator_types module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mirte_lc_nav2.navigators.html">mirte_lc_nav2.navigators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mirte_lc_nav2.utils.html">mirte_lc_nav2.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../mirte_lc_nav2.html#module-mirte_lc_nav2">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../standards.html">Standard Documents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../PACKAGE.html">PACKAGE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../README.html">README</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../README.html#coverage-navigation-package">Coverage Navigation package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#run">Run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#nodes">Nodes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#coverage-execution-flow">Coverage execution flow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#planners">Planners</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#systematicnavigator-shared-base-class"><code class="docutils literal notranslate"><span class="pre">SystematicNavigator</span></code> — shared base class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#dependencies">Dependencies</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mirte_lc_nav2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Coverage Navigation package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/standard_docs/original/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="coverage-navigation-package">
+<h1>Coverage Navigation package<a class="headerlink" href="#coverage-navigation-package" title="Permalink to this headline"></a></h1>
+<p>Coverage navigation package for the LabClean application. Provides the action server that executes coverage plans, a set of pluggable path planners, and shared utilities for map processing and ROS path conversion.</p>
+<hr class="docutils" />
+<section id="run">
+<h2>Run<a class="headerlink" href="#run" title="Permalink to this headline"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2 run mirte_lc_nav2 labclean_navigator
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="nodes">
+<h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this headline"></a></h2>
+<section id="labclean-action-server">
+<h3><code class="docutils literal notranslate"><span class="pre">labclean_action_server</span></code><a class="headerlink" href="#labclean-action-server" title="Permalink to this headline"></a></h3>
+<p>Accepts <code class="docutils literal notranslate"><span class="pre">NavigateCoverage</span></code> goals, delegates path planning to the requested planner, and drives the robot through coverage segments using Nav2’s <code class="docutils literal notranslate"><span class="pre">goThroughPoses</span></code>. Supports pause, resume, and stop at runtime via a service interface.</p>
+<p><strong>Action servers</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Action</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/labclean_navigator/coverage</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs/NavigateCoverage</span></code></p></td>
+<td><p>Execute a full coverage plan</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Services</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Service</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/labclean_navigator/set_state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs/ServeCoverageStatus</span></code></p></td>
+<td><p>Pause, resume, or stop ongoing coverage</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Subscribed topics</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Topic</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/global_costmap/costmap</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nav_msgs/OccupancyGrid</span></code></p></td>
+<td><p>Live costmap used for coverage planning</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<hr class="docutils" />
+<section id="coverage-execution-flow">
+<h2>Coverage execution flow<a class="headerlink" href="#coverage-execution-flow" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Receive NavigateCoverage goal
+│
+├── Look up robot position via TF (map → base_link)
+├── Instantiate requested planner
+├── planner.plan(costmap, start)
+│     ├── update_map()     — threshold, contour extraction, world↔pixel conversion
+│     ├── generate_path()  — planner-specific algorithm
+│     └── sanitize_paths() — clamp waypoints to costmap bounds
+│
+├── Sort segments longest-first
+│
+└── For each segment:
+      ├── goThroughPoses(segment)
+      ├── Poll feedback loop
+      │     ├── cancel requested  → canceled()
+      │     ├── stop requested    → abort()
+      │     ├── pause requested   → cancelTask()
+      │     │     ├── save_path() — reinsert remaining segment at queue front
+      │     │     └── spin until resume → goThroughPoses(remaining)
+      │     └── isTaskComplete()  → advance to next segment
+      └── publish_feedback (completion %, current/total segments)
+</pre></div>
+</div>
+<section id="pause-resume-behaviour">
+<h3>Pause / resume behaviour<a class="headerlink" href="#pause-resume-behaviour" title="Permalink to this headline"></a></h3>
+<p>On pause the server calls <code class="docutils literal notranslate"><span class="pre">cancelTask()</span></code> immediately, then calls <code class="docutils literal notranslate"><span class="pre">save_path()</span></code> to compute the remaining portion of the current segment before re-queuing it. On resume, <code class="docutils literal notranslate"><span class="pre">goThroughPoses</span></code> is re-issued on that saved segment. The <code class="docutils literal notranslate"><span class="pre">remaining_poses</span></code> field in the service response reflects the last feedback value from Nav2 at the time of the pause.</p>
+<p><code class="docutils literal notranslate"><span class="pre">save_path()</span></code> finds the resume index by computing the closest waypoint to the current robot pose (TF lookup). If that lookup fails it falls back to using <code class="docutils literal notranslate"><span class="pre">remaining_poses</span></code> to slice the tail of the segment.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="planners">
+<h2>Planners<a class="headerlink" href="#planners" title="Permalink to this headline"></a></h2>
+<p>All planners inherit from <code class="docutils literal notranslate"><span class="pre">SystematicNavigator</span></code> and implement <code class="docutils literal notranslate"><span class="pre">generate_path(start)</span></code>. The <code class="docutils literal notranslate"><span class="pre">PLANNERS</span></code> registry maps name strings to classes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mirte_lc_nav2.navigators</span> <span class="kn">import</span> <span class="n">PLANNERS</span>
+<span class="c1"># PLANNERS = {</span>
+<span class="c1">#   &quot;SkeletonPlanner&quot;:     SkeletonPath,</span>
+<span class="c1">#   &quot;SpanningTreePlanner&quot;: SpanningTreePath,</span>
+<span class="c1">#   &quot;StraightLinePlanner&quot;: StraightLinePath,</span>
+<span class="c1">#   &quot;CVTPlanner&quot;:          CVTPath,</span>
+<span class="c1"># }</span>
+</pre></div>
+</div>
+<section id="skeletonplanner-default">
+<h3><code class="docutils literal notranslate"><span class="pre">SkeletonPlanner</span></code> (default)<a class="headerlink" href="#skeletonplanner-default" title="Permalink to this headline"></a></h3>
+<p>Computes the medial axis skeleton of the free space, converts it to a graph, and traverses between leaf nodes using shortest graph paths.</p>
+<!-- | Step | Detail |
+|---|---|
+| Skeletonization | `skimage.morphology.skeletonize` on the binary costmap |
+| Graph | KDTree-connected waypoint graph; disconnected components bridged |
+| Traversal | Greedy nearest-leaf-first over graph shortest paths |
+| Multi-group | Runs once per polygon group; start of next group is end of previous | -->
+<p><img alt="skeletonplanner image" src="Mirte_Lab_Clean/tree/main/mirte_lc_nav2/docs/skeleton.png" /></p>
+</section>
+<section id="spanningtreeplanner">
+<h3><code class="docutils literal notranslate"><span class="pre">SpanningTreePlanner</span></code><a class="headerlink" href="#spanningtreeplanner" title="Permalink to this headline"></a></h3>
+<p>Downsamples the costmap, builds a DFS spanning tree over free cells, and circumnavigates contours around the tree.</p>
+<!-- | Step | Detail |
+|---|---|
+| Downsampling | `cv2.resize` with `scale` factor (default `0.06`) |
+| Tree | `nx.dfs_tree` per connected component, composed into a directed graph, then edge-subdivided |
+| Contours | Rectangular regions around tree nodes → `cv2.findContours` |
+| Path | Contour pixels resampled from nearest point to start, then wrapped | -->
+<p><img alt="skeletonplanner image" src="Mirte_Lab_Clean/tree/main/mirte_lc_nav2/docs/tree.png" /></p>
+</section>
+<section id="cvtplanner">
+<h3><code class="docutils literal notranslate"><span class="pre">CVTPlanner</span></code><a class="headerlink" href="#cvtplanner" title="Permalink to this headline"></a></h3>
+<p>Samples coverage waypoints using Centroidal Voronoi Tessellation (Lloyd’s algorithm), then solves a nearest-neighbour TSP over the centroids.</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">n_seeds</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">30</span></code></p></td>
+<td><p>Number of Voronoi cells</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">n_iterations</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">20</span></code></p></td>
+<td><p>Lloyd iterations</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="straightlinepath">
+<h3><code class="docutils literal notranslate"><span class="pre">StraightLinePath</span></code><a class="headerlink" href="#straightlinepath" title="Permalink to this headline"></a></h3>
+<p>Generates a single diagonal straight-line trajectory from the start pose. Useful for testing and calibration only.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="systematicnavigator-shared-base-class">
+<h2><code class="docutils literal notranslate"><span class="pre">SystematicNavigator</span></code> — shared base class<a class="headerlink" href="#systematicnavigator-shared-base-class" title="Permalink to this headline"></a></h2>
+<p>All planners share this base. Key shared methods:</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plan(map_msg,</span> <span class="pre">start)</span></code></p></td>
+<td><p>Entry point: calls <code class="docutils literal notranslate"><span class="pre">update_map</span></code> → <code class="docutils literal notranslate"><span class="pre">generate_path</span></code> → <code class="docutils literal notranslate"><span class="pre">sanitize_paths</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_map(map_msg)</span></code></p></td>
+<td><p>Thresholds occupancy grid, extracts and groups polygon contours, stores <code class="docutils literal notranslate"><span class="pre">self.polymap</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sanitize_paths()</span></code></p></td>
+<td><p>Clamps all waypoints to valid costmap bounds; removes duplicate points introduced by clamping</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">set_waypoints(waypoints)</span></code></p></td>
+<td><p>Builds a KDTree-connected <code class="docutils literal notranslate"><span class="pre">nx.Graph</span></code>; bridges disconnected components</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">find_leaf_nodes(graph)</span></code></p></td>
+<td><p>Returns nodes with degree 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">find_nearest_node(graph,</span> <span class="pre">pos,</span> <span class="pre">nodes)</span></code></p></td>
+<td><p>Nearest node by Euclidean distance</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">world_to_pixel_poly(polygon)</span></code></p></td>
+<td><p>Map-frame coordinates → costmap pixel indices</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pixel_to_world_poly(polygon)</span></code></p></td>
+<td><p>Costmap pixel indices → map-frame coordinates</p></td>
+</tr>
+</tbody>
+</table>
+<p>All planners also follow this pattern for retrieving a map
+<img alt="skeletonplanner image" src="Mirte_Lab_Clean/tree/main/mirte_lc_nav2/docs/navigator.png" /></p>
+<p><strong>Published topics</strong> (when a <code class="docutils literal notranslate"><span class="pre">node</span></code> is provided)</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Topic</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/systematic_navigator/map_contours</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">geometry_msgs/PolygonStamped</span></code></p></td>
+<td><p>Extracted map boundary contours</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/systematic_navigator/decomposed_map</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">visualization_msgs/MarkerArray</span></code></p></td>
+<td><p>Decomposition cells (if applicable)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/systematic_navigator/planned_path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">visualization_msgs/MarkerArray</span></code></p></td>
+<td><p>Planned waypoint path</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline"></a></h2>
+<section id="to-ros-path-points-frame-id-spacing">
+<h3><code class="docutils literal notranslate"><span class="pre">to_ros_path(points,</span> <span class="pre">frame_id,</span> <span class="pre">spacing)</span></code><a class="headerlink" href="#to-ros-path-points-frame-id-spacing" title="Permalink to this headline"></a></h3>
+<p>Converts a list of <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> points into a <code class="docutils literal notranslate"><span class="pre">nav_msgs/Path</span></code> by removing duplicates (&lt; 1 mm apart) and uniformly resampling to the requested spacing.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mirte_lc_nav2.utils</span> <span class="kn">import</span> <span class="n">to_ros_path</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">to_ros_path</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">frame_id</span><span class="o">=</span><span class="s2">&quot;map&quot;</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Argument</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">points</span></code></p></td>
+<td><p>—</p></td>
+<td><p>Sequence of <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> tuples</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">frame_id</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;map&quot;</span></code></p></td>
+<td><p>TF frame for output poses</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">spacing</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.1</span></code> m</p></td>
+<td><p>Target distance between output poses</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="log-node-msg-type-msg">
+<h3><code class="docutils literal notranslate"><span class="pre">log(node,</span> <span class="pre">msg_type,</span> <span class="pre">msg)</span></code><a class="headerlink" href="#log-node-msg-type-msg" title="Permalink to this headline"></a></h3>
+<p>Thin wrapper around the ROS logger. Falls back to <code class="docutils literal notranslate"><span class="pre">print()</span></code> when <code class="docutils literal notranslate"><span class="pre">node</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (e.g. running planners in Jupyter).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mirte_lc_nav2.utils</span> <span class="kn">import</span> <span class="n">log</span><span class="p">,</span> <span class="n">LogType</span>
+<span class="n">log</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">LogType</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s2">&quot;planning complete&quot;</span><span class="p">)</span>
+<span class="n">log</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">LogType</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span> <span class="s2">&quot;running without ROS node&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">LogType</span></code></p></th>
+<th class="head"><p>ROS level</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">INFO</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">get_logger().info</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">WARN</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">get_logger().warn</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ERR</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">get_logger().error</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DEBUG</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">get_logger().debug</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<hr class="docutils" />
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rclpy</span></code>, <code class="docutils literal notranslate"><span class="pre">tf2_ros</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nav2_simple_commander</span></code> (<code class="docutils literal notranslate"><span class="pre">BasicNavigator</span></code>, <code class="docutils literal notranslate"><span class="pre">PyCostmap2D</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nav_msgs</span></code>, <code class="docutils literal notranslate"><span class="pre">geometry_msgs</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization_msgs</span></code>, <code class="docutils literal notranslate"><span class="pre">std_msgs</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">opencv-python</span></code> (<code class="docutils literal notranslate"><span class="pre">cv2</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">networkx</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scikit-image</span></code> (<code class="docutils literal notranslate"><span class="pre">skimage.morphology</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code> (<code class="docutils literal notranslate"><span class="pre">KDTree</span></code>, <code class="docutils literal notranslate"><span class="pre">Voronoi</span></code>)</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The &lt;mirte_lc_nav2&gt; Contributors. License: Apache-2.0.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -8,6 +8,7 @@ Submodules
    :maxdepth: 4
 
    mirte_lc_vision.classifier_2d
+   mirte_lc_vision.classifier_2d_pub
    mirte_lc_vision.object_locator
    mirte_lc_vision.object_locator2
    mirte_lc_vision.pc_node

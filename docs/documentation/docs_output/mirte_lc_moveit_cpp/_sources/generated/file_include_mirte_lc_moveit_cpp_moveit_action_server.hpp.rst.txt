@@ -9,6 +9,10 @@ File moveit_action_server.hpp
 .. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
 
 
+Defines the MIRTE MoveIt action server node and execution helpers. 
+
+
+
 .. contents:: Contents
    :local:
    :backlinks: none

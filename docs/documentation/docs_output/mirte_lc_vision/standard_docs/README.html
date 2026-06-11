@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>README &mdash; mirte_lc_vision 0.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="PACKAGE" href="PACKAGE.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> mirte_lc_vision
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mirte_lc_vision.html">mirte_lc_vision package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../mirte_lc_vision.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../mirte_lc_vision.classifier_2d.html">mirte_lc_vision.classifier_2d module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mirte_lc_vision.classifier_2d_pub.html">mirte_lc_vision.classifier_2d_pub module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mirte_lc_vision.object_locator.html">mirte_lc_vision.object_locator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mirte_lc_vision.object_locator2.html">mirte_lc_vision.object_locator2 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mirte_lc_vision.pc_node.html">mirte_lc_vision.pc_node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mirte_lc_vision.test_vision.html">mirte_lc_vision.test_vision module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../mirte_lc_vision.html#module-mirte_lc_vision">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../standards.html">Standard Documents</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="PACKAGE.html">PACKAGE</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">README</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#perception-package">Perception package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#run">Run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nodes">Nodes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">mirte_lc_vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../standards.html">Standard Documents</a> &raquo;</li>
+      <li>README</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/standard_docs/README.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="readme">
+<h1>README<a class="headerlink" href="#readme" title="Permalink to this headline"></a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="perception-package">
+<h2>Perception package<a class="headerlink" href="#perception-package" title="Permalink to this headline"></a></h2>
+<p>Perception package for the LabClean application. Provides two independent nodes: a depth point cloud processor that detects and localises objects in the map frame, and a YOLO-based gripper camera classifier that identifies object classes for sorting decisions.</p>
+<hr class="docutils" />
+<section id="run">
+<h3>Run<a class="headerlink" href="#run" title="Permalink to this headline"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Depth-based object locator</span>
+ros2 run mirte_lc_perception object_locator
+
+<span class="c1"># YOLO gripper camera detector</span>
+ros2 run mirte_lc_vision classifier_2d
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="nodes">
+<h3>Nodes<a class="headerlink" href="#nodes" title="Permalink to this headline"></a></h3>
+<section id="object-locator">
+<h4><code class="docutils literal notranslate"><span class="pre">object_locator</span></code><a class="headerlink" href="#object-locator" title="Permalink to this headline"></a></h4>
+<p>Processes depth point clouds from <code class="docutils literal notranslate"><span class="pre">/camera/depth/points</span></code>, removes ground and planar surfaces via iterative RANSAC, transforms surviving points into the map frame, clusters them with DBSCAN, and publishes oriented bounding boxes as both RViz markers and <code class="docutils literal notranslate"><span class="pre">DetectedObjectArray</span></code> messages.</p>
+<p>Startup is deferred by 5 s to allow TF to become available before subscriptions are registered.</p>
+<p><strong>Subscribed topics</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Topic</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>QoS</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/camera/depth/points</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sensor_msgs/PointCloud2</span></code></p></td>
+<td><p>BEST_EFFORT, depth 10</p></td>
+<td><p>Depth point cloud from the camera</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/global_costmap/costmap</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nav_msgs/OccupancyGrid</span></code></p></td>
+<td><p>default</p></td>
+<td><p>Costmap for rejecting detections inside walls</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Published topics</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Topic</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/perception/depth/detected_objects</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs/DetectedObjectArray</span></code></p></td>
+<td><p>Detected objects in the map frame</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/object_bounding_boxes</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">visualization_msgs/MarkerArray</span></code></p></td>
+<td><p>OBB markers for RViz (10 s lifetime, green)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/obtained_pointcloud</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sensor_msgs/PointCloud2</span></code></p></td>
+<td><p>Raw input cloud (camera frame)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/sculpted_pointcloud</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sensor_msgs/PointCloud2</span></code></p></td>
+<td><p>After NaN removal (camera frame)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/downsampled_pointcloud</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sensor_msgs/PointCloud2</span></code></p></td>
+<td><p>After voxel downsampling (camera frame)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/plane_segmented_pointcloud</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sensor_msgs/PointCloud2</span></code></p></td>
+<td><p>After plane removal (camera frame)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/exclusive_pointcloud</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sensor_msgs/PointCloud2</span></code></p></td>
+<td><p>After costmap occupancy filtering (map frame)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Processing pipeline</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Incoming PointCloud2 (queued, maxlen=1)
+│
+├── Wait until TF available (base_link ← camera frame, map ← base_link)
+│
+├── Read XYZ points, drop NaNs
+├── Publish /obtained_pointcloud
+│
+├── Remove non-finite points
+├── Publish /sculpted_pointcloud  (+ /downsampled_pointcloud)
+│
+├── Iterative RANSAC plane removal
+│     ├── segment_plane(distance_threshold=0.003, ransac_n=3, num_iterations=2000)
+│     ├── Remove inliers from working cloud
+│     ├── Mask HQ cloud points within 0.008 m of the plane
+│     └── Repeat until &lt; 100 points remain or &lt; 500 inliers found
+│
+├── Publish /plane_segmented_pointcloud (camera frame)
+│
+├── TF transform: camera frame → base_link → map
+│
+├── Reject points inside occupied costmap cells (threshold ≥ 5)
+├── Publish /exclusive_pointcloud (map frame)
+│
+├── DBSCAN clustering (eps=0.03, min_samples=20)
+│
+└── For each cluster:
+      ├── Compute oriented bounding box (Open3D OBB)
+      ├── Reject if OBB center is in occupied costmap cell
+      ├── Extract yaw from OBB rotation matrix
+      ├── Append DetectedObject (map frame pose + OBB size)
+      └── Append RViz CUBE marker
+</pre></div>
+</div>
+<p><strong>DBSCAN parameters</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">eps</span></code></p></td>
+<td><p>0.03 m</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">min_samples</span></code></p></td>
+<td><p>20</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Plane segmentation parameters</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">distance_threshold</span></code></p></td>
+<td><p>0.003 m</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ransac_n</span></code></p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_iterations</span></code></p></td>
+<td><p>2000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inlier plane mask distance</p></td>
+<td><p>0.008 m</p></td>
+</tr>
+<tr class="row-even"><td><p>Minimum inliers to continue</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>Minimum cloud size to continue</p></td>
+<td><p>100</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p><strong>Note:</strong> Object orientation is flattened to yaw-only before publishing — roll and pitch from the OBB rotation matrix are discarded.</p>
+</div></blockquote>
+</section>
+<hr class="docutils" />
+<section id="classifier-2d">
+<h4><code class="docutils literal notranslate"><span class="pre">classifier_2d</span></code><a class="headerlink" href="#classifier-2d" title="Permalink to this headline"></a></h4>
+<p>Runs YOLO inference on the gripper camera feed on demand. Detection results are returned via a service call rather than continuously streamed, which suits the behaviour tree’s <code class="docutils literal notranslate"><span class="pre">GetPlanarObjects</span></code> polling pattern.</p>
+<p><strong>Subscribed topics</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Topic</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/camera/color/image_raw</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sensor_msgs/Image</span></code></p></td>
+<td><p>Gripper camera feed</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Published topics</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Topic</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/gripper_camera/image_annotated</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sensor_msgs/Image</span></code></p></td>
+<td><p>YOLO-annotated frame (published on each service call)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Services</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Service</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/perception/planar/get_detected_objects</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs/GetDetectedObjects</span></code></p></td>
+<td><p>Run inference on the latest frame and return detections</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Model</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Weights</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_vision/models/ColourdetectionYOLO26n.pt</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Default confidence</p></td>
+<td><p>0.3</p></td>
+</tr>
+<tr class="row-even"><td><p>Input size</p></td>
+<td><p>640 px</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inference device</p></td>
+<td><p>CUDA if available, otherwise CPU</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Label mapping</strong></p>
+<p>Detections are classified into two labels used by the behaviour tree’s <code class="docutils literal notranslate"><span class="pre">PickObject</span></code> for sort routing:</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Model class</p></th>
+<th class="head"><p>Published label</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">green</span></code>, <code class="docutils literal notranslate"><span class="pre">red</span></code>, <code class="docutils literal notranslate"><span class="pre">purple</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;target&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>any other class</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;trash&quot;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Detection coordinate system</strong></p>
+<p>Pose and size fields in the returned <code class="docutils literal notranslate"><span class="pre">DetectedObject</span></code> messages use normalised image coordinates (<code class="docutils literal notranslate"><span class="pre">xywhn</span></code> from YOLO boxes). <code class="docutils literal notranslate"><span class="pre">z</span></code> is always <code class="docutils literal notranslate"><span class="pre">0.0</span></code>. These are <strong>not</strong> in the map frame — they are pixel-space fractions intended for use by the arm controller to centre the gripper over an object.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rclpy</span></code>, <code class="docutils literal notranslate"><span class="pre">tf2_ros</span></code>, <code class="docutils literal notranslate"><span class="pre">cv_bridge</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sensor_msgs</span></code>, <code class="docutils literal notranslate"><span class="pre">nav_msgs</span></code>, <code class="docutils literal notranslate"><span class="pre">geometry_msgs</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization_msgs</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nav2_simple_commander</span></code> (<code class="docutils literal notranslate"><span class="pre">PyCostmap2D</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">open3d</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> (<code class="docutils literal notranslate"><span class="pre">DBSCAN</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code> (<code class="docutils literal notranslate"><span class="pre">Rotation</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opencv-python</span></code> (<code class="docutils literal notranslate"><span class="pre">cv2</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">torch</span></code>, <code class="docutils literal notranslate"><span class="pre">ultralytics</span></code> (YOLO node only)</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="PACKAGE.html" class="btn btn-neutral float-left" title="PACKAGE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The &lt;mirte_lc_vision&gt; Contributors. License: TODO: License declaration.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

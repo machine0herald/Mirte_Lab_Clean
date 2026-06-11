@@ -1,19 +1,27 @@
-# mirte_lc_gazebo
+# Gazebo package
 
-Short description: TODO — add a short description of the package.
+## Run (example)
 
-## Contents
-- Package: mirte_lc_gazebo
-- Path: `/workspaces/lcr/src/mirte_lc/mirte_lc_gazebo`
+Launch the Gazebo world and LabClean integration stack:
 
-## Quickstart
-1. Source your workspace: `source /opt/ros/<distro>/setup.bash && source install/setup.bash`
-2. Build (if needed): `colcon build --packages-select mirte_lc_gazebo`
-3. Run examples in `examples/` or `launch/`.
+```bash
+ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
+```
 
-## Documentation
-- Quickstart / tutorial: `docs/quickstart.md`
-- Examples: `examples/usage.md`
+## Launch Files
 
-## Notes
-- This README was generated automatically. Please replace placeholders with package-specific information.
+The launch file starts:
+
+- Gazebo simulation with one of the worlds in the `./worlds` folder
+- `labclean_tree` from [`mirte_lc_labclean`](https://github.com/matt-rbt/Mirte_Lab_Clean/blob/main/mirte_lc_labclean/mirte_lc_labclean/labclean_tree.py)
+- the LabClean bringup stack via [`mirte_lc_labclean`](https://github.com/matt-rbt/Mirte_Lab_Clean/blob/main/mirte_lc_labclean/launch/labclean_bringup.launch.py)
+
+## Worlds
+
+The package contains a world folder with three testing worlds for lab cleanup
+
+- [floor](https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_gazebo/worlds/floor), an empty lab cleanup floor.
+- [floor_with_cubes](https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_gazebo/worlds/floor_with_cubes), a lab with green cubes as portable objects.
+- [floor_with_cubes_2](https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_gazebo/worlds/floor_with_cubes_2), a larger lab with pink cubes and more obstacles.
+- [floor_with_electronics](), a lab with electronics as portable objects.
+

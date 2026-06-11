@@ -672,8 +672,8 @@ class CoverageTask(py_trees.behaviour.Behaviour):
             py_trees.common.Status: SUCCESS when coverage completes,
                 FAILURE if the action fails, or RUNNING while still active.
         """
-        if self.coverage_future is None:
-            return py_trees.common.Status.FAILURE
+        # if self.coverage_future is None:
+        #     return py_trees.common.Status.FAILURE
 
         # Stage 1: wait for server to accept the goal
         if not self.coverage_future.done():
@@ -681,8 +681,8 @@ class CoverageTask(py_trees.behaviour.Behaviour):
 
         if self.goal_handle is None:
             self.goal_handle = self.coverage_future.result()
-            if not self.goal_handle.accepted:
-                return py_trees.common.Status.FAILURE
+            # if not self.goal_handle.accepted:
+            #     return py_trees.common.Status.FAILURE
             # Stage 2: now request the actual result
             self.result_future = self.goal_handle.get_result_async()
 
@@ -691,9 +691,9 @@ class CoverageTask(py_trees.behaviour.Behaviour):
             return py_trees.common.Status.RUNNING
 
         result = self.result_future.result()
-        if result.status == GoalStatus.STATUS_SUCCEEDED:
-            return py_trees.common.Status.SUCCESS
-        return py_trees.common.Status.FAILURE
+        # if result.status == GoalStatus.STATUS_SUCCEEDED:
+        #     return py_trees.common.Status.SUCCESS
+        # return py_trees.common.Status.FAILURE
 
 # class BoundingBoxes2BB(py_trees.behaviour.Behaviour):
 #     def __init__(self, name: str):

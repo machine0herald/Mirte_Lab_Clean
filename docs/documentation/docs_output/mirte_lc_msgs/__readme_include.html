@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>README &mdash; mirte_lc_msgs 0.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> mirte_lc_msgs
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="interfaces/message_definitions.html">Message Definitions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interfaces/msg/DetectedObject.html">DetectedObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interfaces/msg/DetectedObjectArray.html">DetectedObjectArray</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interfaces/service_definitions.html">Service Definitions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interfaces/srv/GetDetectedObjects.html">GetDetectedObjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interfaces/srv/ServeCoverageStatus.html">ServeCoverageStatus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interfaces/action_definitions.html">Action Definitions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interfaces/action/MoveToPosition.html">MoveToPosition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interfaces/action/NavigateCoverage.html">NavigateCoverage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="standards.html">Standard Documents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="standard_docs/PACKAGE.html">PACKAGE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="standard_docs/README.html">README</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#ros-2-messages-package">ROS 2 Messages package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#services">Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#messages">Messages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#actions">Actions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mirte_lc_msgs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>README</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/__readme_include.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="readme">
+<h1>README<a class="headerlink" href="#readme" title="Permalink to this headline"></a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="ros-2-messages-package">
+<h2>ROS 2 Messages package<a class="headerlink" href="#ros-2-messages-package" title="Permalink to this headline"></a></h2>
+<p>ROS 2 message, service, and action definitions for the LabClean application.</p>
+<hr class="docutils" />
+<section id="services">
+<h3>Services<a class="headerlink" href="#services" title="Permalink to this headline"></a></h3>
+<section id="servecoveragestatus-srv">
+<h4><code class="docutils literal notranslate"><span class="pre">ServeCoverageStatus.srv</span></code><a class="headerlink" href="#servecoveragestatus-srv" title="Permalink to this headline"></a></h4>
+<p>Pause, resume, or stop the coverage navigator.</p>
+<p><strong>Request</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Constants</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">command</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PAUSE=0</span></code> <code class="docutils literal notranslate"><span class="pre">RESUME=1</span></code> <code class="docutils literal notranslate"><span class="pre">STOP=2</span></code></p></td>
+<td><p>Command to send to the coverage navigator</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">succeeded</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>Whether the command was applied successfully</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">remaining_poses</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32</span></code></p></td>
+<td><p>Number of waypoints remaining in the coverage plan</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="getdetectedobjects-srv">
+<h4><code class="docutils literal notranslate"><span class="pre">GetDetectedObjects.srv</span></code><a class="headerlink" href="#getdetectedobjects-srv" title="Permalink to this headline"></a></h4>
+<p>Call the 2D classification and detection service.</p>
+<p><strong>Request</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>empty</p></td>
+<td><p>-</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">detected_objects</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DetectedObjectArray.msg</span></code></p></td>
+<td><p>detected object array message.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<hr class="docutils" />
+<section id="messages">
+<h3>Messages<a class="headerlink" href="#messages" title="Permalink to this headline"></a></h3>
+<section id="detectedobjectarray-msg">
+<h4><code class="docutils literal notranslate"><span class="pre">DetectedObjectArray.msg</span></code><a class="headerlink" href="#detectedobjectarray-msg" title="Permalink to this headline"></a></h4>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">objects</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DetectedObject[]</span></code></p></td>
+<td><p>Array of detected objects</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">length</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32</span></code></p></td>
+<td><p>Number of objects in the array</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detectedobject-msg">
+<h4><code class="docutils literal notranslate"><span class="pre">DetectedObject.msg</span></code><a class="headerlink" href="#detectedobject-msg" title="Permalink to this headline"></a></h4>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pose</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">geometry_msgs/Pose</span></code></p></td>
+<td><p>Object position and orientation in the map frame</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">size</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">geometry_msgs/Vector3</span></code></p></td>
+<td><p>Bounding box dimensions (metres)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">confidence</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float32</span></code></p></td>
+<td><p>Detection confidence score <code class="docutils literal notranslate"><span class="pre">[0.0,</span> <span class="pre">1.0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">label</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>Object class label (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;target&quot;</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<hr class="docutils" />
+<section id="actions">
+<h3>Actions<a class="headerlink" href="#actions" title="Permalink to this headline"></a></h3>
+<section id="navigatecoverage-action">
+<h4><code class="docutils literal notranslate"><span class="pre">NavigateCoverage.action</span></code><a class="headerlink" href="#navigatecoverage-action" title="Permalink to this headline"></a></h4>
+<p>Execute a full coverage navigation plan over the mapped area.</p>
+<p><strong>Goal</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Constants</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">planner_type</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BOUSTROPHEDON=&quot;BousPlanner&quot;</span></code> <code class="docutils literal notranslate"><span class="pre">SPANNINGTREE=&quot;SpanningTreePlanner&quot;</span></code> <code class="docutils literal notranslate"><span class="pre">SKELETON=&quot;SkeletonPlanner&quot;</span></code></p></td>
+<td><p>Coverage planner to use</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">verbose</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p></p></td>
+<td><p>Enable verbose logging in the coverage navigator</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Result</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">success</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>Whether coverage completed successfully</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">message</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>Human-readable status or error description</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Feedback</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">completion_percentage</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float32</span></code></p></td>
+<td><p>Percentage of coverage area visited <code class="docutils literal notranslate"><span class="pre">[0.0,</span> <span class="pre">100.0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">distance_remaining</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float32</span></code></p></td>
+<td><p>Estimated path distance remaining (metres)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">current_segment</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32</span></code></p></td>
+<td><p>Index of the segment currently being executed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">total_segments</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32</span></code></p></td>
+<td><p>Total number of segments in the coverage plan</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="movetoposition-action">
+<h4><code class="docutils literal notranslate"><span class="pre">MoveToPosition.action</span></code><a class="headerlink" href="#movetoposition-action" title="Permalink to this headline"></a></h4>
+<p>Move the MIRTE arm or gripper to a target position. Goal fields are evaluated in priority order — set only one per goal (see <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">mirte_lc_moveit_cpp</span></code></span> for execution details).</p>
+<p><strong>Goal</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mirte_arm_target_pose</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">geometry_msgs/Pose</span></code></p></td>
+<td><p>Cartesian target pose for the arm (IK solved to <code class="docutils literal notranslate"><span class="pre">wrist</span></code> link). Active when <code class="docutils literal notranslate"><span class="pre">position.x</span> <span class="pre">!=</span> <span class="pre">0.0</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mirte_arm_named_target</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>Named MoveIt target for the arm (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;vigilant&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;standby&quot;</span></code>). Takes priority over pose.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mirte_gripper_named_target</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>Named MoveIt target for the gripper (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;open&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;close&quot;</span></code>). Ignored if value is <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mirte_gripper_joint_target</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float64</span></code></p></td>
+<td><p>Direct gripper joint position (rad / m). Active when <code class="docutils literal notranslate"><span class="pre">!=</span> <span class="pre">0.0</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mirte_wrist_joint_target</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float64</span></code></p></td>
+<td><p>Direct wrist joint position (rad). Active when <code class="docutils literal notranslate"><span class="pre">!=</span> <span class="pre">0.0</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Result</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">success</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>Whether the motion completed successfully</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Feedback</strong></p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>Current execution state string from the action server</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The &lt;mirte_lc_msgs&gt; Contributors. License: TODO: License declaration.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

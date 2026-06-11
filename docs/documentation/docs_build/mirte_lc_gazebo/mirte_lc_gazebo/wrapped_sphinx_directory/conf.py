@@ -128,7 +128,11 @@ if rosdoc2_settings.get('automatically_extend_intersphinx_mapping', True):
             "Cannot extend intersphinx mapping if 'sphinx.ext.intersphinx' "
             "has not been added to the extensions")
     ensure_global('intersphinx_mapping', {
-        
+        'mirte_lc_nav2': ('http://docs.ros.org/en/latest/p/mirte_lc_nav2/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_nav2/objects.inv'),
+        'mirte_lc_msgs': ('http://docs.ros.org/en/latest/p/mirte_lc_msgs/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_msgs/objects.inv'),
+        'mirte_lc_moveit_cpp': ('http://docs.ros.org/en/latest/p/mirte_lc_moveit_cpp/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_moveit_cpp/objects.inv'),
+        'mirte_lc_labclean': ('http://docs.ros.org/en/latest/p/mirte_lc_labclean/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_labclean/objects.inv'),
+        'mirte_lc_vision': ('http://docs.ros.org/en/latest/p/mirte_lc_vision/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_vision/objects.inv')
     })
 
 if rosdoc2_settings.get('support_markdown', True):
