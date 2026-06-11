@@ -78,7 +78,7 @@ The main py_trees_ros behaviour tree. Ticks at 500 ms and drives the full task l
 
 ## Behaviour tree structure
 
-![Behavior Tree](assets/labcleantree.png)
+![Behavior Tree](https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_labclean/assets/labcleantree.png)
 
 ---
 
