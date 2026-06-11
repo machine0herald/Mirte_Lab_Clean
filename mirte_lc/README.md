@@ -1,4 +1,4 @@
-# mirte_lc
+# Metapackage
 
 Metapackage for mirte_lc ROS 2 packages containing all rosdeps.
 

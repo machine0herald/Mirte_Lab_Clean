@@ -53,7 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="standards.html">Standard Documents</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#mirte-lc-labclean">mirte_lc_labclean</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#labclean-package">Labclean package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#run">Run</a></li>
 <li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#nodes">Nodes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#behaviour-tree-structure">Behaviour tree structure</a></li>
@@ -95,8 +95,8 @@
              
   <section id="readme">
 <h1>README<a class="headerlink" href="#readme" title="Permalink to this headline"></a></h1>
-<section class="tex2jax_ignore mathjax_ignore" id="mirte-lc-labclean">
-<h2>mirte_lc_labclean<a class="headerlink" href="#mirte-lc-labclean" title="Permalink to this headline"></a></h2>
+<section class="tex2jax_ignore mathjax_ignore" id="labclean-package">
+<h2>Labclean package<a class="headerlink" href="#labclean-package" title="Permalink to this headline"></a></h2>
 <p>Autonomous lab-cleaning application for the Mirte robot, built on <a class="reference external" href="https://github.com/splintered-reality/py_trees_ros">py_trees_ros</a>. The package provides a behaviour tree that coordinates exploration, object detection, arm manipulation, and coverage navigation to clean a lab environment without human intervention.</p>
 <hr class="docutils" />
 <section id="run">
@@ -262,45 +262,7 @@ ros2 run mirte_lc_labclean test_node
 <hr class="docutils" />
 <section id="behaviour-tree-structure">
 <h3>Behaviour tree structure<a class="headerlink" href="#behaviour-tree-structure" title="Permalink to this headline"></a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Lab Cleanup Root  [Parallel – SuccessOnAll]
-├── Topics2BB  [Sequence]
-│   ├── Flash Orange          # startup LED indication
-│   ├── Init Cloud Objects    # blackboard initialisation
-│   ├── Init Planar Objects
-│   ├── Init Explore Status
-│   └── Subscribers  [Parallel – SuccessOnAll]
-│       ├── Exploration2BB
-│       ├── Cancel2BB
-│       ├── Start2BB
-│       ├── Battery2BB
-│       └── Detectedcloud2BB
-└── Explore or Cover  [Selector]
-    ├── Battery Low?  [EternalGuard]           # docks when battery &lt; 25 %
-    │   └── Dock  [Parallel – SuccessOnOne]
-    │       ├── Flash Red
-    │       └── Dock Action (navigate to [0,0])
-    ├── Explored?  [EternalGuard]              # waits until exploration complete
-    │   └── Cover and Discover  [Parallel – SuccessOnAll]
-    │       ├── Tasks  [Selector]
-    │       │   ├── Approach and Handle  [Sequence]
-    │       │   │   ├── Objects?            # check cloud_objects_detected
-    │       │   │   ├── Pause Coverage
-    │       │   │   ├── Handle  [Sequence]
-    │       │   │   │   ├── Flash Green
-    │       │   │   │   └── Pick Up  [Sequence]
-    │       │   │   │       ├── Approach    # navigate to closest object
-    │       │   │   │       ├── Deploy Arm  # move arm to &#39;standby&#39;
-    │       │   │   │       └── Pick or Skip  [Selector]
-    │       │   │   │           ├── Sort  [Sequence]
-    │       │   │   │           │   ├── Retry Planar  (up to 5×)
-    │       │   │   │           │   └── Place (arm to &#39;place_right&#39;)
-    │       │   │   │           └── Idle
-    │       │   │   └── Resume Coverage
-    │       │   └── Flash Orange            # fallback idle
-    │       └── CoverageTask                # skeleton-planner coverage
-    └── Idle                                # fallback while exploring
-</pre></div>
-</div>
+<p><img alt="Behavior Tree" src="assets/labcleantree.png" /></p>
 </section>
 <hr class="docutils" />
 <section id="behaviours">
@@ -337,7 +299,7 @@ ros2 run mirte_lc_labclean test_node
 </section>
 <section id="movearm">
 <h4><code class="docutils literal notranslate"><span class="pre">MoveArm</span></code><a class="headerlink" href="#movearm" title="Permalink to this headline"></a></h4>
-<p>Sends a goal to <code class="docutils literal notranslate"><span class="pre">/arm_controller/move_to_position</span></code>. Accepts a named pose, a blackboard pose, or an explicit <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> position.</p>
+<p>Sends a goal to <code class="docutils literal notranslate"><span class="pre">/move_to_position</span></code>. Accepts a named pose, a blackboard pose, or an explicit <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> position.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">behaviours</span><span class="o">.</span><span class="n">MoveArm</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Deploy Arm&quot;</span><span class="p">,</span> <span class="n">predefined_pose</span><span class="o">=</span><span class="s2">&quot;standby&quot;</span><span class="p">)</span>
 <span class="n">behaviours</span><span class="o">.</span><span class="n">MoveArm</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Place&quot;</span><span class="p">,</span> <span class="n">predefined_pose</span><span class="o">=</span><span class="s2">&quot;place_right&quot;</span><span class="p">)</span>
 </pre></div>
@@ -380,7 +342,7 @@ ros2 run mirte_lc_labclean test_node
 </section>
 <section id="coveragetask">
 <h4><code class="docutils literal notranslate"><span class="pre">CoverageTask</span></code><a class="headerlink" href="#coveragetask" title="Permalink to this headline"></a></h4>
-<p>Sends a coverage goal with <code class="docutils literal notranslate"><span class="pre">planner_type</span> <span class="pre">=</span> <span class="pre">SKELETON</span></code> to <code class="docutils literal notranslate"><span class="pre">/labclean_navigator/coverage</span></code> and monitors the action until completion.</p>
+<p>Sends a coverage goal with <code class="docutils literal notranslate"><span class="pre">planner_type</span> <span class="pre">=</span> <span class="pre">SKELETON</span></code> by default to <code class="docutils literal notranslate"><span class="pre">/labclean_navigator/coverage</span></code> and monitors the action until completion.</p>
 </section>
 <section id="getplanarobjects">
 <h4><code class="docutils literal notranslate"><span class="pre">GetPlanarObjects</span></code><a class="headerlink" href="#getplanarobjects" title="Permalink to this headline"></a></h4>

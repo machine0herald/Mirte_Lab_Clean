@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mirte_lc_perception &mdash; mirte_lc_vision 0.0.0 documentation</title>
+  <title>Perception package &mdash; mirte_lc_vision 0.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   
@@ -55,7 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../standards.html">Standard Documents</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../README.html#mirte-lc-perception">mirte_lc_perception</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../README.html#perception-package">Perception package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../README.html#run">Run</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../README.html#nodes">Nodes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../README.html#dependencies">Dependencies</a></li>
@@ -81,7 +81,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>mirte_lc_perception</li>
+      <li>Perception package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/standard_docs/original/README.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -91,8 +91,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section class="tex2jax_ignore mathjax_ignore" id="mirte-lc-perception">
-<h1>mirte_lc_perception<a class="headerlink" href="#mirte-lc-perception" title="Permalink to this headline"></a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="perception-package">
+<h1>Perception package<a class="headerlink" href="#perception-package" title="Permalink to this headline"></a></h1>
 <p>Perception package for the LabClean application. Provides two independent nodes: a depth point cloud processor that detects and localises objects in the map frame, and a YOLO-based gripper camera classifier that identifies object classes for sorting decisions.</p>
 <hr class="docutils" />
 <section id="run">
@@ -101,7 +101,7 @@
 ros2 run mirte_lc_perception object_locator
 
 <span class="c1"># YOLO gripper camera detector</span>
-ros2 run mirte_lc_vision yolo_detector
+ros2 run mirte_lc_vision classifier_2d
 </pre></div>
 </div>
 </section>
@@ -256,8 +256,8 @@ ros2 run mirte_lc_vision yolo_detector
 </div></blockquote>
 </section>
 <hr class="docutils" />
-<section id="yolo26-object-detector">
-<h3><code class="docutils literal notranslate"><span class="pre">yolo26_object_detector</span></code><a class="headerlink" href="#yolo26-object-detector" title="Permalink to this headline"></a></h3>
+<section id="classifier-2d">
+<h3><code class="docutils literal notranslate"><span class="pre">classifier_2d</span></code><a class="headerlink" href="#classifier-2d" title="Permalink to this headline"></a></h3>
 <p>Runs YOLO inference on the gripper camera feed on demand. Detection results are returned via a service call rather than continuously streamed, which suits the behaviour tree’s <code class="docutils literal notranslate"><span class="pre">GetPlanarObjects</span></code> polling pattern.</p>
 <p><strong>Subscribed topics</strong></p>
 <table class="colwidths-auto docutils align-default">

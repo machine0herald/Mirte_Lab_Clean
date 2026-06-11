@@ -53,7 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="standards.html">Standard Documents</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#mirte-lc-nav2">mirte_lc_nav2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#coverage-navigation-package">Coverage Navigation package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#run">Run</a></li>
 <li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#nodes">Nodes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#coverage-execution-flow">Coverage execution flow</a></li>
@@ -95,13 +95,13 @@
              
   <section id="readme">
 <h1>README<a class="headerlink" href="#readme" title="Permalink to this headline"></a></h1>
-<section class="tex2jax_ignore mathjax_ignore" id="mirte-lc-nav2">
-<h2>mirte_lc_nav2<a class="headerlink" href="#mirte-lc-nav2" title="Permalink to this headline"></a></h2>
+<section class="tex2jax_ignore mathjax_ignore" id="coverage-navigation-package">
+<h2>Coverage Navigation package<a class="headerlink" href="#coverage-navigation-package" title="Permalink to this headline"></a></h2>
 <p>Coverage navigation package for the LabClean application. Provides the action server that executes coverage plans, a set of pluggable path planners, and shared utilities for map processing and ROS path conversion.</p>
 <hr class="docutils" />
 <section id="run">
 <h3>Run<a class="headerlink" href="#run" title="Permalink to this headline"></a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2 run mirte_lc_nav2 labclean_manager
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2 run mirte_lc_nav2 labclean_navigator
 </pre></div>
 </div>
 </section>
@@ -206,56 +206,24 @@
 <section id="skeletonplanner-default">
 <h4><code class="docutils literal notranslate"><span class="pre">SkeletonPlanner</span></code> (default)<a class="headerlink" href="#skeletonplanner-default" title="Permalink to this headline"></a></h4>
 <p>Computes the medial axis skeleton of the free space, converts it to a graph, and traverses between leaf nodes using shortest graph paths.</p>
-<table class="colwidths-auto docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Step</p></th>
-<th class="head"><p>Detail</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Skeletonization</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">skimage.morphology.skeletonize</span></code> on the binary costmap</p></td>
-</tr>
-<tr class="row-odd"><td><p>Graph</p></td>
-<td><p>KDTree-connected waypoint graph; disconnected components bridged</p></td>
-</tr>
-<tr class="row-even"><td><p>Traversal</p></td>
-<td><p>Greedy nearest-leaf-first over graph shortest paths</p></td>
-</tr>
-<tr class="row-odd"><td><p>Multi-group</p></td>
-<td><p>Runs once per polygon group; start of next group is end of previous</p></td>
-</tr>
-</tbody>
-</table>
+<!-- | Step | Detail |
+|---|---|
+| Skeletonization | `skimage.morphology.skeletonize` on the binary costmap |
+| Graph | KDTree-connected waypoint graph; disconnected components bridged |
+| Traversal | Greedy nearest-leaf-first over graph shortest paths |
+| Multi-group | Runs once per polygon group; start of next group is end of previous | -->
+<p><img alt="skeletonplanner image" src="docs/skeleton.png" /></p>
 </section>
 <section id="spanningtreeplanner">
 <h4><code class="docutils literal notranslate"><span class="pre">SpanningTreePlanner</span></code><a class="headerlink" href="#spanningtreeplanner" title="Permalink to this headline"></a></h4>
 <p>Downsamples the costmap, builds a DFS spanning tree over free cells, and circumnavigates contours around the tree.</p>
-<table class="colwidths-auto docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Step</p></th>
-<th class="head"><p>Detail</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Downsampling</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">cv2.resize</span></code> with <code class="docutils literal notranslate"><span class="pre">scale</span></code> factor (default <code class="docutils literal notranslate"><span class="pre">0.06</span></code>)</p></td>
-</tr>
-<tr class="row-odd"><td><p>Tree</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">nx.dfs_tree</span></code> per connected component, composed into a directed graph, then edge-subdivided</p></td>
-</tr>
-<tr class="row-even"><td><p>Contours</p></td>
-<td><p>Rectangular regions around tree nodes → <code class="docutils literal notranslate"><span class="pre">cv2.findContours</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Path</p></td>
-<td><p>Contour pixels resampled from nearest point to start, then wrapped</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="straightlinepath">
-<h4><code class="docutils literal notranslate"><span class="pre">StraightLinePath</span></code><a class="headerlink" href="#straightlinepath" title="Permalink to this headline"></a></h4>
-<p>Generates a single diagonal straight-line trajectory from the start pose. Useful for testing and calibration only.</p>
+<!-- | Step | Detail |
+|---|---|
+| Downsampling | `cv2.resize` with `scale` factor (default `0.06`) |
+| Tree | `nx.dfs_tree` per connected component, composed into a directed graph, then edge-subdivided |
+| Contours | Rectangular regions around tree nodes → `cv2.findContours` |
+| Path | Contour pixels resampled from nearest point to start, then wrapped | -->
+<p><img alt="skeletonplanner image" src="docs/tree.png" /></p>
 </section>
 <section id="cvtplanner">
 <h4><code class="docutils literal notranslate"><span class="pre">CVTPlanner</span></code><a class="headerlink" href="#cvtplanner" title="Permalink to this headline"></a></h4>
@@ -278,6 +246,10 @@
 </tr>
 </tbody>
 </table>
+</section>
+<section id="straightlinepath">
+<h4><code class="docutils literal notranslate"><span class="pre">StraightLinePath</span></code><a class="headerlink" href="#straightlinepath" title="Permalink to this headline"></a></h4>
+<p>Generates a single diagonal straight-line trajectory from the start pose. Useful for testing and calibration only.</p>
 </section>
 </section>
 <hr class="docutils" />
@@ -317,6 +289,8 @@
 </tr>
 </tbody>
 </table>
+<p>All planners also follow this pattern for retrieving a map
+<img alt="skeletonplanner image" src="docs/navigator.png" /></p>
 <p><strong>Published topics</strong> (when a <code class="docutils literal notranslate"><span class="pre">node</span></code> is provided)</p>
 <table class="colwidths-auto docutils align-default">
 <thead>

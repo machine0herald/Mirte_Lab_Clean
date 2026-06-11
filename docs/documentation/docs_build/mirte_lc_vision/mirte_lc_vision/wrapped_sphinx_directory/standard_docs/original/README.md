@@ -1,4 +1,4 @@
-# mirte_lc_perception
+# Perception package
 
 Perception package for the LabClean application. Provides two independent nodes: a depth point cloud processor that detects and localises objects in the map frame, and a YOLO-based gripper camera classifier that identifies object classes for sorting decisions.
 
@@ -11,7 +11,7 @@ Perception package for the LabClean application. Provides two independent nodes:
 ros2 run mirte_lc_perception object_locator
 
 # YOLO gripper camera detector
-ros2 run mirte_lc_vision yolo_detector
+ros2 run mirte_lc_vision classifier_2d
 ```
 
 ---
@@ -101,7 +101,7 @@ Incoming PointCloud2 (queued, maxlen=1)
 
 ---
 
-### `yolo26_object_detector`
+### `classifier_2d`
 
 Runs YOLO inference on the gripper camera feed on demand. Detection results are returned via a service call rather than continuously streamed, which suits the behaviour tree's `GetPlanarObjects` polling pattern.
 

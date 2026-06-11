@@ -1,4 +1,4 @@
-# move_to_position_action_client
+# MoveIt Package (Python)
 
 Interactive command-line client for the `MoveToPosition` action server. Lets you drive the Mirte arm, gripper, and wrist directly from a terminal without writing any code — useful for tuning named poses, verifying hardware, and debugging the manipulation pipeline.
 

@@ -1,4 +1,4 @@
-# mirte_lc_nav2
+# Coverage Navigation package
 
 Coverage navigation package for the LabClean application. Provides the action server that executes coverage plans, a set of pluggable path planners, and shared utilities for map processing and ROS path conversion.
 
@@ -7,7 +7,7 @@ Coverage navigation package for the LabClean application. Provides the action se
 ## Run
 
 ```bash
-ros2 run mirte_lc_nav2 labclean_manager
+ros2 run mirte_lc_nav2 labclean_navigator
 ```
 
 ---
@@ -90,27 +90,27 @@ from mirte_lc_nav2.navigators import PLANNERS
 
 Computes the medial axis skeleton of the free space, converts it to a graph, and traverses between leaf nodes using shortest graph paths.
 
-| Step | Detail |
+<!-- | Step | Detail |
 |---|---|
 | Skeletonization | `skimage.morphology.skeletonize` on the binary costmap |
 | Graph | KDTree-connected waypoint graph; disconnected components bridged |
 | Traversal | Greedy nearest-leaf-first over graph shortest paths |
-| Multi-group | Runs once per polygon group; start of next group is end of previous |
+| Multi-group | Runs once per polygon group; start of next group is end of previous | -->
+![skeletonplanner image](docs/skeleton.png)
 
 ### `SpanningTreePlanner`
 
 Downsamples the costmap, builds a DFS spanning tree over free cells, and circumnavigates contours around the tree.
 
-| Step | Detail |
+<!-- | Step | Detail |
 |---|---|
 | Downsampling | `cv2.resize` with `scale` factor (default `0.06`) |
 | Tree | `nx.dfs_tree` per connected component, composed into a directed graph, then edge-subdivided |
 | Contours | Rectangular regions around tree nodes → `cv2.findContours` |
-| Path | Contour pixels resampled from nearest point to start, then wrapped |
+| Path | Contour pixels resampled from nearest point to start, then wrapped | -->
 
-### `StraightLinePath`
+![skeletonplanner image](docs/tree.png)
 
-Generates a single diagonal straight-line trajectory from the start pose. Useful for testing and calibration only.
 
 ### `CVTPlanner`
 
@@ -120,6 +120,10 @@ Samples coverage waypoints using Centroidal Voronoi Tessellation (Lloyd's algori
 |---|---|---|
 | `n_seeds` | `30` | Number of Voronoi cells |
 | `n_iterations` | `20` | Lloyd iterations |
+
+### `StraightLinePath`
+
+Generates a single diagonal straight-line trajectory from the start pose. Useful for testing and calibration only.
 
 ---
 
@@ -137,6 +141,9 @@ All planners share this base. Key shared methods:
 | `find_nearest_node(graph, pos, nodes)` | Nearest node by Euclidean distance |
 | `world_to_pixel_poly(polygon)` | Map-frame coordinates → costmap pixel indices |
 | `pixel_to_world_poly(polygon)` | Costmap pixel indices → map-frame coordinates |
+
+All planners also follow this pattern for retrieving a map
+![skeletonplanner image](docs/navigator.png)
 
 **Published topics** (when a `node` is provided)
 

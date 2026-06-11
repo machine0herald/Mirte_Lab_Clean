@@ -1,4 +1,4 @@
-# mirte_lc_labclean
+# Labclean package
 
 Autonomous lab-cleaning application for the Mirte robot, built on [py_trees_ros](https://github.com/splintered-reality/py_trees_ros). The package provides a behaviour tree that coordinates exploration, object detection, arm manipulation, and coverage navigation to clean a lab environment without human intervention.
 
@@ -78,45 +78,7 @@ The main py_trees_ros behaviour tree. Ticks at 500 ms and drives the full task l
 
 ## Behaviour tree structure
 
-```
-Lab Cleanup Root  [Parallel – SuccessOnAll]
-├── Topics2BB  [Sequence]
-│   ├── Flash Orange          # startup LED indication
-│   ├── Init Cloud Objects    # blackboard initialisation
-│   ├── Init Planar Objects
-│   ├── Init Explore Status
-│   └── Subscribers  [Parallel – SuccessOnAll]
-│       ├── Exploration2BB
-│       ├── Cancel2BB
-│       ├── Start2BB
-│       ├── Battery2BB
-│       └── Detectedcloud2BB
-└── Explore or Cover  [Selector]
-    ├── Battery Low?  [EternalGuard]           # docks when battery < 25 %
-    │   └── Dock  [Parallel – SuccessOnOne]
-    │       ├── Flash Red
-    │       └── Dock Action (navigate to [0,0])
-    ├── Explored?  [EternalGuard]              # waits until exploration complete
-    │   └── Cover and Discover  [Parallel – SuccessOnAll]
-    │       ├── Tasks  [Selector]
-    │       │   ├── Approach and Handle  [Sequence]
-    │       │   │   ├── Objects?            # check cloud_objects_detected
-    │       │   │   ├── Pause Coverage
-    │       │   │   ├── Handle  [Sequence]
-    │       │   │   │   ├── Flash Green
-    │       │   │   │   └── Pick Up  [Sequence]
-    │       │   │   │       ├── Approach    # navigate to closest object
-    │       │   │   │       ├── Deploy Arm  # move arm to 'standby'
-    │       │   │   │       └── Pick or Skip  [Selector]
-    │       │   │   │           ├── Sort  [Sequence]
-    │       │   │   │           │   ├── Retry Planar  (up to 5×)
-    │       │   │   │           │   └── Place (arm to 'place_right')
-    │       │   │   │           └── Idle
-    │       │   │   └── Resume Coverage
-    │       │   └── Flash Orange            # fallback idle
-    │       └── CoverageTask                # skeleton-planner coverage
-    └── Idle                                # fallback while exploring
-```
+![Behavior Tree](assets/labcleantree.png)
 
 ---
 
@@ -157,7 +119,7 @@ Returns `SUCCESS` when the robot is within 0.5 m of the goal, `FAILURE` if navig
 
 ### `MoveArm`
 
-Sends a goal to `/arm_controller/move_to_position`. Accepts a named pose, a blackboard pose, or an explicit `(x, y, z)` position.
+Sends a goal to `/move_to_position`. Accepts a named pose, a blackboard pose, or an explicit `(x, y, z)` position.
 
 ```python
 behaviours.MoveArm(name="Deploy Arm", predefined_pose="standby")
@@ -182,7 +144,7 @@ The closest object is selected by Euclidean distance from `base_link`. Returns `
 
 ### `CoverageTask`
 
-Sends a coverage goal with `planner_type = SKELETON` to `/labclean_navigator/coverage` and monitors the action until completion.
+Sends a coverage goal with `planner_type = SKELETON` by default to `/labclean_navigator/coverage` and monitors the action until completion.
 
 ### `GetPlanarObjects`
 

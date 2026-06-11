@@ -1,4 +1,4 @@
-# mirte_lc_moveit_cpp
+# MoveIt (C++)
 
 MoveIt action server for the MIRTE arm and gripper. Exposes the `/move_to_position` action and handles named targets, Cartesian pose goals, and gripper commands via `MoveGroupInterface`. Also includes a standalone example executable for quick motion testing.
 

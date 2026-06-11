@@ -1,4 +1,4 @@
-# mirte_lc_msgs
+# ROS 2 Messages package
 
 ROS 2 message, service, and action definitions for the LabClean application.
 
@@ -31,7 +31,7 @@ Call the 2D classification and detection service.
 
 | Field | Description |
 |---|---|
-| empty | Command to send to the coverage navigator |
+| empty | - |
 
 **Response**
 
