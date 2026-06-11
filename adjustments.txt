@@ -1,4 +1,8 @@
-sudo ssh mirte@192.168.42.1 "sudo date -s '@$(date +%s.%N)'"
+To syncronise the two machines' clocks, use the following command:
+sudo date -s "date_and_time"
+
+example: 
+sudo date -s "2026-01-01 12:01:01"
 
 
 sudo apt install ros-humble-image-pipeline
@@ -66,16 +70,6 @@ mirte-ros-packages/mirte_description/urdf/arm.urdf.xacro
       gripper_link_joint_l_mimic
       _gripper_link_joint_r_mimic
 
-mirte-ros-packages/mirte_description/mirte_master_description/urdf/arm.xacro
-    -replace the joint limit of the 'shoulder_lift_joint' (line 55) to:
-
-    <limit
-        lower="${-pi + 0.2}"
-        upper="${pi - 0.2}"
-        effort="2.0"
-        velocity="2.0"
-    />
-
 mirte-ros-packages/mirte_moveit_config/config/mirte_master.srdf
   - add group states for the mirte_arm move group
 
@@ -84,17 +78,17 @@ mirte-ros-packages/mirte_moveit_config/config/mirte_master.srdf
     # under the "home" move group (line 29)
     ##################################################
 
-        <group_state name="place_right" group="mirte_arm">
-        <joint name="shoulder_pan_joint" value="-2.88"/>
-        <joint name="shoulder_lift_joint" value="0.262"/>
-        <joint name="elbow_joint" value="-1.5"/>
-        <joint name="wrist_joint" value="-1.5"/>
+    <group_state name="place_right" group="mirte_arm">
+        <joint name="shoulder_pan_joint" value="0.3"/>
+        <joint name="shoulder_lift_joint" value="-0.6"/>
+        <joint name="elbow_joint" value="1.5"/>
+        <joint name="wrist_joint" value="0.6"/>
     </group_state>
     <group_state name="place_left" group="mirte_arm">
-        <joint name="shoulder_pan_joint" value="2.88"/>
-        <joint name="shoulder_lift_joint" value="0.262"/>
-        <joint name="elbow_joint" value="-1.5"/>
-        <joint name="wrist_joint" value="-1.5"/>
+        <joint name="shoulder_pan_joint" value="-0.3"/>
+        <joint name="shoulder_lift_joint" value="-0.6"/>
+        <joint name="elbow_joint" value="1.5"/>
+        <joint name="wrist_joint" value="0.6"/>
     </group_state>
     <group_state name="standby" group="mirte_arm">
         <joint name="shoulder_pan_joint" value="0.0"/>
@@ -196,4 +190,3 @@ On the MIRTE, execute the following commands:
     $ros2 run mirte_test mirte_master_set_voltage_ranges
     $ros2 run mirte_test mirte_master_calibrate
 Turn off ROS2 on the MIRTE and reassemble the arm components so they match the "home" pose.
-
