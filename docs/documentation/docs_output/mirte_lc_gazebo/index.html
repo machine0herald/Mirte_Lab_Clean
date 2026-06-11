@@ -40,11 +40,10 @@
 <li class="toctree-l1"><a class="reference internal" href="standards.html">Standard Documents</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#mirte-lc-gazebo">mirte_lc_gazebo</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#contents">Contents</a></li>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#quickstart">Quickstart</a></li>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#documentation">Documentation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#notes">Notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#gazebo-package">Gazebo package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#run-example">Run (example)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#launch-files">Launch Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#worlds">Worlds</a></li>
 </ul>
 </li>
 </ul>
@@ -92,35 +91,32 @@
 </section>
 <section id="readme">
 <h1>README<a class="headerlink" href="#readme" title="Permalink to this headline"></a></h1>
-<section class="tex2jax_ignore mathjax_ignore" id="mirte-lc-gazebo">
-<h2>mirte_lc_gazebo<a class="headerlink" href="#mirte-lc-gazebo" title="Permalink to this headline"></a></h2>
-<p>Short description: TODO — add a short description of the package.</p>
-<section id="contents">
-<h3>Contents<a class="headerlink" href="#contents" title="Permalink to this headline"></a></h3>
+<section class="tex2jax_ignore mathjax_ignore" id="gazebo-package">
+<h2>Gazebo package<a class="headerlink" href="#gazebo-package" title="Permalink to this headline"></a></h2>
+<section id="run-example">
+<h3>Run (example)<a class="headerlink" href="#run-example" title="Permalink to this headline"></a></h3>
+<p>Launch the Gazebo world and LabClean integration stack:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2 launch mirte_lc_gazebo gazebo_mirte_lc.launch.py
+</pre></div>
+</div>
+</section>
+<section id="launch-files">
+<h3>Launch Files<a class="headerlink" href="#launch-files" title="Permalink to this headline"></a></h3>
+<p>The launch file starts:</p>
 <ul class="simple">
-<li><p>Package: mirte_lc_gazebo</p></li>
-<li><p>Path: <code class="docutils literal notranslate"><span class="pre">/workspaces/lcr/src/mirte_lc/mirte_lc_gazebo</span></code></p></li>
+<li><p>Gazebo simulation with one of the worlds in the <code class="docutils literal notranslate"><span class="pre">./worlds</span></code> folder</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">labclean_tree</span></code> from <a class="reference external" href="https://github.com/matt-rbt/Mirte_Lab_Clean/blob/main/mirte_lc_labclean/mirte_lc_labclean/labclean_tree.py"><code class="docutils literal notranslate"><span class="pre">mirte_lc_labclean</span></code></a></p></li>
+<li><p>the LabClean bringup stack via <a class="reference external" href="https://github.com/matt-rbt/Mirte_Lab_Clean/blob/main/mirte_lc_labclean/launch/labclean_bringup.launch.py"><code class="docutils literal notranslate"><span class="pre">mirte_lc_labclean</span></code></a></p></li>
 </ul>
 </section>
-<section id="quickstart">
-<h3>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline"></a></h3>
-<ol class="arabic simple">
-<li><p>Source your workspace: <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">/opt/ros/&lt;distro&gt;/setup.bash</span> <span class="pre">&amp;&amp;</span> <span class="pre">source</span> <span class="pre">install/setup.bash</span></code></p></li>
-<li><p>Build (if needed): <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">--packages-select</span> <span class="pre">mirte_lc_gazebo</span></code></p></li>
-<li><p>Run examples in <code class="docutils literal notranslate"><span class="pre">examples/</span></code> or <code class="docutils literal notranslate"><span class="pre">launch/</span></code>.</p></li>
-</ol>
-</section>
-<section id="documentation">
-<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline"></a></h3>
+<section id="worlds">
+<h3>Worlds<a class="headerlink" href="#worlds" title="Permalink to this headline"></a></h3>
+<p>The package contains a world folder with three testing worlds for lab cleanup</p>
 <ul class="simple">
-<li><p>Quickstart / tutorial: <code class="docutils literal notranslate"><span class="pre">docs/quickstart.md</span></code></p></li>
-<li><p>Examples: <code class="docutils literal notranslate"><span class="pre">examples/usage.md</span></code></p></li>
-</ul>
-</section>
-<section id="notes">
-<h3>Notes<a class="headerlink" href="#notes" title="Permalink to this headline"></a></h3>
-<ul class="simple">
-<li><p>This README was generated automatically. Please replace placeholders with package-specific information.</p></li>
+<li><p><a class="reference external" href="https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_gazebo/worlds/floor">floor</a>, an empty lab cleanup floor.</p></li>
+<li><p><a class="reference external" href="https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_gazebo/worlds/floor_with_cubes">floor_with_cubes</a>, a lab with green cubes as portable objects.</p></li>
+<li><p><a class="reference external" href="https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_gazebo/worlds/floor_with_cubes_2">floor_with_cubes_2</a>, a larger lab with pink cubes and more obstacles.</p></li>
+<li><p><span class="xref myst">floor_with_electronics</span>, a lab with electronics as portable objects.</p></li>
 </ul>
 </section>
 </section>

@@ -4,243 +4,45 @@
 ## intersphinx mappings correctly, among other things.
 
 import os
-import shutil
 import sys
-from importlib.metadata import entry_points
-
-if '/workspaces/lcr/src/mirte_lc/mirte_lc_vision/mirte_lc_vision' != 'None':
-    sys.path.insert(0, os.path.abspath(os.path.join('/workspaces/lcr/src/mirte_lc/mirte_lc_vision/mirte_lc_vision', '..')))
-
-# -- Project information -----------------------------------------------------
-
-project = 'mirte_lc_vision'
-ros_distro = os.environ.get('ROS_DISTRO')
-if ros_distro:
-    project += ': ' + ros_distro.capitalize()
-
-# The docs say year and author but we have this and it seems more relevant.
-copyright = 'The <mirte_lc_vision> Contributors. License: TODO: License declaration'
-author = """root"""
-
-# The full version, including alpha/beta/rc tags
-release = '0.0.0'
-version = '0.0'
-
-# -- General configuration ---------------------------------------------------
-
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
-## rosdoc2 will extend the extensions to enable Breathe and Exhale if you
-## do not add them here, as well as others, perhaps.
-## If you add them manually rosdoc2 may still try to configure them.
-## See the rosdoc2_settings below for some options on avoiding that.
-extensions = [
-    'sphinx_rtd_theme',
-]
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
-
-# List of patterns, relative to source directory, that match files and
-# directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
-
-# List of Python modules to mock during documentation generation.
-# When Sphinx's autodoc extension tries to import your Python modules to extract
-# docstrings, it may fail if dependencies are not available in the build environment.
-# Modules listed here will be mocked (fake imports) to prevent import errors.
-## rosdoc2 automatically adds modules from exec_depend and doc_depend tags in
-## package.xml that cannot be imported. You can manually add additional modules
-## here if your code has dependencies not listed in package.xml or if the module
-## name differs from the package name.
-autodoc_mock_imports = []
-pkgs_to_mock = []
-exhale_args = {}
-breathe_projects = {}
-master_doc = 'index'
-intersphinx_mapping = { 'mirte_lc_msgs': ('http://docs.ros.org/en/latest/p/mirte_lc_msgs/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_msgs/objects.inv'),
-        'mirte_lc_nav2': ('http://docs.ros.org/en/latest/p/mirte_lc_nav2/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_nav2/objects.inv'),
-        'mirte_lc_labclean': ('http://docs.ros.org/en/latest/p/mirte_lc_labclean/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_labclean/objects.inv') }
-
-source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
-    '.markdown': 'markdown',
-}
-
-# -- Options for HTML output -------------------------------------------------
-
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
-## rosdoc2 will override the theme, but you may set one here for running Sphinx
-## without the rosdoc2 tool.
-html_theme = 'sphinx_rtd_theme'
-
-html_theme_options = {
-    # Toc options
-    'collapse_navigation': False,
-    'sticky_navigation': True,
-    'navigation_depth': 4,
-    'includehidden': True,
-    'titles_only': False,
-}
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-## rosdoc2 comments this out by default because we're not creating it.
-# html_static_path = ['_static']
-
-# -- Options for rosdoc2 -----------------------------------------------------
-
-## These settings are specific to rosdoc2, and if Sphinx is run without rosdoc2
-## they will be safely ignored.
-## None are required by default, so the lines below show the default values,
-## therefore you will need to uncomment the lines and change their value
-## if you want change the behavior of rosdoc2.
-rosdoc2_settings = {
-    ## This setting, if True, will ensure breathe is part of the 'extensions',
-    ## and will set all of the breathe configurations, if not set, and override
-    ## settings as needed if they are set by this configuration.
-    # 'enable_breathe': True,
-
-    ## This setting, if True, will ensure exhale is part of the 'extensions',
-    ## and will set all of the exhale configurations, if not set, and override
-    ## settings as needed if they are set by this configuration.
-    # 'enable_exhale': True,
-
-    ## This setting, if provided, allows option specification for breathe
-    ## directives through exhale. If not set, exhale defaults will be used.
-    ## If an empty dictionary is provided, breathe defaults will be used.
-    # 'exhale_specs_mapping': {},
-
-    ## This setting, if True, will ensure autodoc is part of the 'extensions'.
-    # 'enable_autodoc': True,
-
-    ## This setting, if True, will ensure intersphinx is part of the 'extensions'.
-    # 'enable_intersphinx': True,
-
-    ## This setting, if True, will have the 'html_theme' overridden to provide
-    ## a consistent style across all of the ROS documentation. If False, will only
-    ## override the 'html_theme' if that theme is not installed.
-    # 'override_theme': True,
-
-    ## This setting, if True, will automatically extend the intersphinx mapping
-    ## using inventory files found in the cross-reference directory.
-    ## If false, the `found_intersphinx_mappings` variable will be in the global
-    ## scope when run with rosdoc2, and could be conditionally used in your own
-    ## Sphinx conf.py file.
-    # 'automatically_extend_intersphinx_mapping': True,
-
-    ## Support markdown
-    # 'support_markdown': True,
-
-    ## Allow additional extensions. If true, at runtime rosdoc2 will check to see if
-    ## non-default extensions are installed, and if so allow them. If false, only
-    ## extensions loaded by default by Sphinx or rosdoc2 installs are allowed.
-    # 'allow_other_extensions': False,
-}
 
 ## exec the user's conf.py to bring all of their settings into this file.
-confpy_succeeded = False
-templates_path = []
+exec(open("/workspaces/lcr/src/mirte_lc/docs_build/mirte_lc_vision/mirte_lc_vision/default_sphinx_project/conf.py").read())
 
-if os.path.isfile('/workspaces/lcr/src/mirte_lc/docs_build/mirte_lc_vision/mirte_lc_vision/wrapped_sphinx_directory/__conf.py'):
-    try:
-        exec(open("/workspaces/lcr/src/mirte_lc/docs_build/mirte_lc_vision/mirte_lc_vision/wrapped_sphinx_directory/__conf.py").read())
-        confpy_succeeded = True
-        print('[rosdoc2] Using user supplied conf.py')
-    except Exception as e:
-        print(f'[rosdoc2] *** Warning *** conf.py for package mirte_lc_vision generated error: '
-              + str(e) + '. Falling back to default generated conf.py.')
-if not confpy_succeeded:
-    exec(open("/workspaces/lcr/src/mirte_lc/docs_build/mirte_lc_vision/mirte_lc_vision/wrapped_sphinx_directory/__conf_default.py").read())
-
-## Copy any templates to the wrapped location.
-for t_dir in templates_path:
-    source_t_dir = os.path.join('/workspaces/lcr/src/mirte_lc/docs_build/mirte_lc_vision/mirte_lc_vision/wrapped_sphinx_directory', t_dir)
-    target_t_dir = os.path.join('/workspaces/lcr/src/mirte_lc/docs_build/mirte_lc_vision/mirte_lc_vision/wrapped_sphinx_directory', t_dir)
-    if os.path.isdir(target_t_dir):
-        # Template already copied
-        pass
-    elif os.path.isdir(source_t_dir):
-        shutil.copytree(source_t_dir, target_t_dir)
+def ensure_global(name, default):
+    if name not in globals():
+        globals()[name] = default
 
 ## Based on the rosdoc2 settings, do various things to the settings before
 ## letting Sphinx continue.
 
-# Remove any unsupported extensions
-allowed_extensions = set((
-    # Shipped with sphinx
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosectionlabel',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.coverage',
-    'sphinx.ext.doctest',
-    'sphinx.ext.duration',
-    'sphinx.ext.extlinks',
-    'sphinx.ext.githubpages',
-    'sphinx.ext.graphviz',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.imgconverter',
-    'sphinx.ext.inheritance_diagram',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.linkcode',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.todo',
-    'sphinx.ext.viewcode',
-    # Sphinx-included math extensions
-    'sphinx.ext.imgmath',
-    'sphinx.ext.mathjax',
-    # Installed by us
-    'myst_parser',
-    'sphinx_rtd_theme',
-))
-
-if not False:
-    allowed_extensions.add(('breathe', 'exhale'))
-else:
-    rosdoc2_settings['enable_breathe'] = False
-    rosdoc2_settings['enable_exhale'] = False
-
-for extension in extensions[:]:
-    if extension not in allowed_extensions:
-        if rosdoc2_settings.get('allow_other_extensions', False):
-            print(f"[rosdoc2] Checking if extension '{extension}' is installed")
-            try:
-                __import__(extension)
-                continue
-            except ModuleNotFoundError:
-                print(f"[rosdoc2] requested extension '{extension}' not installed")
-        print(f"[rosdoc2] *** Warning *** removing extension '{extension}', not supported")
-        extensions.remove(extension)
-if extensions:
-    print(f'[rosdoc2] user conf.py specified allowed extensions: {extensions}')
+ensure_global('rosdoc2_settings', {})
+ensure_global('extensions', [])
+ensure_global('project', "mirte_lc_vision")
+ensure_global('author', """root""")
+ensure_global('release', "0.0.0")
+ensure_global('version', "0.0")
 
 if rosdoc2_settings.get('enable_autodoc', True):
-    print('[rosdoc2] enabling autodoc')
+    print('[rosdoc2] enabling autodoc', file=sys.stderr)
     extensions.append('sphinx.ext.autodoc')
 
+    pkgs_to_mock = []
     import importlib
     for exec_depend in ['cv_bridge', 'mirte_lc_msgs']:
         try:
             # Some python dependencies may be dist packages.
-            exec_depend = exec_depend.split("python3-")[-1].split("-pip")[0].replace('-', '_')
+            exec_depend = exec_depend.split("python3-")[-1]
             importlib.import_module(exec_depend)
         except ImportError:
             pkgs_to_mock.append(exec_depend)
-
-    autodoc_mock_imports.extend(pkgs_to_mock)
-
-    if len(autodoc_mock_imports) > 0:
-        joined_imports = "', '".join(autodoc_mock_imports)
-        print(f"[rosdoc2] autodoc mock imports: '{joined_imports}'")
+    # todo(YV): If users provide autodoc_mock_imports in their conf.py
+    # it will be overwritten by those in exec_depends.
+    # Consider appending to autodoc_mock_imports instead.
+    autodoc_mock_imports = pkgs_to_mock
 
 if rosdoc2_settings.get('enable_intersphinx', True):
-    print('[rosdoc2] enabling intersphinx')
+    print('[rosdoc2] enabling intersphinx', file=sys.stderr)
     extensions.append('sphinx.ext.intersphinx')
 
 build_type = 'ament_python'
@@ -251,13 +53,14 @@ is_doxygen_invoked = False
 if rosdoc2_settings.get('enable_breathe', is_doxygen_invoked):
     # Configure Breathe.
     # Breathe ingests the XML output from Doxygen and makes it accessible from Sphinx.
-    print('[rosdoc2] enabling breathe')
+    print('[rosdoc2] enabling breathe', file=sys.stderr)
     # First check that doxygen would have been run
     if not is_doxygen_invoked:
         raise RuntimeError(
             "Cannot enable the 'breathe' extension if 'doxygen' is not invoked. "
             "Please enable 'always_run_doxygen' if the package is not an "
             "'ament_cmake' or 'cmake' package.")
+    ensure_global('breathe_projects', {})
     breathe_projects.update({
     })
     if breathe_projects:
@@ -271,7 +74,7 @@ if rosdoc2_settings.get('enable_exhale', is_doxygen_invoked):
     # for classes and functions documented with Doxygen.
     # This is similar to the class hierarchies and namespace listing provided by
     # Doxygen out of the box.
-    print('[rosdoc2] enabling exhale')
+    print('[rosdoc2] enabling exhale', file=sys.stderr)
     # First check that doxygen would have been run
     if not is_doxygen_invoked:
         raise RuntimeError(
@@ -279,6 +82,7 @@ if rosdoc2_settings.get('enable_exhale', is_doxygen_invoked):
             "Please enable 'always_run_doxygen' if the package is not an "
             "'ament_cmake' or 'cmake' package.")
     extensions.append('exhale')
+    ensure_global('exhale_args', {})
 
     default_exhale_specs_mapping = {
         'page': [':content-only:'],
@@ -312,34 +116,27 @@ if rosdoc2_settings.get('enable_exhale', is_doxygen_invoked):
             lambda kind: exhale_specs_mapping.get(kind, [])),
     })
 
-use_user_theme = False
-if not rosdoc2_settings.get('override_theme', True) and html_theme != 'sphinx_rtd_theme':
-    ## Detect if requested theme exists
-    for entry_point in entry_points(group='sphinx.html_themes'):
-        if entry_point.name == html_theme:
-            use_user_theme = True
-            break
-    if not use_user_theme:
-        print(f"[rosdoc2] *** warning *** user specified theme '{html_theme}' not found")
-if not use_user_theme:
+if rosdoc2_settings.get('override_theme', True):
     extensions.append('sphinx_rtd_theme')
     html_theme = 'sphinx_rtd_theme'
-    print(f"[rosdoc2] overriding theme to be '{html_theme}'")
-else:
-    print(f"[rosdoc2] Using user specified theme '{html_theme}'")
+    print(f"[rosdoc2] overriding theme to be '{html_theme}'", file=sys.stderr)
 
 if rosdoc2_settings.get('automatically_extend_intersphinx_mapping', True):
-    print(f"[rosdoc2] extending intersphinx mapping")
+    print(f"[rosdoc2] extending intersphinx mapping", file=sys.stderr)
     if 'sphinx.ext.intersphinx' not in extensions:
         raise RuntimeError(
             "Cannot extend intersphinx mapping if 'sphinx.ext.intersphinx' "
             "has not been added to the extensions")
+    ensure_global('intersphinx_mapping', {
+        'mirte_lc_nav2': ('http://docs.ros.org/en/latest/p/mirte_lc_nav2/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_nav2/objects.inv'),
+        'mirte_lc_msgs': ('http://docs.ros.org/en/latest/p/mirte_lc_msgs/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_msgs/objects.inv'),
+        'mirte_lc_moveit_cpp': ('http://docs.ros.org/en/latest/p/mirte_lc_moveit_cpp/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_moveit_cpp/objects.inv'),
+        'mirte_lc_labclean': ('http://docs.ros.org/en/latest/p/mirte_lc_labclean/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_labclean/objects.inv'),
+        'mirte_lc_gazebo': ('http://docs.ros.org/en/latest/p/mirte_lc_gazebo/', '/workspaces/lcr/src/mirte_lc/cross_reference/mirte_lc_gazebo/objects.inv')
+    })
 
 if rosdoc2_settings.get('support_markdown', True):
-    print(f"[rosdoc2] adding markdown parser")
+    print(f"[rosdoc2] adding markdown parser", file=sys.stderr)
     # The `myst_parser` is used specifically if there are markdown files
     # in the sphinx project
     extensions.append('myst_parser')
-
-if False and False:
-    templates_path.append('__doxy_template')

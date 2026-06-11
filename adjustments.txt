@@ -1,9 +1,3 @@
-sudo ssh mirte@192.168.42.1 "sudo date -s '@$(date +%s.%N)'"
-
-
-sudo apt install ros-humble-image-pipeline
-
-
 mirte-gazebo/launch/gazebo_mirte_world_generated.launch.xml
     - Add verbosity and add to gazebo model path
 
@@ -197,3 +191,7 @@ On the MIRTE, execute the following commands:
     $ros2 run mirte_test mirte_master_calibrate
 Turn off ROS2 on the MIRTE and reassemble the arm components so they match the "home" pose.
 
+sudo ssh mirte@192.168.42.1 "sudo date -s '@$(date +%s.%N)'"
+
+
+sudo apt install ros-humble-image-pipeline

@@ -3,10 +3,10 @@
 ## Include the user defined, or default if none specified, Doxyfile.
 @INCLUDE = Doxyfile.rosdoc2_default
 
+## Add extra doxyfile statements given by the user.
+
+
 ## Add rosdoc2 doxyfile statements for tag files, output directory, etc.
 OUTPUT_DIRECTORY = /workspaces/lcr/src/mirte_lc/docs_build/mirte_lc_moveit_cpp/mirte_lc_moveit_cpp-public-cc-api/doxygen_output
 GENERATE_XML = YES
 GENERATE_TAGFILE = /workspaces/lcr/src/mirte_lc/docs_build/mirte_lc_moveit_cpp/mirte_lc_moveit_cpp-public-cc-api/doxygen_output/mirte_lc_moveit_cpp.tag
-
-## Add extra doxyfile statements given by the user.
-
