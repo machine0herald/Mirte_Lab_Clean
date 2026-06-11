@@ -182,12 +182,12 @@ def generate_launch_description():
                     nav2_labclean,
                 ],
             ),
-            TimerAction(
-                period=50.0,
-                actions=[
-                    LogInfo(msg="Starting M-explore Navigation stack"),
-                    m_explore_nav,
-                ],
-            ),
+            # TimerAction(
+            #     period=50.0,
+            #     actions=[
+            #         LogInfo(msg="Starting M-explore Navigation stack"),
+            #         m_explore_nav,
+            #     ],
+            # ),
         ]
     )

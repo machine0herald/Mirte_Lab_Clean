@@ -45,11 +45,20 @@ def create_root() -> py_trees.behaviour.Behaviour:
     # Root node with parallel policy to run topic subscribers and tasks concurrently #
     ##################################################################################
 
+    lab_cleanup_init = py_trees.composites.Sequence(
+        name="ROOT",
+        memory=True,
+    )
+
+
+
     root = py_trees.composites.Parallel(
         name="Lab Cleanup Root",
         policy=py_trees.common.ParallelPolicy.SuccessOnAll(synchronise=False),
     )
     
+    init_or_run = py_trees.composites.Selector(name="init_or_run", memory=True)
+
     ##################################
     # Branch 1: Topics to Blackboard #
     ##################################
@@ -58,21 +67,21 @@ def create_root() -> py_trees.behaviour.Behaviour:
         name="Init Cloud Objects",
         variable_name="cloud_objects_detected",
         variable_value=[],
-        overwrite=False,
+        overwrite=True,
     )
 
     init_planar = py_trees.behaviours.SetBlackboardVariable(
         name="Init Planar Objects",
         variable_name="planar_objects_detected",
         variable_value=[],
-        overwrite=False,
+        overwrite=True,
     )
 
     init_explore = py_trees.behaviours.SetBlackboardVariable(
         name="Init Explore Status",
         variable_name="explore_status",
         variable_value="",
-        overwrite=False,
+        overwrite=True,
     )
 
     init_flash_orange = behaviours.FlashLedStrip(name= "Flash Orange", colour=[1.0, 0.117, 0.0])
@@ -127,11 +136,9 @@ def create_root() -> py_trees.behaviour.Behaviour:
         memory=True,
     )
 
-    subscriber_parallel = py_trees.composites.Parallel(
+    subscriber_parallel = py_trees.composites.Sequence(
         name="Subscribers",
-        policy=py_trees.common.ParallelPolicy.SuccessOnAll(
-            synchronise=False
-        ),
+        memory=True
     )
     
 
@@ -160,7 +167,8 @@ def create_root() -> py_trees.behaviour.Behaviour:
         name="Explored?",
         condition=check_explored,
         blackboard_keys={"explore_status"},
-        child=cover_and_discover,
+        # child=cover_and_discover,
+        child=cover,
     )
 
     tasks = py_trees.composites.Selector(name="Tasks", memory=True)
@@ -242,31 +250,6 @@ def create_root() -> py_trees.behaviour.Behaviour:
 
     # --------------------------- #
 
-
-    # # Die Sequence #
-    # die = py_trees.composites.Sequence(name="Die", memory=True)
-
-    # # Failed Notification Parallel (Flash Red + Pause) #
-    # failed_notification = py_trees.composites.Parallel(
-    #     name="Notification", policy=py_trees.common.ParallelPolicy.SuccessOnOne()
-    # )
-    # failed_flash_green = behaviours.FlashLedStrip(name="Flash Red", colour="red")
-    # failed_pause = py_trees.timers.Timer("Pause", duration=3.0)
-
-    # result_succeeded_to_bb = py_trees.behaviours.SetBlackboardVariable(
-    #     name="Result2BB\n'succeeded'",
-    #     variable_name="result",
-    #     variable_value="succeeded",
-    #     overwrite=True,
-    # )
-
-    # # Celebrate Parallel (Flash Green + Pause) #
-    # celebrate = py_trees.composites.Parallel(
-    #     name="Celebrate", policy=py_trees.common.ParallelPolicy.SuccessOnOne()
-    # )
-    # celebrate_flash_green = behaviours.FlashLedStrip(name="Flash Green", colour="green")
-    # celebrate_pause = py_trees.timers.Timer("Pause", duration=3.0)
-
     class SendResult(py_trees.behaviour.Behaviour):
 
         def __init__(self, name: str):
@@ -291,7 +274,12 @@ def create_root() -> py_trees.behaviour.Behaviour:
     idle_pick = py_trees.behaviours.Success(name="Idle")
     idle_explore = py_trees.behaviours.Success(name="Idle")
 
-    root.add_children([topics2bb, explore_or_cover])
+    lab_cleanup_init.add_children([topics2bb, root])
+
+    root.add_children([subscriber_parallel, explore_or_cover, tasks, battery_emergency])
+
+    # init_or_run.add_children([ 
+    #     subscriber_parallel])
 
     # 1. Topics to Blackboard branch
     topics2bb.add_children([
@@ -299,18 +287,18 @@ def create_root() -> py_trees.behaviour.Behaviour:
         init_cloud,
         init_planar,
         init_explore,
-        subscriber_parallel,
     ])
 
     subscriber_parallel.add_children([
-        exploration2bb,
+        # exploration2bb,
         cancel2bb,
         start2bb,
         battery2bb,
         detectedcloud2bb,
     ])
 
-    cover_and_discover.add_children([tasks, cover])
+    # cover_and_discover.add_children([tasks, cover])
+
     # 2. Tasks branch
     tasks.add_children([approach_and_handle, flash_orange_2])
 
@@ -318,15 +306,27 @@ def create_root() -> py_trees.behaviour.Behaviour:
     dock.add_children([flash_red, dock_action])
 
     # 2.2: Detection and handling
-    approach_and_handle.add_children([detection_check, pause_coverage, handle, resume_coverage])
+    wait_for_objects = py_trees.behaviours.WaitForBlackboardVariable(
+        name="Wait For Objects",
+        variable_name="cloud_objects_detected",
+    )
+
+    approach_and_handle.add_children([
+        wait_for_objects,
+        detection_check,
+        pause_coverage,
+        handle,
+        resume_coverage,
+    ])
+
     handle.add_children([flash_green, pick_up])
     pick_up.add_children([approach, deploy_arm, pick_or_skip])
     pick_or_skip.add_children([sort, idle_pick])
     
     # 3. Explore or Cover branch
-    explore_or_cover.add_children([battery_emergency, explored_check, idle_explore])
+    explore_or_cover.add_children([explored_check, idle_explore])
     sort.add_children([retry_planar, place])
-    return root
+    return lab_cleanup_init
 
 
 def main():

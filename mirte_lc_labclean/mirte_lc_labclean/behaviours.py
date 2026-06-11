@@ -402,7 +402,7 @@ class MoveArm(py_trees.behaviour.Behaviour):
             )
 
         
-        self.arm_action_client = ActionClient(self.node, MoveToPosition, "/arm_controller/move_to_position")
+        self.arm_action_client = ActionClient(self.node, MoveToPosition, "/move_to_position")
         self.goal_handle = None
         
     
