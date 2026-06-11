@@ -12,7 +12,8 @@ inputs:
     - worlds
     - config
   docs:
-    - docs
+    - docs/quickstart.md
+    - examples/usage.md
     - README.md
 
 exclude:

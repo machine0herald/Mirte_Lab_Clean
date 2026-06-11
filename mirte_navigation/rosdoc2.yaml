@@ -11,7 +11,8 @@ inputs:
     - include
     - src
   docs:
-    - doc
+    - docs/quickstart.md
+    - examples/usage.md
     - README.md
 
 exclude:
