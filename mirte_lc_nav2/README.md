@@ -96,7 +96,7 @@ Computes the medial axis skeleton of the free space, converts it to a graph, and
 | Graph | KDTree-connected waypoint graph; disconnected components bridged |
 | Traversal | Greedy nearest-leaf-first over graph shortest paths |
 | Multi-group | Runs once per polygon group; start of next group is end of previous | -->
-![skeletonplanner image](https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_nav2/docs/skeleton.png)
+![skeletonplanner image](https://raw.githubusercontent.com/matt-rbt/Mirte_Lab_Clean/main/mirte_lc_nav2/docs/skeleton.png)
 
 ### `SpanningTreePlanner`
 
@@ -109,7 +109,7 @@ Downsamples the costmap, builds a DFS spanning tree over free cells, and circumn
 | Contours | Rectangular regions around tree nodes → `cv2.findContours` |
 | Path | Contour pixels resampled from nearest point to start, then wrapped | -->
 
-![skeletonplanner image](https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_nav2/docs/tree.png)
+![skeletonplanner image](https://raw.githubusercontent.com/matt-rbt/Mirte_Lab_Clean/main/mirte_lc_nav2/docs/tree.png)
 
 
 ### `CVTPlanner`
@@ -143,7 +143,7 @@ All planners share this base. Key shared methods:
 | `pixel_to_world_poly(polygon)` | Costmap pixel indices → map-frame coordinates |
 
 All planners also follow this pattern for retrieving a map
-![skeletonplanner image](https://github.com/matt-rbt/Mirte_Lab_Clean/tree/main/mirte_lc_nav2/docs/navigator.png)
+![skeletonplanner image](https://raw.githubusercontent.com/matt-rbt/Mirte_Lab_Clean/main/mirte_lc_nav2/docs/navigator.png)
 
 **Published topics** (when a `node` is provided)
 

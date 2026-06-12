@@ -100,13 +100,9 @@
   <section id="module-mirte_lc_labclean.labclean_tree">
 <span id="mirte-lc-labclean-labclean-tree-module"></span><h1>mirte_lc_labclean.labclean_tree module<a class="headerlink" href="#module-mirte_lc_labclean.labclean_tree" title="Permalink to this headline"></a></h1>
 <p>LabClean behaviour tree entrypoint for ROS2.</p>
-<p>This module builds and returns the root of the LabClean behaviour tree used by
-ROS2 and py_trees. It wires topic subscriptions, blackboard variables, and task
-branches for exploration, object handling, and coverage navigation.</p>
 <dl class="simple">
 <dt>Handy cli commands:</dt><dd><p>$ py-trees-render -b mirte_lc_labclean.labclean_tree.create_root
 $ py-trees-blackboard-watcher –list
-$ py-trees-blackboard-watcher /battery.percentage
 $ ros2 run mirte_lc_labclean labclean_tree
 $ py-trees-tree-viewer –no-sandbox</p>
 </dd>
@@ -115,10 +111,47 @@ $ py-trees-tree-viewer –no-sandbox</p>
 <dt class="sig sig-object py" id="mirte_lc_labclean.labclean_tree.create_root">
 <span class="sig-prename descclassname"><span class="pre">mirte_lc_labclean.labclean_tree.</span></span><span class="sig-name descname"><span class="pre">create_root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">py_trees.behaviour.Behaviour</span></span></span><a class="headerlink" href="#mirte_lc_labclean.labclean_tree.create_root" title="Permalink to this definition"></a></dt>
 <dd><p>Build the LabClean behaviour tree root.</p>
-<p>The returned root node executes blackboard updates, task selection, and
-safety monitoring for the lab cleaning application.</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>py_trees.behaviour.Behaviour: The root behaviour node for the tree.</p>
+<dl>
+<dt>Tree structure:</dt><dd><p>[Parallel] Lab Cleanup Root
+├── [Sequence] Topics2BB
+│   ├── Init Cloud Objects
+│   ├── Init Planar Objects
+│   ├── Init Explore Status
+│   └── [Parallel] Subscribers
+│       ├── Exploration2BB
+│       ├── Cancel2BB
+│       ├── Start2BB
+│       ├── Battery2BB
+│       ├── Detectedcloud2BB
+│       └── DetectedClasses2BB
+├── [Selector] Explore or Cover
+│   ├── [EternalGuard] Explored?
+│   │   └── CoverageTask
+│   └── Idle
+└── [Selector] Tasks</p>
+<blockquote>
+<div><p>├── [EternalGuard] Battery Low?
+│   └── [Parallel] Dock
+│       ├── Flash Red
+│       └── Dock Action
+├── [Sequence] Approach and Handle
+│   ├── Objects?
+│   ├── Pause Coverage
+│   ├── [Sequence] Handle
+│   │   ├── Flash Green
+│   │   └── [Sequence] Pick Up
+│   │       ├── Approach
+│   │       └── [Selector] Pick or Skip
+│   │           ├── [Sequence] Sort and Pick
+│   │           │   ├── [Retry] Retry Planar
+│   │           │   │   └── Planar_Detected?
+│   │           │   └── PickObject
+│   │           └── Idle
+│   └── Resume Coverage
+└── Flash Orange</p>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt><dd><p>py_trees.behaviour.Behaviour: Root of the behaviour tree.</p>
 </dd>
 </dl>
 </dd></dl>
