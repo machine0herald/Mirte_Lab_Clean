@@ -5,6 +5,9 @@ behaviour tree. Behaviours include LED control, coverage navigation, object
 retrieval, and plan execution using ROS2 action servers and services.
 """
 
+import math
+import time
+
 from mirte_msgs.msg import NeopixelColor
 from mirte_msgs.srv import SetNeopixel
 
@@ -16,11 +19,8 @@ from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 from nav2_msgs.action import NavigateToPose
 import py_trees
 import py_trees_ros
-import rcl_interfaces.msg as rcl_msgs
-import rcl_interfaces.srv as rcl_srvs
 import rclpy
 from rclpy.action import ActionClient
-import std_msgs.msg as std_msgs
 
 from geometry_msgs.msg import Pose, PoseStamped
 from visualization_msgs.msg import Marker
@@ -30,80 +30,55 @@ from mirte_lc_msgs.srv import GetDetectedObjects
 from tf2_ros import Buffer, TransformListener
 import numpy as np
 
-class FlashLedStrip(py_trees.behaviour.Behaviour):
-    """Flash the LabClean LED strip with a colour command.
 
-    This behaviour publishes a Neopixel colour request and shows an LED marker
-    in the simulated map. It remains in the running state and does not
-    complete successfully until interrupted or cancelled.
+# ===========================================================================
+# FlashLedStrip
+# ===========================================================================
+
+class FlashLedStrip(py_trees.behaviour.Behaviour):
+    """Flash the LED strip with a colour command.
 
     Args:
         name (str): Name of the behaviour.
-        colour (list[float], optional): RGB colour values in range [0.0, 1.0].
-            Defaults to [0, 0, 1.0].
+        colour (list[float]): RGB colour values in range [0.0, 1.0].
     """
 
-    def __init__(
-        self,
-        name: str,
-        colour: list = [0, 0, 1.0],
-    ):
+    def __init__(self, name: str, colour: list = [0.0, 0.0, 1.0]):
         super(FlashLedStrip, self).__init__(name=name)
         self.colour = colour
 
     def setup(self, **kwargs):
-        """
-        Setup the publisher which will stream commands to the mock robot.
-
-        Args:
-            **kwargs (:obj:`dict`): look for the 'node' object being passed down from the tree
-
-        Raises:
-            :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
-        """
         self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
         except KeyError as e:
-            error_message = "didn't find 'node' in setup's kwargs [{}][{}]".format(
-                self.qualified_name
-            )
-            raise KeyError(error_message) from e
+            raise KeyError(
+                "didn't find 'node' in setup's kwargs [{}]".format(self.qualified_name)
+            ) from e
 
         self.neopixel_client = self.node.create_client(
             SetNeopixel, "/io/leds/leds/set_color"
         )
+        self.led_marker_publisher = self.node.create_publisher(
+            Marker, '/labclean_led_markers', 10
+        )
         self.feedback_message = "Neopixel service client created"
-        
-        self.led_marker_publisher = self.node.create_publisher(Marker, '/labclean_led_markers', 10)
 
     def initialise(self):
-        """Send the LED colour request and publish a marker."""
         self.logger.info(
             "%s.initialise(), sending led request" % self.__class__.__name__
         )
         request = SetNeopixel.Request()
-
-        # Robot and message definitions differ
-        # msg       led strip
-        # red       blue
-        # green     red      
-        # blue      green
         request.color = NeopixelColor()
+        # Robot LED strip has swapped channels: msg.g=red, msg.b=green, msg.r=blue
         request.color.g = int(self.colour[0] * 255)
         request.color.b = int(self.colour[1] * 255)
         request.color.r = int(self.colour[2] * 255)
-
         self.future = self.neopixel_client.call_async(request)
-        self.publish_led_marker(self.colour)
+        self._publish_led_marker(self.colour)
         self.feedback_message = "Sent LED request"
-        
-    def publish_led_marker(self, colour):
-        """Publish a visualization marker describing the LED colour.
 
-        Args:
-            colour (list[float]): The RGB colour values to display in RViz.
-        """
+    def _publish_led_marker(self, colour):
         marker = Marker()
         marker.header.frame_id = "map"
         marker.type = Marker.CUBE
@@ -114,25 +89,23 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
         marker.pose.position.x = 0.0
         marker.pose.position.y = 0.0
         marker.pose.position.z = 2.4
-        
         marker.color.r = colour[0]
         marker.color.g = colour[1]
         marker.color.b = colour[2]
         marker.color.a = 1.0
-        
         self.led_marker_publisher.publish(marker)
 
     def update(self):
-        self.feedback_message = f"LED updated"
+        self.feedback_message = "LED updated"
         return py_trees.common.Status.SUCCESS
 
 
-class SetCoverageStatus(py_trees.behaviour.Behaviour):
-    """Update the coverage navigation status using a service call.
+# ===========================================================================
+# SetCoverageStatus
+# ===========================================================================
 
-    The behaviour sends a pause, resume, or stop command to the coverage
-    navigation server. It monitors the asynchronous service response and
-    reports success when the request is complete.
+class SetCoverageStatus(py_trees.behaviour.Behaviour):
+    """Send a pause/resume/stop command to the coverage navigation server.
 
     Args:
         name (str): Name of the behaviour.
@@ -140,320 +113,403 @@ class SetCoverageStatus(py_trees.behaviour.Behaviour):
     """
 
     status_commands = {
-        "pause": ServeCoverageStatus.Request.PAUSE,
+        "pause":  ServeCoverageStatus.Request.PAUSE,
         "resume": ServeCoverageStatus.Request.RESUME,
-        "stop": ServeCoverageStatus.Request.STOP,
+        "stop":   ServeCoverageStatus.Request.STOP,
     }
 
-    def __init__(
-        self,
-        name: str,
-        requested_status: str,
-    ):
+    def __init__(self, name: str, requested_status: str):
         super(SetCoverageStatus, self).__init__(name=name)
         self.requested_status = requested_status
 
     def setup(self, **kwargs):
-        """
-        Setup the publisher which will stream commands to the mock robot.
-
-        Args:
-            **kwargs (:obj:`dict`): look for the 'node' object being passed down from the tree
-
-        Raises:
-            :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
-        """
         self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
         except KeyError as e:
-            error_message = "didn't find 'node' in setup's kwargs [{}][{}]".format(
-                self.qualified_name
-            )
-            raise KeyError(error_message) from e  # 'direct cause' traceability
-
-        self.coverage_status_client = self.node.create_client(
+            raise KeyError(
+                "didn't find 'node' in setup's kwargs [{}]".format(self.qualified_name)
+            ) from e
+        self.client = self.node.create_client(
             ServeCoverageStatus, "/labclean_navigator/set_state"
         )
-
-        self.feedback_message = "Coverage Status service client created"
+        self.future = None
+        self.feedback_message = "Coverage status client created"
 
     def initialise(self):
-        """Send the requested coverage status command."""
-        self.logger.info(
-            f"%s.initialise(), sending {self.requested_status} request"
-            % self.__class__.__name__
-        )
         request = ServeCoverageStatus.Request()
-
-        # Adjust field names to match your srv definition
-        try:
-            request.command = self.status_commands[self.requested_status]
-        except KeyError as e:
-            error_message = f"Requested status command \
-                {self.requested_status} does not exist, \
-                possible commands are {self.status_commands}"
-            raise KeyError(error_message) from e  # 'direct cause' traceability
-
-        self.future = self.coverage_status_client.call_async(request)
-
+        request.command = self.status_commands[self.requested_status]
+        self.future = self.client.call_async(request)
         self.feedback_message = f"Sent {self.requested_status} request"
 
     def update(self):
         if self.future is None:
             return py_trees.common.Status.FAILURE
+        if not self.future.done():
+            return py_trees.common.Status.RUNNING
+        try:
+            response = self.future.result()
+            self.feedback_message = (
+                f"Coverage {self.requested_status} ok, "
+                f"remaining={response.remaining_poses}"
+            )
+            return py_trees.common.Status.SUCCESS
+        except Exception as e:
+            self.feedback_message = f"Service call failed: {e}"
+            return py_trees.common.Status.FAILURE
 
-        if self.future.done():
 
-            try:
-                response = self.future.result()
-                self.feedback_message = f"status updated, status: {response.succeeded} \
-                    waypoints left: {response.remaining_poses}"
-                return py_trees.common.Status.SUCCESS
-
-            except Exception as e:
-                self.feedback_message = f"Service call failed: {e}"
-                return py_trees.common.Status.FAILURE
-
-        return py_trees.common.Status.RUNNING
-
+# ===========================================================================
+# NavigateToPosition
+# ===========================================================================
 
 class NavigateToPosition(py_trees.behaviour.Behaviour):
     """Navigate the robot to a target position.
 
-    This behaviour sends a navigation goal to the ROS2 navigation stack and
-    monitors the distance remaining until the target is reached.
+    Sends a Nav2 goal and monitors progress. Handles TF not ready, Nav2 not
+    ready, feedback dropout, and genuine stuck situations gracefully.
 
     Args:
         name (str): Name of the behaviour.
-        blackboard_key (str, optional): Blackboard key containing detected objects.
+        blackboard_key (str, optional): Blackboard key containing a list of
+            DetectedObject messages. The closest object is used as the target.
         target_position (list[float] | tuple[float, float], optional): Fixed
-            XY position in the map frame.
+            XY position in the map frame. Used when blackboard_key is None.
+        goal_tolerance (float): Distance in metres at which to consider the
+            goal reached and cancel early. Default 0.5m.
+        stuck_timeout (float): Seconds without progress before cancelling.
+            Default 20.0s.
+        nav2_timeout (float): Seconds to wait for Nav2 to become active.
+            Default 5.0s.
+        standoff (float): Metres to stop short of a detected object so the
+            robot doesn't drive into it. Default 0.4m.
     """
 
-    def __init__(self, name: str, blackboard_key: str=None, target_position=None):
+    def __init__(
+        self,
+        name: str,
+        blackboard_key: str = None,
+        target_position=None,
+        goal_tolerance: float = 0.5,
+        stuck_timeout: float = 20.0,
+        nav2_timeout: float = 5.0,
+        standoff: float = 0.4,
+    ):
         super(NavigateToPosition, self).__init__(name=name)
-        self.target_position = target_position
         self.blackboard_key = blackboard_key
+        self.target_position = target_position
+        self.goal_tolerance = goal_tolerance
+        self.stuck_timeout = stuck_timeout
+        self.nav2_timeout = nav2_timeout
+        self.standoff = standoff
 
     def setup(self, **kwargs):
-        """Create ROS2 subscriptions and blackboard bindings for navigation.
-
-        Args:
-            **kwargs: Dictionary containing runtime context from the behaviour
-                tree. Expects a ROS2 node under the key ``node``.
-
-        Raises:
-            KeyError: If ``node`` is not provided in ``kwargs``.
-        """
         self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
         except KeyError as e:
-            error_message = "didn't find 'node' in setup's kwargs [{}][{}]".format(
-                self.qualified_name
-            )
-            raise KeyError(error_message) from e
+            raise KeyError(
+                "didn't find 'node' in setup's kwargs [{}]".format(self.qualified_name)
+            ) from e
 
         self.blackboard = self.attach_blackboard_client(name=self.name)
         if self.blackboard_key is not None:
             self.blackboard.register_key(
                 key=self.blackboard_key,
-                access=py_trees.common.Access.READ
+                access=py_trees.common.Access.READ,
             )
 
+        # Single Navigator instance — created once, reused across all ticks
+        self.Navigator = BasicNavigator()
+
         self._distance_remaining = float('inf')
-        
+        self._last_feedback_time = 0.0
+
         self.node.create_subscription(
             NavigateToPose.Impl.FeedbackMessage,
             '/navigate_to_pose/_action/feedback',
             self._feedback_callback,
-            10
+            10,
         )
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self.node)
 
     def _feedback_callback(self, msg):
         self._distance_remaining = msg.feedback.distance_remaining
-
+        self._last_feedback_time = time.monotonic()
 
     def initialise(self):
-        self.Navigator = BasicNavigator()
         self._close_enough = False
-        transform = self.tf_buffer.lookup_transform(
-            "map",
-            "base_link",
-            rclpy.time.Time()
-        )
+        self._best_distance = math.inf
+        self._last_progress_time = time.monotonic()
+        self._target_set = False
+        self._distance_remaining = float('inf')
+        self._last_feedback_time = time.monotonic()
+
+        # Cancel any lingering goal
+        if not self.Navigator.isTaskComplete():
+            self.node.get_logger().warn(
+                f"[{self.name}] Previous nav goal still active, cancelling"
+            )
+            self.Navigator.cancelTask()
+
+        # Wait briefly for Nav2 to be idle
+        deadline = time.monotonic() + self.nav2_timeout
+        while time.monotonic() < deadline:
+            if self.Navigator.isTaskComplete():
+                break
+            time.sleep(0.1)
+        else:
+            self.node.get_logger().warn(
+                f"[{self.name}] Nav2 not ready after {self.nav2_timeout}s, skipping"
+            )
+            return
+
+        # TF lookup
+        try:
+            transform = self.tf_buffer.lookup_transform(
+                "map", "base_link", rclpy.time.Time()
+            )
+        except Exception as e:
+            self.node.get_logger().warn(
+                f"[{self.name}] TF not ready, will retry: {e}"
+            )
+            return
+
         rx = transform.transform.translation.x
         ry = transform.transform.translation.y
-        
+
+        pose_msg = PoseStamped()
+        pose_msg.header.frame_id = "map"
+
         if self.blackboard_key is not None:
             objects = self.blackboard.get(self.blackboard_key)
-            
             if not objects:
                 self.feedback_message = "No objects on blackboard"
                 return
-            
+
             closest = min(
                 objects,
-                key=lambda obj: (obj.pose.position.x - rx)**2 + (obj.pose.position.y - ry)**2
+                key=lambda obj: (obj.pose.position.x - rx) ** 2
+                              + (obj.pose.position.y - ry) ** 2,
             )
-            
-            pose_msg = PoseStamped()
-            pose_msg.header.frame_id = "map"
-            pose_msg.pose.position.x = closest.pose.position.x
-            pose_msg.pose.position.y = closest.pose.position.y
-            self.Navigator.goToPose(pose_msg)
+            obj_x = closest.pose.position.x
+            obj_y = closest.pose.position.y
+
+            dist_to_obj = math.hypot(obj_x - rx, obj_y - ry)
+            if dist_to_obj > self.standoff:
+                scale = (dist_to_obj - self.standoff) / dist_to_obj
+                pose_msg.pose.position.x = rx + (obj_x - rx) * scale
+                pose_msg.pose.position.y = ry + (obj_y - ry) * scale
+            else:
+                self.feedback_message = "Already within standoff distance"
+                self._close_enough = True
+                self._target_set = True
+                return
 
         elif self.target_position is not None:
-            pose_msg = PoseStamped()
-            pose_msg.header.frame_id = "map"
             pose_msg.pose.position.x = float(self.target_position[0])
             pose_msg.pose.position.y = float(self.target_position[1])
-            self.Navigator.goToPose(pose_msg)
+
+        else:
+            self.feedback_message = "No target specified"
+            return
+
+        # Set orientation toward goal
+        dx = pose_msg.pose.position.x - rx
+        dy = pose_msg.pose.position.y - ry
+        yaw = math.atan2(dy, dx)
+        pose_msg.pose.orientation.z = math.sin(yaw / 2.0)
+        pose_msg.pose.orientation.w = math.cos(yaw / 2.0)
+
+        self.Navigator.goToPose(pose_msg)
+        self._target_set = True
+        self.feedback_message = (
+            f"Navigating to ({pose_msg.pose.position.x:.2f}, "
+            f"{pose_msg.pose.position.y:.2f})"
+        )
+        self.node.get_logger().info(f"[{self.name}] {self.feedback_message}")
 
     def update(self):
+        if not self._target_set:
+            return py_trees.common.Status.FAILURE
+
         if self._close_enough:
             return py_trees.common.Status.SUCCESS
 
         current_distance = self._distance_remaining
 
-        self.node.get_logger().info(
-            f"distance_remaining={current_distance:.3f}"
-        )
+        # No feedback yet — hold stuck timer
+        if current_distance == float('inf'):
+            self._last_progress_time = time.monotonic()
+            return py_trees.common.Status.RUNNING
 
-        # Progress detection
-        progress_threshold = 0.10  # meters
-        stuck_timeout = 15.0       # seconds
-        self._best_distance = inf
+        # Close enough
+        if 0.0 <= current_distance < self.goal_tolerance:
+            self._close_enough = True
+            self.Navigator.cancelTask()
+            self.feedback_message = f"Reached goal ({current_distance:.2f}m)"
+            self.node.get_logger().info(f"[{self.name}] {self.feedback_message}")
+            return py_trees.common.Status.SUCCESS
 
-        if current_distance < self._best_distance - progress_threshold:
+        # Progress tracking
+        if current_distance < self._best_distance - 0.05:
             self._best_distance = current_distance
             self._last_progress_time = time.monotonic()
 
         elapsed = time.monotonic() - self._last_progress_time
-
-        if elapsed > stuck_timeout:
+        if elapsed > self.stuck_timeout:
             self.node.get_logger().warn(
-                f"No navigation progress for {elapsed:.1f}s"
+                f"[{self.name}] Stuck for {elapsed:.1f}s, cancelling"
             )
             self.Navigator.cancelTask()
             return py_trees.common.Status.FAILURE
 
-        # Existing close-enough logic
-        if 0.0 < current_distance < 0.5:
-            self._close_enough = True
-            self.Navigator.cancelTask()
-            return py_trees.common.Status.SUCCESS
+        # Nav2 completed on its own
+        if self.Navigator.isTaskComplete():
+            result = self.Navigator.getResult()
+            if result == TaskResult.SUCCEEDED:
+                self.feedback_message = "Navigation succeeded"
+                return py_trees.common.Status.SUCCESS
+            else:
+                self.feedback_message = f"Navigation failed: {result}"
+                self.node.get_logger().warn(f"[{self.name}] {self.feedback_message}")
+                return py_trees.common.Status.FAILURE
 
-        navigation_result = self.Navigator.getResult()
-
-        if navigation_result == TaskResult.SUCCEEDED:
-            return py_trees.common.Status.SUCCESS
-
-        elif navigation_result in [TaskResult.FAILED, TaskResult.CANCELED]:
-            return py_trees.common.Status.FAILURE
-
+        self.feedback_message = (
+            f"distance={current_distance:.2f}m, "
+            f"no progress for {elapsed:.1f}s"
+        )
         return py_trees.common.Status.RUNNING
 
+
+# ===========================================================================
+# MoveArm
+# ===========================================================================
 
 class MoveArm(py_trees.behaviour.Behaviour):
     """Move the robot arm to a named or explicit target pose.
 
-    The behaviour can use a predefined pose name, a blackboard key, or an explicit
-    target position to build an arm movement action goal.
+    Returns SUCCESS only when the action server confirms the goal succeeded.
 
     Args:
         name (str): Name of the behaviour.
         blackboard_key (str, optional): Blackboard key holding a target pose.
-        target_position (tuple[float, float, float], optional): Explicit arm pose
-            position.
+        target_position (tuple[float, float, float], optional): Explicit XYZ.
         predefined_pose (str, optional): Name of a predefined arm pose.
     """
 
-    def __init__(self, name: str, blackboard_key: str=None, target_position=None, predefined_pose: str=None):
+    def __init__(
+        self,
+        name: str,
+        blackboard_key: str = None,
+        target_position=None,
+        predefined_pose: str = None,
+    ):
         super(MoveArm, self).__init__(name=name)
-        self.target_position = target_position
         self.blackboard_key = blackboard_key
+        self.target_position = target_position
         self.predefined_pose = predefined_pose
 
     def setup(self, **kwargs):
-        """Prepare the arm action client and attach a blackboard client.
-
-        Args:
-            **kwargs: Dictionary containing runtime context from the behaviour
-                tree. Expects a ROS2 node under the key ``node``.
-        """
         self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
         except KeyError as e:
-            error_message = "didn't find 'node' in setup's kwargs [{}][{}]".format(
-                self.qualified_name
-            )
-            raise KeyError(error_message) from e
+            raise KeyError(
+                "didn't find 'node' in setup's kwargs [{}]".format(self.qualified_name)
+            ) from e
 
         self.blackboard = self.attach_blackboard_client(name=self.name)
         if self.blackboard_key is not None:
             self.blackboard.register_key(
                 key=self.blackboard_key,
-                access=py_trees.common.Access.READ
+                access=py_trees.common.Access.READ,
             )
 
-        
-        self.arm_action_client = ActionClient(self.node, MoveToPosition, "/move_to_position")
-        self.goal_handle = None
-        
-    
-    def initialise(self):
-        """Build and send a target goal to the arm action server."""
+        self.arm_action_client = ActionClient(
+            self.node, MoveToPosition, "/move_to_position"
+        )
+        self.arm_future = None
         self.goal_handle = None
         self.result_future = None
-        
+
+    def initialise(self):
+        self.arm_future = None
+        self.goal_handle = None
+        self.result_future = None
+
         goal_msg = MoveToPosition.Goal()
 
         if self.predefined_pose is not None:
             goal_msg.mirte_arm_named_target = self.predefined_pose
 
         elif self.blackboard_key is not None:
-            goal_msg.target_pose = self.blackboard.get(self.blackboard_key)
-        
+            goal_msg.mirte_arm_target_pose = self.blackboard.get(self.blackboard_key)
+
         elif self.target_position is not None:
-            # Create a Pose message from the target_position tuple
             pose_msg = Pose()
             pose_msg.position.x = self.target_position[0]
             pose_msg.position.y = self.target_position[1]
             pose_msg.position.z = self.target_position[2]
+            goal_msg.mirte_arm_target_pose = pose_msg
 
-            goal_msg = MoveToPosition.Goal()
-            goal_msg.target_pose = pose_msg
+        else:
+            self.feedback_message = "No target specified"
+            return
 
         self.arm_future = self.arm_action_client.send_goal_async(goal_msg)
-    
-    def update(self):
-        rclpy.spin_once(self.node, timeout_sec=5)
-        return py_trees.common.Status.SUCCESS
+        self.feedback_message = "Goal sent, waiting for acceptance"
 
+    def update(self):
+        if self.arm_future is None:
+            self.feedback_message = "No goal was sent"
+            return py_trees.common.Status.FAILURE
+
+        # Stage 1: goal acceptance
+        if not self.arm_future.done():
+            return py_trees.common.Status.RUNNING
+
+        if self.goal_handle is None:
+            self.goal_handle = self.arm_future.result()
+            if not self.goal_handle.accepted:
+                self.feedback_message = "Goal rejected by action server"
+                self.node.get_logger().warn(f"[{self.name}] Arm goal rejected")
+                return py_trees.common.Status.FAILURE
+            self.result_future = self.goal_handle.get_result_async()
+            self.feedback_message = "Goal accepted, arm moving"
+
+        # Stage 2: wait for result
+        if not self.result_future.done():
+            return py_trees.common.Status.RUNNING
+
+        result = self.result_future.result()
+        if result.result.success:
+            self.feedback_message = "Arm move succeeded"
+            return py_trees.common.Status.SUCCESS
+        else:
+            self.feedback_message = "Arm move failed (success=False)"
+            self.node.get_logger().warn(f"[{self.name}] {self.feedback_message}")
+            return py_trees.common.Status.FAILURE
+
+
+# ===========================================================================
+# PickObject
+# ===========================================================================
 
 class PickObject(py_trees.behaviour.Behaviour):
-    """Pick an object from the workspace using a multi-step manipulation sequence.
+    """Pick the closest detected object using a multi-step arm sequence.
 
-    The behaviour chooses the closest detected object and executes a series of
-    manipulation steps, including approach, gripper control, and placement.
+    Steps: approach → open → dive → grip → place → let_go → standby
+
+    Args:
+        name (str): Name of the behaviour.
+        blackboard_key (str): Blackboard key holding a list of DetectedObject.
     """
 
-    STEPS = [
-        "approach", "open", "dive", "grip", "place", "let_go", "standby"
-    ]
+    STEPS = ["approach", "open", "dive", "grip", "place", "let_go", "standby"]
 
     def __init__(self, name: str, blackboard_key: str = "planar_objects_detected_array"):
-        """Create the pick object behaviour.
-
-        Args:
-            name (str): Name of the behaviour.
-            blackboard_key (str): Blackboard key from which to read detected objects.
-        """
         super(PickObject, self).__init__(name=name)
         self.blackboard_key = blackboard_key
 
@@ -469,7 +525,7 @@ class PickObject(py_trees.behaviour.Behaviour):
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(
             key=self.blackboard_key,
-            access=py_trees.common.Access.READ
+            access=py_trees.common.Access.READ,
         )
 
         self.pick_action_client = ActionClient(
@@ -478,20 +534,24 @@ class PickObject(py_trees.behaviour.Behaviour):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self.node)
 
-        self.pick_action_client.wait_for_server()
+        # Non-blocking server wait
+        if not self.pick_action_client.wait_for_server(timeout_sec=5.0):
+            self.node.get_logger().warn(
+                f"[{self.name}] /move_to_position server not available at setup"
+            )
 
     def initialise(self):
         self.step = 0
         self.current_future = None
         self.goal_handle = None
         self.result_future = None
+        self.object = None
 
         objects = self.blackboard.get(self.blackboard_key)
         if not objects:
-            self.object = None
+            self.feedback_message = "No objects on blackboard"
             return
 
-        # pick the closest object
         try:
             transform = self.tf_buffer.lookup_transform(
                 "map", "base_link", rclpy.time.Time()
@@ -500,10 +560,11 @@ class PickObject(py_trees.behaviour.Behaviour):
             ry = transform.transform.translation.y
             self.object = min(
                 objects,
-                key=lambda o: (o.pose.position.x - rx)**2 + (o.pose.position.y - ry)**2
+                key=lambda o: (o.pose.position.x - rx) ** 2
+                            + (o.pose.position.y - ry) ** 2,
             )
         except Exception as e:
-            self.node.get_logger().warn(f"TF lookup failed: {e}")
+            self.node.get_logger().warn(f"[{self.name}] TF lookup failed: {e}")
             self.object = objects[0]
 
         self._send_step()
@@ -515,55 +576,53 @@ class PickObject(py_trees.behaviour.Behaviour):
 
         if step == "approach":
             try:
-                transform = self.tf_buffer.lookup_transform(
+                t = self.tf_buffer.lookup_transform(
                     "base_link", "wrist", rclpy.time.Time()
                 )
-                rx = transform.transform.translation.x
-                ry = transform.transform.translation.y
-                rz = transform.transform.translation.z
+                rx = t.transform.translation.x
+                ry = t.transform.translation.y
+                rz = t.transform.translation.z
             except Exception:
                 rx, ry, rz = 0.0, 0.0, 0.3
 
-            k_p = 1 / 10000
-            target_pose_y = 200
-            error = target_pose_y - obj.pose.position.y
-
+            k_p = 1.0 / 10000.0
+            error = 200.0 - obj.pose.position.y
             pose = Pose()
             pose.position.x = rx + obj.pose.position.x * k_p
-            pose.position.y = ry + error * k_pf
+            pose.position.y = ry + error * k_p        # fixed k_pf typo
             pose.position.z = rz
-            goal_msg.target_pose = pose
+            goal_msg.mirte_arm_target_pose = pose
 
         elif step == "open":
             goal_msg.mirte_gripper_named_target = "open"
 
         elif step == "dive":
             try:
-                transform = self.tf_buffer.lookup_transform(
+                t = self.tf_buffer.lookup_transform(
                     "base_link", "wrist", rclpy.time.Time()
                 )
-                rx = transform.transform.translation.x
-                ry = transform.transform.translation.y
-                rz = transform.transform.translation.z
+                rx = t.transform.translation.x
+                ry = t.transform.translation.y
+                rz = t.transform.translation.z
             except Exception:
-                rx, ry, rz = 0.0, 0.0, 0.3
+                rx, ry, rz = 0.0, 0.0, 0.03
 
-            k_p = 1 / 10000
-            target_pose_y = 200
-            error = target_pose_y - obj.pose.position.y
-
+            k_p = 1.0 / 10000.0
+            error = 200.0 - obj.pose.position.y
             pose = Pose()
             pose.position.x = rx + obj.pose.position.x * k_p
             pose.position.y = ry + error * k_p
-            pose.position.z = rz - 0.1
-            goal_msg.target_pose = pose
+            pose.position.z = rz - 0.15
+            goal_msg.mirte_arm_target_pose = pose
 
         elif step == "grip":
             goal_msg.mirte_gripper_named_target = "close"
 
         elif step == "place":
+            # Use obj.label if available, otherwise default to place_right
+            label = getattr(obj, 'label', None)
             goal_msg.mirte_arm_named_target = (
-                "place_left" if obj.label == "target" else "place_right"
+                "place_left" if label == "target" else "place_right"
             )
 
         elif step == "let_go":
@@ -580,12 +639,15 @@ class PickObject(py_trees.behaviour.Behaviour):
         self.goal_handle = None
         self.result_future = None
         self.feedback_message = f"Sending step: {self.STEPS[self.step]}"
+        self.node.get_logger().info(
+            f"[{self.name}] {self.feedback_message}"
+        )
 
     def update(self):
         if self.object is None:
             return py_trees.common.Status.FAILURE
 
-        # Stage 1: wait for goal acceptance
+        # Stage 1: goal acceptance
         if not self.current_future.done():
             return py_trees.common.Status.RUNNING
 
@@ -593,7 +655,7 @@ class PickObject(py_trees.behaviour.Behaviour):
             self.goal_handle = self.current_future.result()
             if not self.goal_handle.accepted:
                 self.node.get_logger().warn(
-                    f"Step {self.STEPS[self.step]} rejected"
+                    f"[{self.name}] Step {self.STEPS[self.step]} rejected"
                 )
                 return py_trees.common.Status.FAILURE
             self.result_future = self.goal_handle.get_result_async()
@@ -603,30 +665,32 @@ class PickObject(py_trees.behaviour.Behaviour):
             return py_trees.common.Status.RUNNING
 
         result = self.result_future.result()
-        if result.status != GoalStatus.STATUS_SUCCEEDED:
+        if not result.result.success:
             self.node.get_logger().warn(
-                f"Step {self.STEPS[self.step]} failed with status {result.status}"
+                f"[{self.name}] Step {self.STEPS[self.step]} failed"
             )
             return py_trees.common.Status.FAILURE
 
-        # Step succeeded — move to next
+        # Advance to next step
         self.step += 1
         if self.step >= len(self.STEPS):
+            self.feedback_message = "Pick sequence complete"
             return py_trees.common.Status.SUCCESS
 
         self._send_step()
         return py_trees.common.Status.RUNNING
 
 
-class CoverageTask(py_trees.behaviour.Behaviour):
-    """Start a coverage navigation action for lab cleaning.
+# ===========================================================================
+# CoverageTask
+# ===========================================================================
 
-    The behaviour sends a coverage goal and monitors the action server until
-    coverage completes or fails.
+class CoverageTask(py_trees.behaviour.Behaviour):
+    """Send a coverage navigation goal and monitor until complete.
 
     Args:
         name (str): Name of the behaviour.
-        planner (str): Planner type for coverage navigation, such as ``skeleton``.
+        planner (str): Planner type, e.g. ``skeleton``.
     """
 
     def __init__(self, name: str, planner: str):
@@ -634,110 +698,71 @@ class CoverageTask(py_trees.behaviour.Behaviour):
         self.planner = planner
 
     def setup(self, **kwargs):
-        """Create the coverage action client and capture the ROS2 node.
-
-        Args:
-            **kwargs: Dictionary containing runtime context from the behaviour
-                tree. Expects a ROS2 node under the key ``node``.
-
-        Raises:
-            KeyError: If ``node`` is not provided in ``kwargs``.
-        """
+        self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
         except KeyError as e:
-            error_message = "didn't find 'node' in setup's kwargs [{}][{}]".format(
-                self.qualified_name
-            )
-            raise KeyError(error_message) from e
-        self.logger.info("{}.setup()".format(self.qualified_name))
-        self.coverage_action_client = ActionClient(self.node, NavigateCoverage, "/labclean_navigator/coverage")
+            raise KeyError(
+                "didn't find 'node' in setup's kwargs [{}]".format(self.qualified_name)
+            ) from e
+
+        self.coverage_action_client = ActionClient(
+            self.node, NavigateCoverage, "/labclean_navigator/coverage"
+        )
         self.goal_handle = None
+        self.result_future = None
+        self.coverage_future = None
 
     def initialise(self):
-        """Send the coverage navigation action goal."""
         self.logger.info("{}.initialise()".format(self.qualified_name))
+        self.goal_handle = None
+        self.result_future = None
+
+        if not self.coverage_action_client.wait_for_server(timeout_sec=5.0):
+            self.node.get_logger().warn(
+                f"[{self.name}] Coverage action server not available"
+            )
+            self.coverage_future = None
+            return
+
         goal_msg = NavigateCoverage.Goal()
         goal_msg.planner_type = NavigateCoverage.Goal.SKELETON
         goal_msg.verbose = True
-        
-        self.coverage_action_client.wait_for_server()
         self.coverage_future = self.coverage_action_client.send_goal_async(goal_msg)
-        self.feedback_message = "Sent request"
+        self.feedback_message = "Coverage goal sent"
 
     def update(self):
-        """Check the coverage action status and return the behaviour result.
+        if self.coverage_future is None:
+            return py_trees.common.Status.FAILURE
 
-        Returns:
-            py_trees.common.Status: SUCCESS when coverage completes,
-                FAILURE if the action fails, or RUNNING while still active.
-        """
-        # if self.coverage_future is None:
-        #     return py_trees.common.Status.FAILURE
-
-        # Stage 1: wait for server to accept the goal
         if not self.coverage_future.done():
             return py_trees.common.Status.RUNNING
 
         if self.goal_handle is None:
             self.goal_handle = self.coverage_future.result()
-            # if not self.goal_handle.accepted:
-            #     return py_trees.common.Status.FAILURE
-            # Stage 2: now request the actual result
+            if not self.goal_handle.accepted:
+                self.feedback_message = "Coverage goal rejected"
+                return py_trees.common.Status.FAILURE
             self.result_future = self.goal_handle.get_result_async()
 
-        # Stage 2: wait for the action to complete
         if not self.result_future.done():
             return py_trees.common.Status.RUNNING
 
         result = self.result_future.result()
-        # if result.status == GoalStatus.STATUS_SUCCEEDED:
-        #     return py_trees.common.Status.SUCCESS
-        # return py_trees.common.Status.FAILURE
+        if result.status == GoalStatus.STATUS_SUCCEEDED:
+            self.feedback_message = "Coverage complete"
+            return py_trees.common.Status.SUCCESS
 
-# class BoundingBoxes2BB(py_trees.behaviour.Behaviour):
-#     def __init__(self, name: str):
-#         super(BoundingBoxes2BB, self).__init__(name=name)
-    
-#     def setup(self, **kwargs):
-#         """
-#         Setup the publisher which will stream commands to the mock robot.
+        self.feedback_message = f"Coverage failed: {result.status}"
+        return py_trees.common.Status.FAILURE
 
-#         Args:
-#             **kwargs (:obj:`dict`): look for the 'node' object being passed down from the tree
 
-#         Raises:
-#             :class:`KeyError`: if a ros2 node isn't passed under the key 'node' in kwargs
-#         """
-#         try:
-#             self.node = kwargs["node"]
-#         except KeyError as e:
-#             error_message = "didn't find 'node' in setup's kwargs [{}][{}]".format(
-#                 self.qualified_name
-#             )
-#             raise KeyError(error_message) from e
-#         self.bounding_box_sub = self.node.create_subscription(
-#             DetectedObjectArray, '/perception/depth/detected_objects', self.sub_callback, 10)
-#         self.bounding_boxes = []
-#         self.navigator = BasicNavigator
-        
-#     def sub_callback(self, msg):
-#         boxes = msg.objects
-#         for box in boxes:
-#             for existing_box in self.bounding_boxes:
-#                 if np.linalg.norm(np.array(box.pose) - np.array(existing_box.pose)) > 0.1:
-#                     exists = True
-#                 else:
-#                     exists = False
-#             if exists:
-#                 self.bounding_boxes.append(box)
-#                 self.bounding_boxes = sorted(self.bounding_boxes, key=)
+# ===========================================================================
+# GetPlanarObjects
+# ===========================================================================
 
 class GetPlanarObjects(py_trees.behaviour.Behaviour):
-    """Query the planar object detection service and store results on the blackboard.
-
-    The behaviour requests detected objects from the perception service and writes
-    them to the specified blackboard key.
+    """Query the planar object detection service and write to the blackboard.
 
     Args:
         name (str): Name of the behaviour.
@@ -745,22 +770,10 @@ class GetPlanarObjects(py_trees.behaviour.Behaviour):
     """
 
     def __init__(self, name: str, blackboard_key: str = "planar_objects_detected_array"):
-        """Create the planar object detection behaviour.
-
-        Args:
-            name (str): Name of the behaviour.
-            blackboard_key (str): Blackboard key for detected objects storage.
-        """
         super(GetPlanarObjects, self).__init__(name=name)
         self.blackboard_key = blackboard_key
 
     def setup(self, **kwargs):
-        """Register the service client and prepare the blackboard write keys.
-
-        Args:
-            **kwargs: Dictionary containing runtime context from the behaviour
-                tree. Expects a ROS2 node under the key ``node``.
-        """
         self.logger.info("{}.setup()".format(self.qualified_name))
         try:
             self.node = kwargs["node"]
@@ -772,29 +785,23 @@ class GetPlanarObjects(py_trees.behaviour.Behaviour):
         self.blackboard = self.attach_blackboard_client(name=self.name)
         self.blackboard.register_key(
             key=self.blackboard_key,
-            access=py_trees.common.Access.WRITE
+            access=py_trees.common.Access.WRITE,
         )
         self.blackboard.register_key(
             key="planar_objects_detected_bool",
-            access=py_trees.common.Access.WRITE
+            access=py_trees.common.Access.WRITE,
         )
-
         self.client = self.node.create_client(
-            GetDetectedObjects,
-            "/perception/planar/get_detected_objects"
+            GetDetectedObjects, "/perception/planar/get_detected_objects"
         )
         self.future = None
 
     def initialise(self):
         self.logger.info("{}.initialise()".format(self.qualified_name))
-        self.future = None
-
-        rclpy.spin_once(self.node, timeout_sec=5)
         self.future = self.client.call_async(GetDetectedObjects.Request())
         self.feedback_message = "Waiting for detection response"
 
     def update(self):
-        
         if self.future is None:
             self.feedback_message = "Service unavailable"
             return py_trees.common.Status.FAILURE
