@@ -45,6 +45,7 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">Mirte Lab Cleaner Documentation</a><ul>
 <li><a class="reference internal" href="#package-documentation">Package Documentation</a></li>
+<li><a class="reference internal" href="#quickstart">Quickstart</a></li>
 </ul>
 </li>
 </ul>
@@ -75,14 +76,25 @@
              
   <section id="mirte-lab-cleaner-documentation">
 <h1>Mirte Lab Cleaner Documentation<a class="headerlink" href="#mirte-lab-cleaner-documentation" title="Link to this heading"></a></h1>
-<p>This is the top-level documentation for the <strong>mirte_lc</strong> ROS 2 project.
-The robot autonomously navigates a lab environment, detects objects,
-and cleans up using a behaviour tree architecture.</p>
 <div class="toctree-wrapper compound">
 </div>
+<a class="reference internal image-reference" href="_images/mirte_new.png"><img alt="Mirte Master robot" class="align-center" src="_images/mirte_new.png" style="width: 500px;" />
+</a>
+<img alt="Status: In Progress" src="https://img.shields.io/badge/status-in%20progress-yellow" />
+<p>The Mirte Master Lab Cleanup Robot is an autonomous mobile manipulator designed
+to identify, retrieve, and sort objects in a laboratory environment without human
+intervention. The system combines frontier-based exploration, coverage path
+planning, 3D object detection, and colour-based classification to fully automate
+the lab cleaning task.</p>
+<p>The robot platform is the <strong>Mirte Master</strong>, a mechanum-drive mobile robot
+with a 4-DOF arm and 5-bar-linkage gripper. It uses an  gripper-mounted Orbbec Astra depth camera for
+3D perception and 2D classification. Navigation is handled by the ROS 2 <strong>Nav2</strong> stack, motion
+planning by <strong>MoveIt 2</strong>, and task coordination by a <strong>py_trees</strong> behaviour tree.</p>
+<hr class="docutils" />
 <section id="package-documentation">
 <h2>Package Documentation<a class="headerlink" href="#package-documentation" title="Link to this heading"></a></h2>
-<p>Each ROS 2 package has its own API documentation:</p>
+<p>This is the top-level documentation for the <strong>mirte_lc</strong> ROS 2 project.
+Each ROS 2 package has its own API documentation:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -114,6 +126,127 @@ and cleans up using a behaviour tree architecture.</p>
 </tr>
 </tbody>
 </table>
+<p>The system is composed of eleven ROS 2 nodes that communicate through topics,
+services, and actions. The nodes are organised into four functional layers:
+navigation, manipulation, perception, and task coordination.</p>
+<img alt="_images/ros2_topic_diagram.png" src="_images/ros2_topic_diagram.png" />
+<p>Key interfaces between nodes:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 20.0%" />
+<col style="width: 15.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Interface</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Kind</p></th>
+<th class="head"><p>Between</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/perception/depth/detected_objects</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs/DetectedObjectArray</span></code></p></td>
+<td><p>Topic</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">object_locator</span></code> → <code class="docutils literal notranslate"><span class="pre">labclean_tree</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/labclean_navigator/coverage</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs/NavigateCoverage</span></code></p></td>
+<td><p>Action</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">labclean_tree</span></code> → <code class="docutils literal notranslate"><span class="pre">labclean_action_server</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/labclean_navigator/set_state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs/ServeCoverageStatus</span></code></p></td>
+<td><p>Service</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">labclean_tree</span></code> → <code class="docutils literal notranslate"><span class="pre">labclean_action_server</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/move_to_position</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs/MoveToPosition</span></code></p></td>
+<td><p>Action</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">labclean_tree</span></code> → <code class="docutils literal notranslate"><span class="pre">mirte_lc_moveit_action_server</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/navigate_to_pose</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nav2_msgs/NavigateToPose</span></code></p></td>
+<td><p>Action</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">labclean_tree</span></code>, <code class="docutils literal notranslate"><span class="pre">labclean_action_server</span></code> → Nav2</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/navigate_through_poses</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nav2_msgs/NavigateThroughPoses</span></code></p></td>
+<td><p>Action</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">labclean_action_server</span></code> → Nav2</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/perception/planar/get_detected_objects</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mirte_lc_msgs/GetDetectedObjects</span></code></p></td>
+<td><p>Service</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">labclean_tree</span></code> → <code class="docutils literal notranslate"><span class="pre">yolo_detector</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/global_costmap/costmap</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nav_msgs/OccupancyGrid</span></code></p></td>
+<td><p>Topic</p></td>
+<td><p>Nav2 → <code class="docutils literal notranslate"><span class="pre">object_locator</span></code>, <code class="docutils literal notranslate"><span class="pre">labclean_action_server</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/io/power/power_watcher</span></code></p></td>
+<td><p>battery msg</p></td>
+<td><p>Topic</p></td>
+<td><p>Hardware → <code class="docutils literal notranslate"><span class="pre">labclean_tree</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/explore/status</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">explore_lite_msgs/ExploreStatus</span></code></p></td>
+<td><p>Topic</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">explore_server</span></code> → <code class="docutils literal notranslate"><span class="pre">labclean_tree</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading"></a></h2>
+<p>Clone and build the full workspace:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws/src
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/matt-rbt/Mirte_Lab_Clean
+<span class="nb">cd</span><span class="w"> </span>~/ros2_ws
+vcs<span class="w"> </span>import<span class="w"> </span>src/<span class="w"> </span>&lt;<span class="w"> </span>src/mirte_lc/sources.repos
+<span class="nb">cd</span><span class="w"> </span>src/mirte-ros-packages<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../..
+rosdep<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--from-paths<span class="w"> </span>src/<span class="w"> </span>--ignore-src<span class="w"> </span>--rosdistro<span class="w"> </span>humble
+colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install
+</pre></div>
+</div>
+<p>Launch the full stack on the real robot:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>mirte_lc_labclean<span class="w"> </span>labclean_bringup.launch.py<span class="w"> </span>use_sim_time:<span class="o">=</span><span class="nb">false</span>
+</pre></div>
+</div>
+<p>Launch in simulation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Terminal 1 — Gazebo</span>
+ros2<span class="w"> </span>launch<span class="w"> </span>mirte_lc_gazebo<span class="w"> </span>gazebo_mirte_lc.launch.py
+
+<span class="c1"># Terminal 2 — full stack</span>
+ros2<span class="w"> </span>launch<span class="w"> </span>mirte_lc_labclean<span class="w"> </span>labclean_bringup.launch.py<span class="w"> </span>use_sim_time:<span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div>
+<p>See <span class="xref std std-doc">quickstart</span> for the full installation guide including robot-only sparse
+checkout, clock synchronisation, and visualisation setup.</p>
+<p>ROS 2 requires the clocks on the robot and the development laptop to be
+synchronised to within ~1 ms for TF and sensor fusion to work correctly.
+Chrony is used to sync the laptop to the robot:</p>
+<p>On the <strong>robot</strong> — add to <code class="docutils literal notranslate"><span class="pre">/etc/chrony/chrony.conf</span></code>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>local stratum 8
+allow 192.168.178.0/24
+allow 192.168.42.0/24
+</pre></div>
+</div>
+<p>On the <strong>laptop</strong> — add to <code class="docutils literal notranslate"><span class="pre">/etc/chrony/chrony.conf</span></code>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>server 192.168.42.148 iburst prefer
+server 192.168.178.38 iburst
+makestep 1.0 3
+</pre></div>
+</div>
+<p>Verify synchronisation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<span class="c1"># 192.168.x.x should show ^* (current best source)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
 </section>
 </section>
 
