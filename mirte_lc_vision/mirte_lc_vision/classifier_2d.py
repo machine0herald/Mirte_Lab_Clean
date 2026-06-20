@@ -141,6 +141,10 @@ class Yolo26RosNode(Node):
             msg (sensor_msgs.msg.Image): Incoming image message from the gripper camera.
         """
         self.latest_frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")
+        self.objects = self.detector.predict_frame(self.latest_frame)
+        annotated = self.detector.results.plot()
+        annotated_msg = self.bridge.cv2_to_imgmsg(annotated, encoding="bgr8")
+        self.plotted_image_publisher.publish(annotated_msg)
 
     def detection_callback(self, request, response):
         """Handle service requests for detected objects.
@@ -157,10 +161,8 @@ class Yolo26RosNode(Node):
             response.detected_objects = DetectedObjectArray()
             return response
 
-        objects = self.detector.predict_frame(self.latest_frame)
-
         result_array = DetectedObjectArray()
-        for obj in objects:
+        for obj in self.objects:
             detected_object = DetectedObject()
             detected_object.pose = Pose()
             detected_object.pose.position.x = obj["pose"][0]
@@ -180,7 +182,7 @@ class Yolo26RosNode(Node):
             annotated_msg = self.bridge.cv2_to_imgmsg(annotated, encoding="bgr8")
             self.plotted_image_publisher.publish(annotated_msg)
 
-        self.get_logger().info(f"Detected {len(objects)} objects")
+        self.get_logger().info(f"Detected {len(self.objects)} objects")
         return response
 
     def destroy_node(self):

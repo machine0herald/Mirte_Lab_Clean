@@ -55,7 +55,7 @@ class ObjectLocator2(Node):
         self.maxDim = 0.3
 
         self.msg_queue = deque(maxlen=1)
-        self.get_logger().info("Starting")
+        #self.get_logger().info("Starting")
 
         ############################################################
         # TF2 Listener
@@ -178,17 +178,17 @@ class ObjectLocator2(Node):
             10
         )
 
-        self.get_logger().info(
-            "Object Locator Started"
-        )
+        #self.get_logger().info(
+        #     "Object Locator Started"
+        # )
         
-        self.get_logger().info(
-            f"""
-            ###################################################
-            # Subscribed to: {self.subscription.topic_name} #
-            ###################################################
-            """
-        )
+        #self.get_logger().info(
+        #     f"""
+        #     ###################################################
+        #     # Subscribed to: {self.subscription.topic_name} #
+        #     ###################################################
+        #     """
+        # )
         
         self.startup_timer.cancel()
 
@@ -232,9 +232,9 @@ class ObjectLocator2(Node):
 
         except Exception as e:
 
-            self.get_logger().warn(
-                f"Costmap occupancy check failed: {e}"
-            )
+            #self.get_logger().warn(
+            #     f"Costmap occupancy check failed: {e}"
+            # )
 
             return False
 
@@ -272,7 +272,8 @@ class ObjectLocator2(Node):
             self.process_point_cloud(msg)
 
         except Exception as e:
-            self.get_logger().warn(str(e))
+            error = e
+            # self.get_logger().warn(error)
 
 
     def process_point_cloud(self, msg):
@@ -290,9 +291,9 @@ class ObjectLocator2(Node):
             skip_nans=True
         ).astype(np.float32)
 
-        self.get_logger().info(
-            f"Received {points_np.shape[0]} points"
-        )
+        #self.get_logger().info(
+        #     f"Received {points_np.shape[0]} points"
+        # )
 
         message = self.point_cloud(points_np, 'camera_depth_optical_frame')
 
@@ -312,9 +313,9 @@ class ObjectLocator2(Node):
 
         self.sculpted_pub.publish(message)
 
-        self.get_logger().info(f"Converted to numpy array with shape {points_np.shape}")
-        self.get_logger().info(f"Min point: {np.min(points_np, axis=0)}")
-        self.get_logger().info(f"Max point: {np.max(points_np, axis=0)}")
+        #self.get_logger().info(f"Converted to numpy array with shape {points_np.shape}")
+        #self.get_logger().info(f"Min point: {np.min(points_np, axis=0)}")
+        #self.get_logger().info(f"Max point: {np.max(points_np, axis=0)}")
 
         pcd_HQ = o3d.geometry.PointCloud()
         pcd_HQ.points = o3d.utility.Vector3dVector(
@@ -335,8 +336,8 @@ class ObjectLocator2(Node):
 
         while True:
 
-            self.get_logger().info(
-                f"Using downsampled pointcloud with {len(pcd_LQ.points)} points")
+            #self.get_logger().info(
+                # f"Using downsampled pointcloud with {len(pcd_LQ.points)} points")
 
             if len(pcd_LQ.points) < 100:
                 break
@@ -375,9 +376,9 @@ class ObjectLocator2(Node):
             object_points
         )
 
-        self.get_logger().info(
-            f"Extracted {len(object_pcd.points)} object points after plane segmentation"
-        )
+        #self.get_logger().info(
+            # f"Extracted {len(object_pcd.points)} object points after plane segmentation"
+        # )
 
         if (object_points.shape[0] < 3):
             return
@@ -503,7 +504,7 @@ class ObjectLocator2(Node):
                 )
 
             except RuntimeError as e:
-                self.get_logger().warn(f"OBB failed: {e}")
+                #self.get_logger().warn(f"OBB failed: {e}")
                 continue
 
             center = obb.center
@@ -515,11 +516,11 @@ class ObjectLocator2(Node):
 
             if self.is_occupied(center[0], center[1]):
 
-                self.get_logger().info(
-                    f"Rejected object at "
-                    f"({center[0]:.2f}, {center[1]:.2f}) "
-                    f"because costmap cell is occupied"
-                )
+                #self.get_logger().info(
+                    # f"Rejected object at "
+                    # f"({center[0]:.2f}, {center[1]:.2f}) "
+                    # f"because costmap cell is occupied"
+                # )
 
                 continue
 
@@ -622,9 +623,9 @@ class ObjectLocator2(Node):
         self.marker_pub.publish(
             marker_array
         )
-        self.get_logger().info(
-            f"Published {len(marker_array.markers)-1} bounding boxes"
-        )
+        #self.get_logger().info(
+        #     f"Published {len(marker_array.markers)-1} bounding boxes"
+        # )
         
         self.object_pub.publish(
             detected_object_array

@@ -45,6 +45,7 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
 
     def __init__(self, name: str, colour: list = [0.0, 0.0, 1.0]):
         super(FlashLedStrip, self).__init__(name=name)
+        self.name = name
         self.colour = colour
 
     def setup(self, **kwargs):
@@ -56,6 +57,7 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
                 "didn't find 'node' in setup's kwargs [{}]".format(self.qualified_name)
             ) from e
 
+        self.node.color = "FlashBlue"
         self.neopixel_client = self.node.create_client(
             SetNeopixel, "/io/leds/leds/set_color"
         )
@@ -65,18 +67,23 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
         self.feedback_message = "Neopixel service client created"
 
     def initialise(self):
-        self.logger.info(
-            "%s.initialise(), sending led request" % self.__class__.__name__
-        )
-        request = SetNeopixel.Request()
-        request.color = NeopixelColor()
-        # Robot LED strip has swapped channels: msg.g=red, msg.b=green, msg.r=blue
-        request.color.g = int(self.colour[0] * 255)
-        request.color.b = int(self.colour[1] * 255)
-        request.color.r = int(self.colour[2] * 255)
-        self.future = self.neopixel_client.call_async(request)
-        self._publish_led_marker(self.colour)
-        self.feedback_message = "Sent LED request"
+        if self.node.color == self.name:
+            return
+
+        else:
+            self.node.color = self.name
+            self.logger.info(
+                "%s.initialise(), sending led request" % self.__class__.__name__
+            )
+            request = SetNeopixel.Request()
+            request.color = NeopixelColor()
+            # Robot LED strip has swapped channels: msg.g=red, msg.b=green, msg.r=blue
+            request.color.g = int(self.colour[0] * 255)
+            request.color.b = int(self.colour[1] * 255)
+            request.color.r = int(self.colour[2] * 255)
+            self.future = self.neopixel_client.call_async(request)
+            self._publish_led_marker(self.colour)
+            self.feedback_message = "Sent LED request"
 
     def _publish_led_marker(self, colour):
         marker = Marker()
@@ -96,7 +103,7 @@ class FlashLedStrip(py_trees.behaviour.Behaviour):
         self.led_marker_publisher.publish(marker)
 
     def update(self):
-        self.feedback_message = "LED updated"
+        # self.feedback_message = "LED updated"
         return py_trees.common.Status.SUCCESS
 
 
@@ -190,7 +197,7 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
         name: str,
         blackboard_key: str = None,
         target_position=None,
-        goal_tolerance: float = 0.5,
+        goal_tolerance: float = 0.003,
         stuck_timeout: float = 20.0,
         nav2_timeout: float = 5.0,
         standoff: float = 0.4,
@@ -239,7 +246,6 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
         self._last_feedback_time = time.monotonic()
 
     def initialise(self):
-        self._close_enough = False
         self._best_distance = math.inf
         self._last_progress_time = time.monotonic()
         self._target_set = False
@@ -334,19 +340,11 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
         if not self._target_set:
             return py_trees.common.Status.FAILURE
 
-        if self._close_enough:
-            return py_trees.common.Status.SUCCESS
-
         current_distance = self._distance_remaining
-
-        # No feedback yet — hold stuck timer
-        if current_distance == float('inf'):
-            self._last_progress_time = time.monotonic()
-            return py_trees.common.Status.RUNNING
+        self.node.get_logger().info(f"distance remaining: {current_distance}")
 
         # Close enough
         if 0.0 <= current_distance < self.goal_tolerance:
-            self._close_enough = True
             self.Navigator.cancelTask()
             self.feedback_message = f"Reached goal ({current_distance:.2f}m)"
             self.node.get_logger().info(f"[{self.name}] {self.feedback_message}")
@@ -365,16 +363,16 @@ class NavigateToPosition(py_trees.behaviour.Behaviour):
             self.Navigator.cancelTask()
             return py_trees.common.Status.FAILURE
 
-        # Nav2 completed on its own
-        if self.Navigator.isTaskComplete():
-            result = self.Navigator.getResult()
-            if result == TaskResult.SUCCEEDED:
-                self.feedback_message = "Navigation succeeded"
-                return py_trees.common.Status.SUCCESS
-            else:
-                self.feedback_message = f"Navigation failed: {result}"
-                self.node.get_logger().warn(f"[{self.name}] {self.feedback_message}")
-                return py_trees.common.Status.FAILURE
+        # # Nav2 completed on its own
+        # if self.Navigator.isTaskComplete():
+        #     result = self.Navigator.getResult()
+        #     if result == TaskResult.SUCCEEDED:
+        #         self.feedback_message = "Navigation succeeded"
+        #         return py_trees.common.Status.SUCCESS
+        #     else:
+        #         self.feedback_message = f"Navigation failed: {result}"
+        #         self.node.get_logger().warn(f"[{self.name}] {self.feedback_message}")
+        #         return py_trees.common.Status.FAILURE
 
         self.feedback_message = (
             f"distance={current_distance:.2f}m, "
@@ -507,7 +505,16 @@ class PickObject(py_trees.behaviour.Behaviour):
         blackboard_key (str): Blackboard key holding a list of DetectedObject.
     """
 
-    STEPS = ["approach", "open", "dive", "grip", "place", "let_go", "standby"]
+    STEPS = [
+        # "look", 
+        # "approach", 
+        "open", 
+        "dive", 
+        "grip", 
+        "place", 
+        "let_go", 
+        "standby"
+        ]
 
     def __init__(self, name: str, blackboard_key: str = "planar_objects_detected_array"):
         super(PickObject, self).__init__(name=name)
@@ -573,6 +580,8 @@ class PickObject(py_trees.behaviour.Behaviour):
         goal_msg = MoveToPosition.Goal()
         obj = self.object
         step = self.STEPS[self.step]
+        if step == "look":
+            goal_msg.mirte_arm_named_target = "standby"
 
         if step == "approach":
             try:
@@ -599,19 +608,18 @@ class PickObject(py_trees.behaviour.Behaviour):
         elif step == "dive":
             try:
                 t = self.tf_buffer.lookup_transform(
-                    "base_link", "wrist", rclpy.time.Time()
+                    "wrist", "base_link", rclpy.time.Time()
                 )
-                rx = t.transform.translation.x
-                ry = t.transform.translation.y
-                rz = t.transform.translation.z
+                rx = 0.085
+                ry = 0.0
+                rz = 0.47
+                self.node.get_logger().info(f"[{self.name}]: transforms found")
             except Exception:
                 rx, ry, rz = 0.0, 0.0, 0.03
 
-            k_p = 1.0 / 10000.0
-            error = 200.0 - obj.pose.position.y
             pose = Pose()
-            pose.position.x = rx + obj.pose.position.x * k_p
-            pose.position.y = ry + error * k_p
+            pose.position.x = rx
+            pose.position.y = ry
             pose.position.z = rz - 0.15
             goal_msg.mirte_arm_target_pose = pose
 

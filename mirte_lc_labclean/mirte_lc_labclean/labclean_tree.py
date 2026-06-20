@@ -119,7 +119,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
         name="Battery2BB",
         topic_name="/io/power/power_watcher",
         qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
-        threshold=0.20,
+        threshold=0.10,
     )
     detectedcloud2bb = py_trees_ros.subscribers.ToBlackboard(
         name="Detectedcloud2BB",
@@ -228,6 +228,10 @@ def create_root() -> py_trees.behaviour.Behaviour:
         blackboard_key="cloud_objects_detected",
         standoff=0.4,
     )
+    approach_arm = behaviours.MoveArm(
+        name="Approach Arm",
+        predefined_pose="standby",
+    )
 
     pick_or_skip = py_trees.composites.Selector(name="Pick or Skip", memory=True)
 
@@ -276,7 +280,12 @@ def create_root() -> py_trees.behaviour.Behaviour:
     # Branch 3
     tasks.add_children([battery_emergency, approach_and_handle, flash_orange])
 
-    dock.add_children([flash_red, dock_action])
+    dock.add_children(
+        [
+            flash_red, 
+            # dock_action
+        ]
+    )
 
     approach_and_handle.add_children([
         detection_check,
@@ -285,7 +294,7 @@ def create_root() -> py_trees.behaviour.Behaviour:
         # resume_coverage,
     ])
     handle.add_children([flash_green, pick_up])
-    pick_up.add_children([approach, pick_or_skip])
+    pick_up.add_children([approach, approach_arm, pick_or_skip])
     pick_or_skip.add_children([sort_and_pick, idle_pick])
     sort_and_pick.add_children([retry_planar, pick_object])
 
@@ -314,7 +323,7 @@ def main():
         rclpy.try_shutdown()
         sys.exit(1)
 
-    tree.tick_tock(period_ms=100.0)
+    tree.tick_tock(period_ms=40.0)
 
     try:
         rclpy.spin(tree.node)
