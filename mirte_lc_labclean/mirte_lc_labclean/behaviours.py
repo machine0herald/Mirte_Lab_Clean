@@ -605,22 +605,46 @@ class PickObject(py_trees.behaviour.Behaviour):
         elif step == "open":
             goal_msg.mirte_gripper_named_target = "open"
 
+        # elif step == "dive":
+        #     try:
+        #         t = self.tf_buffer.lookup_transform(
+        #             "wrist", "base_link", rclpy.time.Time()
+        #         )
+        #         rx = 0.085
+        #         ry = 0.0
+        #         rz = 0.47
+        #         self.node.get_logger().info(f"[{self.name}]: transforms found")
+        #     except Exception:
+        #         rx, ry, rz = 0.0, 0.0, 0.03
+
+        #     pose = Pose()
+        #     pose.position.x = rx
+        #     pose.position.y = ry
+        #     pose.position.z = rz - 0.15
+        #     goal_msg.mirte_arm_target_pose = pose
         elif step == "dive":
             try:
                 t = self.tf_buffer.lookup_transform(
-                    "wrist", "base_link", rclpy.time.Time()
+                    "base_link", "wrist", rclpy.time.Time()
                 )
-                rx = 0.085
-                ry = 0.0
-                rz = 0.47
-                self.node.get_logger().info(f"[{self.name}]: transforms found")
-            except Exception:
-                rx, ry, rz = 0.0, 0.0, 0.03
+                rx = t.transform.translation.x
+                ry = t.transform.translation.y
+                rz = t.transform.translation.z
+                self.node.get_logger().info(
+                    f"[{self.name}] wrist in base_link: x={rx:.3f} y={ry:.3f} z={rz:.3f}"
+                )
+            except Exception as e:
+                self.node.get_logger().warn(
+                    f"[{self.name}] TF lookup failed for dive, aborting step: {e}"
+                )
+                # Return a dummy goal that will be rejected rather than silently
+                # sending garbage coordinates
+                return goal_msg   # empty goal — will fail at server, caught in update()
 
             pose = Pose()
             pose.position.x = rx
             pose.position.y = ry
-            pose.position.z = rz - 0.15
+            pose.position.z = rz - 0.05
             goal_msg.mirte_arm_target_pose = pose
 
         elif step == "grip":

@@ -29,24 +29,6 @@ py-trees-render -b mirte_lc_labclean.labclean_tree.create_root
 # Produces a .dot file and opens it as an SVG if Graphviz is installed
 ```
 
-## Manually trigger the arm test CLI
-
-```bash
-ros2 run mirte_lc_labclean test_node
-```
-
-```
-> arm_name vigilant          # move arm to standby pose
-> arm_name standby           # deploy arm for approach
-> gripper_name open          # open gripper
-> gripper_name close         # close gripper
-> arm_pose 0.085 0.0 0.47    # Cartesian wrist position
-> wrist_joint 1.57           # rotate wrist 90°
-> gripper_joint 0.4          # direct gripper joint value
-> help                       # print command reference
-> q                          # quit
-```
-
 ## Simulate a start/cancel button press
 
 The behaviour tree listens to dashboard button topics. Publish to them manually:

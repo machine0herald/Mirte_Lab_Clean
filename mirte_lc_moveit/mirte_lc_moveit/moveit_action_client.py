@@ -115,7 +115,7 @@ def create_pose(x, y, z):
 
     pose.orientation.x = 0.7
     pose.orientation.y = 0.0
-    pose.orientation.z = 0.7
+    pose.orientation.z = -0.7
     pose.orientation.w = 0.0
 
     return pose

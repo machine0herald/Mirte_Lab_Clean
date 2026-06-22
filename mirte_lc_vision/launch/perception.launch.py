@@ -61,9 +61,6 @@ def generate_launch_description():
         ('points', '/camera/depth/points'),
     ],
     arguments=[
-    #     # '--ros-args',
-    #     # '--qos-overrides',
-    #     # '/image_rect.subscription.reliability=reliable',
         'reliability=1'
     ]
 )
@@ -72,8 +69,8 @@ def generate_launch_description():
     return LaunchDescription(
         [
             LogInfo(msg="Starting Perception Stack"),
+            depth_image_proc,
             object_detector,
             object_classifier,
-            depth_image_proc,
         ]
     )

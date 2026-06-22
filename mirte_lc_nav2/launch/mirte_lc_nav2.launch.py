@@ -12,27 +12,34 @@ from launch.actions import (
 
 from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import (
-    AnyLaunchDescriptionSource,
     PythonLaunchDescriptionSource,
 )
 
 from launch_ros.actions import Node, SetParameter
-from nav2_common.launch import RewrittenYaml
 from ament_index_python.packages import get_package_share_directory
+
+from launch.substitutions import PythonExpression
+from launch.conditions import IfCondition, UnlessCondition
 
 import os
 
 def generate_launch_description():
 
     mirte_navigation = get_package_share_directory("mirte_navigation")
-    fbe_mapping = get_package_share_directory("mirte_lc_nav2")
+    lc_nav2 = get_package_share_directory("mirte_lc_nav2")
 
     #######################
     # Launch Args/Configs #
     #######################
     use_sim_time_arg = DeclareLaunchArgument("use_sim_time", default_value="false")
     use_sim_time = LaunchConfiguration("use_sim_time")
-    params_file = os.path.join(fbe_mapping, "config", "nav2_coverage_params.yaml")
+
+    params_file = PythonExpression([
+        "'", os.path.join(lc_nav2, "config", "nav2_params_sim.yaml"), "' if '",
+        use_sim_time,
+        "' == 'true' else '",
+        os.path.join(lc_nav2, "config", "nav2_coverage_params.yaml"), "'"
+    ])
 
 
     #######################
@@ -147,7 +154,7 @@ def generate_launch_description():
     ##############################
     m_explore_nav = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(fbe_mapping, "launch", "fbe.launch.py")
+            os.path.join(lc_nav2, "launch", "fbe.launch.py")
         ),
         launch_arguments={
             "use_sim_time": use_sim_time,
