@@ -25,7 +25,8 @@ class MoveToPositionActionClient(Node):
         arm_named_target="",
         gripper_named_target="",
         gripper_joint_target=None,
-        wrist_joint_target=None
+        wrist_joint_target=None,
+        lock_wrist=False
     ):
 
         goal_msg = MoveToPosition.Goal()
@@ -57,6 +58,12 @@ class MoveToPositionActionClient(Node):
         # -------------------------------------------------
         if wrist_joint_target is not None:
             goal_msg.mirte_wrist_joint_target = wrist_joint_target
+
+        # -------------------------------------------------
+        # Lock wrist joint
+        # -------------------------------------------------
+        if wrist_joint_target is not False:
+            goal_msg.lock_wrist = lock_wrist
 
         self._action_client.wait_for_server()
 
@@ -126,7 +133,7 @@ def print_help():
     print("\nAvailable commands:")
     print("--------------------------------------------------")
     print("ARM")
-    print("  arm_pose x y z")
+    print("  arm_pose x y z [true|false]  (lock wrist joint)")
     print("  arm_name TARGET")
     print("")
     print("GRIPPER")
@@ -177,16 +184,33 @@ def main(args=None):
             # =================================================
             if command == "arm_pose":
 
-                if len(parts) != 4:
-                    print("Usage: arm_pose x y z")
+                if len(parts) not in [4, 5]:
+                    print("Usage: arm_pose x y z [true|false]")
                     continue
 
                 x, y, z = map(float, parts[1:4])
 
+                lock_wrist = None
+
+                if len(parts) == 5:
+
+                    lock_str = parts[4].lower()
+
+                    if lock_str in ["true", "t", "1", "yes"]:
+                        lock_wrist = True
+
+                    elif lock_str in ["false", "f", "0", "no"]:
+                        lock_wrist = False
+
+                    else:
+                        print("Lock wrist must be true or false")
+                        continue
+
                 pose = create_pose(x, y, z)
 
                 future = action_client.send_goal(
-                    arm_pose=pose
+                    arm_pose=pose,
+                    lock_wrist=lock_wrist
                 )
 
             # =================================================

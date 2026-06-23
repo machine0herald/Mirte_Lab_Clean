@@ -308,6 +308,12 @@ private:
 
       print_joint_values(mirte_arm_current_state, "CURRENT");
 
+      if (goal->lock_wrist){
+        set_wrist_constraint();
+      } else{
+        clear_wrist_constraint();
+      }
+
       /*
       * Planner configuration
       */
@@ -622,6 +628,34 @@ private:
   /*
    * Helper functions
    */
+
+  /**
+   * @brief Set constraint so the wrist does not move
+   */
+  void set_wrist_constraint()
+  {
+    float current_wrist_joint_value = mirte_arm_move_group_->getCurrentJointValues()[3];
+    moveit_msgs::msg::Constraints path_constraints;
+    moveit_msgs::msg::JointConstraint wrist_joint_constraint;
+    wrist_joint_constraint.joint_name = "wrist_joint";
+    wrist_joint_constraint.position = current_wrist_joint_value;
+    wrist_joint_constraint.tolerance_above = 0.01;
+    wrist_joint_constraint.tolerance_below = 0.01;
+    wrist_joint_constraint.weight = 1.0;
+    path_constraints.joint_constraints.push_back(wrist_joint_constraint);
+    mirte_arm_move_group_->setPathConstraints(path_constraints);
+    RCLCPP_INFO(
+      get_logger(),
+      "Wrist joint locked");
+  }
+
+  void clear_wrist_constraint()
+  {
+    mirte_arm_move_group_->clearPathConstraints();
+    RCLCPP_INFO(
+      get_logger(),
+      "Wrist joint unlocked");
+  }
 
   /**
    * @brief Log basic MoveGroup information for debugging.

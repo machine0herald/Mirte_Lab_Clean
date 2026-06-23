@@ -4,6 +4,7 @@ string mirte_arm_named_target
 string mirte_gripper_named_target
 float64 mirte_gripper_joint_target
 float64 mirte_wrist_joint_target
+bool lock_wrist
 ---
 # Result
 bool success
