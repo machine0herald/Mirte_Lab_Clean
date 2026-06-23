@@ -104,33 +104,46 @@ Rename mimic joints to avoid naming conflicts. Append `_mimic` to the following 
 Add the following group states under the `mirte_arm` move group (after line 29, below the `home` state):
 
 ```xml
-<group_state name="place_right" group="mirte_arm">
-    <joint name="shoulder_pan_joint"  value="0.3"/>
-    <joint name="shoulder_lift_joint" value="-0.6"/>
-    <joint name="elbow_joint"         value="1.5"/>
-    <joint name="wrist_joint"         value="0.6"/>
-</group_state>
+    <group_state name="place_right" group="mirte_arm">
+        <joint name="shoulder_pan_joint" value="0.3"/>
+        <joint name="shoulder_lift_joint" value="-0.6"/>
+        <joint name="elbow_joint" value="1.5"/>
+        <joint name="wrist_joint" value="0.6"/>
+    </group_state>
+    <group_state name="place_left" group="mirte_arm">
+        <joint name="shoulder_pan_joint" value="-0.3"/>
+        <joint name="shoulder_lift_joint" value="-0.6"/>
+        <joint name="elbow_joint" value="1.5"/>
+        <joint name="wrist_joint" value="0.6"/>
+    </group_state>
+    <group_state name="standby" group="mirte_arm">
+        <joint name="shoulder_pan_joint" value="0.0"/>
+        <joint name="shoulder_lift_joint" value="-0.5"/>
+        <joint name="elbow_joint" value="-1.3"/>
+        <joint name="wrist_joint" value="-1.3"/>
+    </group_state>
+    <group_state name="vigilant" group="mirte_arm">
+        <joint name="shoulder_pan_joint" value="0.0"/>
+        <joint name="shoulder_lift_joint" value="0.68"/>
+        <joint name="elbow_joint" value="-1.57"/>
+        <joint name="wrist_joint" value="-1.46"/>
+    </group_state>
+    <group_state name="open" group="mirte_gripper">
+        <joint name="gripper_joint" value="-0.18"/>
+    </group_state>
+    <group_state name="close" group="mirte_gripper">
+        <joint name="gripper_joint" value="0.2102"/>
+    </group_state>
+```
+**File:** `mirte-ros-packages/mirte_moveit_config/config/joint_limits.yaml`
+```yaml
+    has_acceleration_limits: true
+    max_acceleration: 2.0
+```
 
-<group_state name="place_left" group="mirte_arm">
-    <joint name="shoulder_pan_joint"  value="-0.3"/>
-    <joint name="shoulder_lift_joint" value="-0.6"/>
-    <joint name="elbow_joint"         value="1.5"/>
-    <joint name="wrist_joint"         value="0.6"/>
-</group_state>
-
-<group_state name="standby" group="mirte_arm">
-    <joint name="shoulder_pan_joint"  value="0.0"/>
-    <joint name="shoulder_lift_joint" value="-0.5"/>
-    <joint name="elbow_joint"         value="-1.3"/>
-    <joint name="wrist_joint"         value="-1.3"/>
-</group_state>
-
-<group_state name="vigilant" group="mirte_arm">
-    <joint name="shoulder_pan_joint"  value="0.0"/>
-    <joint name="shoulder_lift_joint" value="-0.5"/>
-    <joint name="elbow_joint"         value="-1.3"/>
-    <joint name="wrist_joint"         value="-0.4"/>
-</group_state>
+**File:** `mirte-ros-packages/mirte_moveit_config/config/kinematics.yaml`
+```yaml
+  position_only_ik: True
 ```
 
 Named pose reference:

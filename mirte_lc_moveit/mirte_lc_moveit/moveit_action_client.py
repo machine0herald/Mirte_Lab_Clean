@@ -61,9 +61,8 @@ class MoveToPositionActionClient(Node):
 
         # -------------------------------------------------
         # Lock wrist joint
-        # -------------------------------------------------
-        if wrist_joint_target is not False:
-            goal_msg.lock_wrist = lock_wrist
+        # ------------------------------------------------
+        goal_msg.lock_wrist = lock_wrist
 
         self._action_client.wait_for_server()
 
@@ -122,7 +121,7 @@ def create_pose(x, y, z):
 
     pose.orientation.x = 0.7
     pose.orientation.y = 0.0
-    pose.orientation.z = -0.7
+    pose.orientation.z = 0.7
     pose.orientation.w = 0.0
 
     return pose
@@ -190,7 +189,7 @@ def main(args=None):
 
                 x, y, z = map(float, parts[1:4])
 
-                lock_wrist = None
+                lock_wrist = False
 
                 if len(parts) == 5:
 
@@ -201,9 +200,8 @@ def main(args=None):
 
                     elif lock_str in ["false", "f", "0", "no"]:
                         lock_wrist = False
-
+                    
                     else:
-                        print("Lock wrist must be true or false")
                         continue
 
                 pose = create_pose(x, y, z)

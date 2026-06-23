@@ -35,10 +35,10 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration("use_sim_time")
 
     params_file = PythonExpression([
-        "'", os.path.join(lc_nav2, "config", "nav2_params_sim.yaml"), "' if '",
+        "'", os.path.join(lc_nav2, "config", "nav2_sim.yaml"), "' if '",
         use_sim_time,
         "' == 'true' else '",
-        os.path.join(lc_nav2, "config", "nav2_coverage_params.yaml"), "'"
+        os.path.join(lc_nav2, "config", "nav2_real.yaml"), "'"
     ])
 
 

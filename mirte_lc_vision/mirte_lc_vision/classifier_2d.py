@@ -130,6 +130,12 @@ class Yolo26RosNode(Node):
             self.detection_callback
         )
 
+        self.detection_publisher = self.create_publisher(
+            DetectedObjectArray, 
+            '/perception/planar/detected_objects', 
+            10
+        )
+
         self.get_logger().info(f"Running YOLO on: {self.detector.device}")
         self.get_logger().info(f"Subscribed to: {gripper_cam_topic}")
         self.get_logger().info(f"Service ready at: /perception/planar/get_detected_objects")
@@ -145,6 +151,21 @@ class Yolo26RosNode(Node):
         annotated = self.detector.results.plot()
         annotated_msg = self.bridge.cv2_to_imgmsg(annotated, encoding="bgr8")
         self.plotted_image_publisher.publish(annotated_msg)
+        
+        result_array = DetectedObjectArray()
+        for obj in self.objects:
+            detected_object = DetectedObject()
+            detected_object.pose = Pose()
+            detected_object.pose.position.x = obj["pose"][0]
+            detected_object.pose.position.y = obj["pose"][1]
+            detected_object.pose.position.z = 0.0
+            detected_object.size = Vector3()
+            detected_object.size.x = obj["size"][0]
+            detected_object.size.y = obj["size"][1]
+            detected_object.size.z = 0.0
+            detected_object.label = obj["label"]
+            result_array.objects.append(detected_object)
+        self.detection_publisher.publish(result_array)
 
     def detection_callback(self, request, response):
         """Handle service requests for detected objects.

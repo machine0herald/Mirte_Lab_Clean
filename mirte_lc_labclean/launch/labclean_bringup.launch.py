@@ -51,20 +51,6 @@ def generate_launch_description():
     mirte_lc_perception = get_package_share_directory("mirte_lc_vision")
     mirte_lc_moveit_cpp =  get_package_share_directory("mirte_lc_moveit_cpp")
 
-    ########################
-    # Labclean Tree Launch #
-    ########################
-    labclean_tree = Node(
-        package="mirte_lc_labclean",
-        executable="labclean_tree",
-        name="labclean_tree",
-        output="screen",
-    )
-    viewer = ExecuteProcess(
-        cmd=['py-trees-tree-viewer', '--no-sandbox'],
-        output='screen'
-    )
-    
     #######################
     # Mirte Moveit Launch #
     #######################
@@ -131,12 +117,10 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            # viewer,
             use_sim_time_arg,
             # foxglove_bridge,
             TimerAction(period=1.0, actions=[moveit_launch]),
             TimerAction(period=20.0, actions=[nav2]),
             TimerAction(period=20.0, actions=[perception]),
-            # labclean_tree,
         ]
     )

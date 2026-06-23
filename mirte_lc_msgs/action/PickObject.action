@@ -1,0 +1,10 @@
+# Goal
+mirte_lc_msgs/DetectedObject object
+---
+# Result
+bool success
+string message
+---
+# Feedback
+string current_step
+int32 step_index

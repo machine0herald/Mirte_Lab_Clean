@@ -1,0 +1,11 @@
+# Goal
+float32 target_distance
+
+---
+# Result
+bool success
+string message
+
+---
+# Feedback
+float32 distance_remaining

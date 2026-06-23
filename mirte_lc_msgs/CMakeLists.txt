@@ -14,6 +14,8 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "action/MoveToPosition.action"
   "action/NavigateCoverage.action"
+  "action/FollowPoint.action"
+  "action/PickObject.action"
   "msg/DetectedObject.msg"
   "msg/DetectedObjectArray.msg"
   "srv/ServeCoverageStatus.srv"
