@@ -414,8 +414,8 @@ private:
         mirte_arm_joint_values);
 
       print_joint_values(mirte_arm_target_state, "TARGET");
-
-      mirte_arm_move_group_->setPositionTarget(mirte_arm_target_pose.position.x, mirte_arm_target_pose.position.y, mirte_arm_target_pose.position.z, "wrist");
+      mirte_arm_move_group_->setJointValueTarget(mirte_arm_joint_values);
+      // mirte_arm_move_group_->setPositionTarget(mirte_arm_target_pose.position.x, mirte_arm_target_pose.position.y, mirte_arm_target_pose.position.z, "wrist");
 
       /*
       * Planning

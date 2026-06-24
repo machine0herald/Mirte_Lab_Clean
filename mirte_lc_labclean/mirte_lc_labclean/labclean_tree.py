@@ -284,7 +284,12 @@ def create_root() -> py_trees.behaviour.Behaviour:
     # Assembly
     # -----------------------------------------------------------------------
 
-    root.add_children([topics2bb, explore_or_cover, tasks, flash_orange])
+    root.add_children([
+        topics2bb, 
+        explore_or_cover, 
+        tasks, 
+        # flash_orange
+    ])
 
     # Branch 1
     topics2bb.add_children([

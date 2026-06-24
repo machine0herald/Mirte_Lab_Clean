@@ -461,6 +461,7 @@ class Follow(
                 goal
             )
         )
+        self.node.get_logger().info("sent follow request")
 
         self.goal_handle = None
         self.result_future = None

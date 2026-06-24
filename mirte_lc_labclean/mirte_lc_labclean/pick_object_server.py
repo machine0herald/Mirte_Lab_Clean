@@ -9,8 +9,11 @@ from geometry_msgs.msg import Pose
 from tf2_ros import Buffer, TransformListener
 
 from mirte_lc_msgs.action import MoveToPosition, PickObject
-from mirte_lc_msgs.msg import DetectedObject
+from mirte_lc_msgs.msg import DetectedObject, DetectedObjectArray
 from rclpy.action import ActionClient
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+import time
+from threading import Lock
 
 
 class PickObjectServer(Node):
@@ -22,8 +25,25 @@ class PickObjectServer(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
+        self.jtc_publisher = self.create_publisher(
+            JointTrajectory,
+            'mirte_master_arm_controller/joint_trajectory',
+            10
+        )
+
         self.arm_client = ActionClient(
             self, MoveToPosition, "/move_to_position",
+            callback_group=self.cb_group,
+        )
+
+        self.detected_objects = []
+        self.detection_lock = Lock()
+
+        self.detection_subscriber = self.create_subscription(
+            DetectedObjectArray,
+            "/perception/planar/detected_objects",
+            self.detection_callback,
+            10,
             callback_group=self.cb_group,
         )
 
@@ -38,10 +58,20 @@ class PickObjectServer(Node):
         )
         self.get_logger().info("PickObjectServer ready")
 
+    def get_object_by_label(self, label):
+        with self.detection_lock:
+            for obj in self.detected_objects:
+                if obj.label == label:
+                    return obj
+
+        return None
+
+    def detection_callback(self, msg):
+        self.detected_objects = msg.objects
+
     # ------------------------------------------------------------------
     # Arm helpers
     # ------------------------------------------------------------------
-
     async def _send_arm_goal(self, goal_msg: MoveToPosition.Goal, step: str) -> bool:
         """Send a MoveToPosition goal and await the result. Returns True on success."""
         send_future = self.arm_client.send_goal_async(goal_msg)
@@ -94,8 +124,11 @@ class PickObjectServer(Node):
             return False
         wx, wy, wz = wrist
         pose = Pose()
-        pose.position.x = wx + obj.pose.position.y* 0.05
-        pose.position.y = wy + obj.pose.position.x * 0.1
+        x_img = obj.pose.position.x - 0.5
+        y_img = -(obj.pose.position.y - 0.5)
+
+        pose.position.x = wx + y_img * 0.1
+        pose.position.y = wy + x_img * 0.2
         pose.position.z = wz
 
         pose.orientation.x = 0.7
@@ -108,6 +141,58 @@ class PickObjectServer(Node):
         goal = MoveToPosition.Goal()
         goal.mirte_arm_target_pose = pose
         return await self._send_arm_goal(goal, "slight")
+        ############################################################
+        # margin = 0.1
+        # gain = 2.0
+        # max_iters = 1000
+        # target = [-0.3, 0.0]
+
+        # for _ in range(max_iters):
+        #     current_obj = self.get_object_by_label(obj.label)
+
+        #     if current_obj is None:
+        #         continue
+
+        #     x_img = (current_obj.pose.position.x - 0.5)
+        #     y_img = -(current_obj.pose.position.y - 0.5)
+
+        #     if abs(target[1] - x_img) < margin and abs(target[0] - y_img) < margin:
+        #         self.get_logger().info("Object centered")
+        #         return True
+
+        #     msg = JointTrajectory()
+        #     msg.joint_names = [
+        #         "elbow_joint",
+        #         "shoulder_lift_joint",
+        #         "shoulder_pan_joint",
+        #         "wrist_joint",
+        #     ]
+
+        #     point = JointTrajectoryPoint()
+
+        #     point.velocities = [
+        #         -gain * (target[0] - y_img),
+        #         gain *(target[0] - y_img),
+        #         gain * (target[1] - x_img),
+        #         gain *(target[0] - y_img),
+        #     ]
+
+        #     point.time_from_start.sec = 1
+
+        #     msg.points.append(point)
+
+        #     self.jtc_publisher.publish(msg)
+        #     self.get_logger().info(
+        #         f"Publishishing joint speeds: {point.velocities}"
+        #     )
+        #     self.get_logger().info(
+        #         f"Centering: x={x_img:.3f} y={y_img:.3f}"
+        #     )
+
+        #     time.sleep(0.1)
+
+        # self.get_logger().warn("Failed to center object")
+        # return False
 
     async def _step_dive(self, obj: DetectedObject) -> bool:
         wrist = self._lookup_wrist()
@@ -117,7 +202,7 @@ class PickObjectServer(Node):
         pose = Pose()
         pose.position.x = wx
         pose.position.y = wy
-        pose.position.z = 0.3
+        pose.position.z = 0.15
         pose.orientation.x = 0.7
         pose.orientation.y = 0.0
         pose.orientation.z = 0.7
@@ -156,7 +241,20 @@ class PickObjectServer(Node):
     # ------------------------------------------------------------------
 
     async def execute_cb(self, goal_handle):
-        obj: DetectedObject = goal_handle.request.object
+        requested_label = goal_handle.request.object.label
+
+        self.get_logger().info(
+            f"Looking for object label '{requested_label}'"
+        )
+
+        obj = self.get_object_by_label(requested_label)
+
+        if obj is None:
+            goal_handle.abort()
+            return PickObject.Result(
+                success=False,
+                message=f"No object found with label {requested_label}"
+            )
 
         self.get_logger().info(
             f"[PickObjectServer] received goal: label='{obj.label}' "

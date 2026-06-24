@@ -219,8 +219,8 @@ class FollowPointServer(Node):
 
 
         if (
-            abs(distance_error) < 0.05
-            and abs(heading_error) < 0.10
+            abs(distance_error) < 0.02
+            and abs(heading_error) < 0.04
         ):
 
             self.goal_reached = True

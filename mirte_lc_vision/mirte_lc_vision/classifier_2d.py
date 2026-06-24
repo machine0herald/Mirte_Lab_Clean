@@ -21,6 +21,7 @@ from mirte_lc_msgs.srv import GetDetectedObjects
 
 from cv_bridge import CvBridge
 from ultralytics import YOLO
+import numpy as np
 
 
 class Yolo26Cam:
@@ -68,7 +69,6 @@ class Yolo26Cam:
             imgsz=self.imgsz,
             verbose=False
         )[0]
-
         objects = []
         boxes = self.results.boxes
 
@@ -136,6 +136,8 @@ class Yolo26RosNode(Node):
             10
         )
 
+        self.publish_timer = self.create_timer(0.1, self.data_publisher)
+
         self.get_logger().info(f"Running YOLO on: {self.detector.device}")
         self.get_logger().info(f"Subscribed to: {gripper_cam_topic}")
         self.get_logger().info(f"Service ready at: /perception/planar/get_detected_objects")
@@ -147,11 +149,53 @@ class Yolo26RosNode(Node):
             msg (sensor_msgs.msg.Image): Incoming image message from the gripper camera.
         """
         self.latest_frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")
+
+    def data_publisher(self):
         self.objects = self.detector.predict_frame(self.latest_frame)
         annotated = self.detector.results.plot()
+        cv2.circle(
+            annotated,
+            (0, 0),
+            radius=10,
+            color=(0, 255, 255),
+            thickness=-1
+        )
+        if len(self.objects) < 5:
+            h, w = annotated.shape[:2]
+
+            for obj in self.objects:
+                px = int(obj["pose"][0] * w)
+                py = int(obj["pose"][1] * h)
+
+                # Horizontal line showing X coordinate
+                cv2.line(
+                    annotated,
+                    (0, py),
+                    (px, py),
+                    (0, 0, 255),
+                    2
+                )
+
+                # Vertical line showing Y coordinate
+                cv2.line(
+                    annotated,
+                    (px, 0),
+                    (px, py),
+                    (0, 255, 0),
+                    2
+                )
+
+                cv2.circle(
+                    annotated,
+                    (px, py),
+                    4,
+                    (255, 0, 0),
+                    10
+                )
+    
         annotated_msg = self.bridge.cv2_to_imgmsg(annotated, encoding="bgr8")
         self.plotted_image_publisher.publish(annotated_msg)
-        
+
         result_array = DetectedObjectArray()
         for obj in self.objects:
             detected_object = DetectedObject()
