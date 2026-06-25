@@ -6,8 +6,6 @@ launches the LabClean bringup stack after the simulator is ready.
 
 import math
 
-from sympy import true
-
 from launch import LaunchDescription
 from launch.actions import (
     IncludeLaunchDescription,
@@ -67,7 +65,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        SetParameter(name="use_sim_time", value='true'),
+        SetParameter(name="use_sim_time", value=True),
         gazebo_launch,
         TimerAction(period=10.0, actions=[mirte_lc_launch]),
     ])

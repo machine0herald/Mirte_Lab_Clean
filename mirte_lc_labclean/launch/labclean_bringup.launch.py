@@ -120,7 +120,7 @@ def generate_launch_description():
             use_sim_time_arg,
             # foxglove_bridge,
             TimerAction(period=1.0, actions=[moveit_launch]),
-            TimerAction(period=20.0, actions=[nav2]),
-            TimerAction(period=20.0, actions=[perception]),
+            # TimerAction(period=20.0, actions=[nav2]),
+            # TimerAction(period=20.0, actions=[perception]),
         ]
     )

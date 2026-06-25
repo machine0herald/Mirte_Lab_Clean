@@ -30,7 +30,8 @@ setup(
     entry_points={
         'console_scripts': [
             'moveit_action_client = mirte_lc_moveit.moveit_action_client:main',
-            'keyboard_servo_node = mirte_lc_moveit.moveit_servo_example:main'
+            'keyboard_servo_node = mirte_lc_moveit.moveit_servo_example:main',
+            'servo_test = mirte_lc_moveit.servo_test:main',
         ],
     },
 )

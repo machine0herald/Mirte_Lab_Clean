@@ -21,15 +21,16 @@ def load_yaml(package_name, file_path):
     try:
         with open(absolute_file_path, "r") as file:
             return yaml.safe_load(file)
-    except (
-        EnvironmentError
-    ):  # parent of IOError, OSError *and* WindowsError where available
+    except EnvironmentError as e:  # parent of IOError, OSError *and* WindowsError where available
+        print(e)
         return None
 
 def generate_launch_description():
     # Get parameters for the Servo node
     servo_yaml = load_yaml("mirte_lc_moveit_cpp", "config/servo_parameters.yaml")
+    servo_kinematics = load_yaml("mirte_lc_moveit_cpp", "config/kinematics_servo.yaml")
     servo_params = {"moveit_servo": servo_yaml}
+    
 
     update_parameters = []
 
@@ -58,7 +59,29 @@ def generate_launch_description():
             output='screen'
         ),
     )
-
+    # /servo_node/change_control_dimensions
+    # /servo_node/change_drift_dimensions
+    update_parameters.append(ExecuteProcess(
+                cmd=[
+                    'ros2', 'service', 'call',
+                    '/servo_node/change_control_dimensions',
+                    'moveit_msgs/srv/ChangeControlDimensions',
+                    '{control_x_translation: true, control_y_translation: true, control_z_translation: true, control_x_rotation: false, control_y_rotation: false, control_z_rotation: false}'
+                ],
+            output='screen'
+        ),
+    )
+    # update_parameters.append(ExecuteProcess(
+    #             cmd=[
+    #                 'ros2', 'service', 'call',
+    #                 '/servo_node/change_drift_dimensions',
+    #                 'moveit_msgs/srv/ChangeDriftDimensions',
+    #                 '{drift_x_translation: false, drift_y_translation: false, drift_z_translation: false, drift_x_rotation: true, drift_y_rotation: true, drift_z_rotation: true}'
+    #             ],
+    #         output='screen'
+    #     ),
+    # )
+    
     # Declare a launch argument for use_sim_time
     use_sim_time_arg = DeclareLaunchArgument(
         "use_sim_time",
@@ -133,7 +156,7 @@ def generate_launch_description():
             servo_params,
             moveit_config.robot_description,
             moveit_config.robot_description_semantic,
-            moveit_config.robot_description_kinematics,
+            {"robot_description_kinematics": servo_kinematics},
             {"use_sim_time": use_sim_time},
         ],
         output="screen",
