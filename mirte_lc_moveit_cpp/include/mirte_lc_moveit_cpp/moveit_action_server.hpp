@@ -506,7 +506,14 @@ private:
             pts[i].time_from_start.sec +
             pts[i].time_from_start.nanosec * 1e-9);
       }
-      mirte_arm_move_group_->execute(plan);
+
+      auto final_joint_values = pts[pts.size() - 1].positions;
+
+      final_joint_values[3] = -3.14 - final_joint_values[1] - final_joint_values[2];
+
+      mirte_arm_move_group_->setJointValueTarget(final_joint_values);
+      mirte_arm_move_group_->move();
+      // mirte_arm_move_group_->execute(plan);
 
 
 
@@ -514,30 +521,28 @@ private:
       * Final pose
       */
 
-      auto current_pose =
-        mirte_arm_move_group_->getCurrentPose("wrist");
+      // auto current_pose =
+      //   mirte_arm_move_group_->getCurrentPose("wrist");
 
-      RCLCPP_INFO(
-        get_logger(),
-        "Current pose: "
-        "position = [%f, %f, %f], "
-        "orientation = [%f, %f, %f, %f]",
-        current_pose.pose.position.x,
-        current_pose.pose.position.y,
-        current_pose.pose.position.z,
-        current_pose.pose.orientation.x,
-        current_pose.pose.orientation.y,
-        current_pose.pose.orientation.z,
-        current_pose.pose.orientation.w);
+      // RCLCPP_INFO(
+      //   get_logger(),
+      //   "Current pose: "
+      //   "position = [%f, %f, %f], "
+      //   "orientation = [%f, %f, %f, %f]",
+      //   current_pose.pose.position.x,
+      //   current_pose.pose.position.y,
+      //   current_pose.pose.position.z,
+      //   current_pose.pose.orientation.x,
+      //   current_pose.pose.orientation.y,
+      //   current_pose.pose.orientation.z,
+      //   current_pose.pose.orientation.w);
 
-      mirte_arm_current_state = mirte_arm_move_group_->getCurrentState(10.0);
-      mirte_arm_current_state->copyJointGroupPositions(
-        mirte_arm_joint_model_group_,
-        mirte_arm_joint_values);
+      // mirte_arm_current_state = mirte_arm_move_group_->getCurrentState(10.0);
+      // mirte_arm_current_state->copyJointGroupPositions(
+      //   mirte_arm_joint_model_group_,
+      //   mirte_arm_joint_values);
 
-      mirte_arm_joint_values[3] = -3.14 - mirte_arm_joint_values[1] - mirte_arm_joint_values[2];
-      mirte_arm_move_group_->setJointValueTarget(mirte_arm_joint_values);
-      mirte_arm_move_group_->move();
+ 
 
 
       /*
